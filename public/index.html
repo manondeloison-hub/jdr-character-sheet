@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche de personnage — D&D 5e</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login">
+    <div class="login-box">
+      <h1>Fiche de Personnage</h1>
+      <p>Donjons & Dragons 5e</p>
+      <form id="login-form">
+        <input type="password" id="login-password" placeholder="Mot de passe" autocomplete="current-password" required>
+        <button type="submit">Entrer</button>
+        <p id="login-error" class="hidden">Mot de passe incorrect</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <!-- HEADER -->
+    <header id="header">
+      <div class="header-info">
+        <h1 id="header-name">—</h1>
+        <div class="header-details">
+          <span id="header-race">—</span>
+          <span class="sep">·</span>
+          <span id="header-class">—</span>
+          <span class="sep">·</span>
+          <span>Niv. <span id="header-level">1</span></span>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="header-hp">
+          <span class="label">PV</span>
+          <span id="header-hp">10 / 10</span>
+        </div>
+        <div class="header-xp">
+          <span class="label">XP</span>
+          <span id="header-xp">0</span>
+        </div>
+        <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
+      </div>
+    </header>
+
+    <!-- TABS NAV -->
+    <nav id="tabs">
+      <button class="tab active" data-tab="profil">Profil</button>
+      <button class="tab" data-tab="combat">Combat</button>
+      <button class="tab" data-tab="sorts">Sorts</button>
+      <button class="tab" data-tab="capacites">Capacités</button>
+      <button class="tab" data-tab="inventaire">Inventaire</button>
+    </nav>
+
+    <!-- TAB CONTENTS -->
+    <main>
+
+      <!-- PROFIL -->
+      <section id="tab-profil" class="tab-content">
+        <div class="section-group">
+          <h2>Informations</h2>
+          <div class="info-grid">
+            <div class="info-field">
+              <label>Nom</label>
+              <input type="text" data-field="name">
+            </div>
+            <div class="info-field">
+              <label>Race</label>
+              <input type="text" data-field="race">
+            </div>
+            <div class="info-field">
+              <label>Classe</label>
+              <input type="text" data-field="class">
+            </div>
+            <div class="info-field">
+              <label>Sous-classe</label>
+              <input type="text" data-field="subclass">
+            </div>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Caractéristiques</h2>
+          <div class="stats-grid" id="stats-grid"></div>
+        </div>
+
+        <div class="section-group">
+          <h2>Jets de sauvegarde</h2>
+          <div id="saving-throws" class="saves-grid"></div>
+        </div>
+
+        <div class="section-group">
+          <h2>Compétences</h2>
+          <div id="skills-list" class="skills-grid"></div>
+        </div>
+      </section>
+
+      <!-- COMBAT -->
+      <section id="tab-combat" class="tab-content hidden">
+        <div class="combat-top">
+          <div class="combat-stat">
+            <span class="label">CA</span>
+            <input type="number" id="combat-ac" min="0">
+          </div>
+          <div class="combat-stat">
+            <span class="label">Initiative</span>
+            <span id="combat-init" class="combat-value">+0</span>
+          </div>
+          <div class="combat-stat">
+            <span class="label">Vitesse</span>
+            <input type="number" id="combat-speed" min="0" step="5">
+          </div>
+          <div class="combat-stat">
+            <span class="label">Bonus maîtrise</span>
+            <span id="combat-prof" class="combat-value">+2</span>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Points de vie</h2>
+          <div class="hp-section">
+            <div class="hp-display">
+              <span id="hp-current" class="hp-big">10</span>
+              <span class="hp-sep">/</span>
+              <input type="number" id="hp-max" class="hp-big" min="1">
+            </div>
+            <div class="hp-bar-container">
+              <div id="hp-bar" class="hp-bar" style="width: 100%"></div>
+            </div>
+            <div class="hp-buttons">
+              <button class="btn-hp" data-hp="-5">-5</button>
+              <button class="btn-hp" data-hp="-1">-1</button>
+              <button class="btn-hp" data-hp="1">+1</button>
+              <button class="btn-hp" data-hp="5">+5</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Armes</h2>
+          <div id="weapons-list"></div>
+          <div class="add-row">
+            <input type="text" id="weapon-name" placeholder="Nom">
+            <input type="text" id="weapon-atk" placeholder="+Atk">
+            <input type="text" id="weapon-dmg" placeholder="Dégâts">
+            <button id="btn-add-weapon" class="btn-add">+</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SORTS -->
+      <section id="tab-sorts" class="tab-content hidden">
+        <div class="section-group">
+          <h2>Emplacements de sorts</h2>
+          <div id="spell-slots"></div>
+          <button id="btn-long-rest" class="btn-secondary">Repos long</button>
+        </div>
+
+        <div class="section-group">
+          <h2>Sorts connus</h2>
+          <div class="spell-filters">
+            <input type="text" id="spell-search" placeholder="Rechercher un sort...">
+            <select id="spell-level-filter">
+              <option value="">Tous niveaux</option>
+              <option value="0">Cantrips</option>
+              <option value="1">Niveau 1</option>
+              <option value="2">Niveau 2</option>
+              <option value="3">Niveau 3</option>
+              <option value="4">Niveau 4</option>
+              <option value="5">Niveau 5</option>
+              <option value="6">Niveau 6</option>
+              <option value="7">Niveau 7</option>
+              <option value="8">Niveau 8</option>
+              <option value="9">Niveau 9</option>
+            </select>
+          </div>
+          <div id="spells-list"></div>
+        </div>
+      </section>
+
+      <!-- CAPACITES -->
+      <section id="tab-capacites" class="tab-content hidden">
+        <div class="section-group">
+          <h2>Traits raciaux</h2>
+          <div id="traits-list" class="tag-list"></div>
+          <div class="add-row">
+            <input type="text" id="trait-input" placeholder="Nouveau trait...">
+            <button id="btn-add-trait" class="btn-add">+</button>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Capacités de classe</h2>
+          <div id="features-list" class="tag-list"></div>
+          <div class="add-row">
+            <input type="text" id="feature-input" placeholder="Nouvelle capacité...">
+            <button id="btn-add-feature" class="btn-add">+</button>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Notes</h2>
+          <textarea id="notes" rows="6" placeholder="Notes libres..."></textarea>
+        </div>
+      </section>
+
+      <!-- INVENTAIRE -->
+      <section id="tab-inventaire" class="tab-content hidden">
+        <div class="section-group">
+          <h2>Or</h2>
+          <div class="gold-section">
+            <button class="btn-hp" data-gold="-10">-10</button>
+            <button class="btn-hp" data-gold="-1">-1</button>
+            <span id="gold-amount" class="gold-big">0</span>
+            <button class="btn-hp" data-gold="1">+1</button>
+            <button class="btn-hp" data-gold="10">+10</button>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Équipement</h2>
+          <div id="equipment-list" class="tag-list"></div>
+          <div class="add-row">
+            <input type="text" id="equip-input" placeholder="Nouvel objet...">
+            <button id="btn-add-equip" class="btn-add">+</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- SPELL DETAIL MODAL -->
+    <div id="spell-modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h2 id="spell-modal-name"></h2>
+        <div class="spell-meta" id="spell-modal-meta"></div>
+        <div class="spell-desc" id="spell-modal-desc"></div>
+      </div>
+    </div>
+
+    <!-- LEVEL UP MODAL -->
+    <div id="levelup-modal" class="modal hidden">
+      <div class="modal-content modal-large">
+        <button class="modal-close">&times;</button>
+        <div id="levelup-content"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

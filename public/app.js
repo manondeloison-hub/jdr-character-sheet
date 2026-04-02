@@ -1,0 +1,676 @@
+(function () {
+  'use strict';
+
+  // --- Constants ---
+  const STATS = {
+    strength: 'Force',
+    dexterity: 'Dextérité',
+    constitution: 'Constitution',
+    intelligence: 'Intelligence',
+    wisdom: 'Sagesse',
+    charisma: 'Charisme',
+  };
+
+  const SKILLS = [
+    { name: 'Acrobaties', ability: 'dexterity' },
+    { name: 'Arcanes', ability: 'intelligence' },
+    { name: 'Athlétisme', ability: 'strength' },
+    { name: 'Discrétion', ability: 'dexterity' },
+    { name: 'Dressage', ability: 'wisdom' },
+    { name: 'Escamotage', ability: 'dexterity' },
+    { name: 'Histoire', ability: 'intelligence' },
+    { name: 'Intimidation', ability: 'charisma' },
+    { name: 'Investigation', ability: 'intelligence' },
+    { name: 'Médecine', ability: 'wisdom' },
+    { name: 'Nature', ability: 'intelligence' },
+    { name: 'Perception', ability: 'wisdom' },
+    { name: 'Perspicacité', ability: 'wisdom' },
+    { name: 'Persuasion', ability: 'charisma' },
+    { name: 'Religion', ability: 'intelligence' },
+    { name: 'Représentation', ability: 'charisma' },
+    { name: 'Survie', ability: 'wisdom' },
+    { name: 'Tromperie', ability: 'charisma' },
+  ];
+
+  const XP_THRESHOLDS = [
+    0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
+    85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
+  ];
+
+  // --- State ---
+  let character = null;
+  let spellsCache = null;
+  let saveTimeout = null;
+
+  // --- DOM refs ---
+  const $login = document.getElementById('login');
+  const $loginForm = document.getElementById('login-form');
+  const $loginPassword = document.getElementById('login-password');
+  const $loginError = document.getElementById('login-error');
+  const $app = document.getElementById('app');
+  const $headerName = document.getElementById('header-name');
+  const $headerRace = document.getElementById('header-race');
+  const $headerClass = document.getElementById('header-class');
+  const $headerLevel = document.getElementById('header-level');
+  const $headerHp = document.getElementById('header-hp');
+  const $headerXp = document.getElementById('header-xp');
+  const $btnLevelUp = document.getElementById('btn-level-up');
+  const $tabs = document.querySelectorAll('.tab');
+  const $tabContents = document.querySelectorAll('.tab-content');
+  const $spellModal = document.getElementById('spell-modal');
+  const $levelupModal = document.getElementById('levelup-modal');
+  const $levelupContent = document.getElementById('levelup-content');
+
+  // --- API helper ---
+  function apiFetch(url, options = {}) {
+    const token = localStorage.getItem('jdr-token');
+    const headers = { ...options.headers };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    if (options.body) headers['Content-Type'] = 'application/json';
+    return fetch(url, { ...options, headers });
+  }
+
+  // --- Auth ---
+  $loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $loginError.classList.add('hidden');
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: $loginPassword.value }),
+    });
+    if (!res.ok) {
+      $loginError.classList.remove('hidden');
+      return;
+    }
+    const data = await res.json();
+    localStorage.setItem('jdr-token', data.token);
+    loadApp();
+  });
+
+  async function loadApp() {
+    const res = await apiFetch('/api/character');
+    if (!res.ok) {
+      localStorage.removeItem('jdr-token');
+      $login.classList.remove('hidden');
+      $app.classList.add('hidden');
+      return;
+    }
+    character = await res.json();
+    $login.classList.add('hidden');
+    $app.classList.remove('hidden');
+    renderAll();
+  }
+
+  // --- Save ---
+  function saveCharacter() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+      await apiFetch('/api/character', {
+        method: 'PUT',
+        body: JSON.stringify(character),
+      });
+    }, 500);
+  }
+
+  function mod(val) {
+    return Math.floor((val - 10) / 2);
+  }
+
+  function modStr(val) {
+    const m = mod(val);
+    return m >= 0 ? '+' + m : '' + m;
+  }
+
+  // --- Tabs ---
+  $tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      $tabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      $tabContents.forEach((tc) => {
+        tc.classList.toggle('hidden', tc.id !== 'tab-' + target);
+      });
+      if (target === 'sorts' && !spellsCache) loadSpells();
+    });
+  });
+
+  // --- Render all ---
+  function renderAll() {
+    renderHeader();
+    renderProfil();
+    renderCombat();
+    renderCapacites();
+    renderInventaire();
+    renderSpellSlots();
+    if (spellsCache) renderSpellsList();
+  }
+
+  // --- Header ---
+  function renderHeader() {
+    $headerName.textContent = character.name || '—';
+    $headerRace.textContent = character.race || '—';
+    $headerClass.textContent = character.class || '—';
+    $headerLevel.textContent = character.level;
+    $headerHp.textContent = character.hp.current + ' / ' + character.hp.max;
+    $headerXp.textContent = character.xp;
+
+    const canLevelUp = character.level < 20 && character.xp >= XP_THRESHOLDS[character.level];
+    $btnLevelUp.classList.toggle('hidden', !canLevelUp);
+  }
+
+  // --- Profil ---
+  function renderProfil() {
+    // Info fields
+    document.querySelectorAll('.info-field input').forEach((input) => {
+      const field = input.dataset.field;
+      input.value = character[field] || '';
+      input.onchange = () => {
+        character[field] = input.value;
+        saveCharacter();
+        renderHeader();
+      };
+    });
+
+    // Stats
+    const $grid = document.getElementById('stats-grid');
+    $grid.innerHTML = '';
+    for (const [key, label] of Object.entries(STATS)) {
+      const val = character.stats[key] || 10;
+      const card = document.createElement('div');
+      card.className = 'stat-card';
+      card.innerHTML =
+        '<div class="stat-name">' + label + '</div>' +
+        '<div class="stat-mod">' + modStr(val) + '</div>' +
+        '<input type="number" value="' + val + '" min="1" max="30">';
+      card.querySelector('input').addEventListener('change', (e) => {
+        character.stats[key] = parseInt(e.target.value, 10) || 10;
+        saveCharacter();
+        renderProfil();
+        renderCombat();
+        renderHeader();
+      });
+      $grid.appendChild(card);
+    }
+
+    // Saving throws
+    const $saves = document.getElementById('saving-throws');
+    $saves.innerHTML = '';
+    for (const [key, label] of Object.entries(STATS)) {
+      const proficient = (character.savingThrows || []).includes(key);
+      const bonus = mod(character.stats[key]) + (proficient ? character.proficiencyBonus : 0);
+      const row = document.createElement('div');
+      row.className = 'save-row';
+      row.innerHTML =
+        '<input type="checkbox"' + (proficient ? ' checked' : '') + '>' +
+        '<span>' + label + '</span>' +
+        '<span class="bonus">' + (bonus >= 0 ? '+' : '') + bonus + '</span>';
+      row.querySelector('input').addEventListener('change', (e) => {
+        if (!character.savingThrows) character.savingThrows = [];
+        if (e.target.checked) {
+          character.savingThrows.push(key);
+        } else {
+          character.savingThrows = character.savingThrows.filter((s) => s !== key);
+        }
+        saveCharacter();
+        renderProfil();
+      });
+      $saves.appendChild(row);
+    }
+
+    // Skills
+    const $skills = document.getElementById('skills-list');
+    $skills.innerHTML = '';
+    for (const skill of SKILLS) {
+      const proficient = character.skills && character.skills[skill.name];
+      const bonus = mod(character.stats[skill.ability]) + (proficient ? character.proficiencyBonus : 0);
+      const row = document.createElement('div');
+      row.className = 'skill-row';
+      row.innerHTML =
+        '<input type="checkbox"' + (proficient ? ' checked' : '') + '>' +
+        '<span>' + skill.name + '</span>' +
+        '<span class="bonus">' + (bonus >= 0 ? '+' : '') + bonus + '</span>';
+      row.querySelector('input').addEventListener('change', (e) => {
+        if (!character.skills) character.skills = {};
+        character.skills[skill.name] = e.target.checked;
+        saveCharacter();
+        renderProfil();
+      });
+      $skills.appendChild(row);
+    }
+  }
+
+  // --- Combat ---
+  function renderCombat() {
+    const $ac = document.getElementById('combat-ac');
+    const $speed = document.getElementById('combat-speed');
+    const $init = document.getElementById('combat-init');
+    const $prof = document.getElementById('combat-prof');
+    const $hpCurrent = document.getElementById('hp-current');
+    const $hpMax = document.getElementById('hp-max');
+    const $hpBar = document.getElementById('hp-bar');
+
+    $ac.value = character.armorClass;
+    $speed.value = character.speed;
+    $init.textContent = modStr(character.stats.dexterity);
+    $prof.textContent = '+' + character.proficiencyBonus;
+
+    $ac.onchange = () => { character.armorClass = parseInt($ac.value, 10); saveCharacter(); };
+    $speed.onchange = () => { character.speed = parseInt($speed.value, 10); saveCharacter(); };
+
+    // HP
+    $hpCurrent.textContent = character.hp.current;
+    $hpMax.value = character.hp.max;
+    $hpMax.onchange = () => {
+      character.hp.max = parseInt($hpMax.value, 10);
+      if (character.hp.current > character.hp.max) character.hp.current = character.hp.max;
+      saveCharacter();
+      renderCombat();
+      renderHeader();
+    };
+
+    const pct = Math.max(0, (character.hp.current / character.hp.max) * 100);
+    $hpBar.style.width = pct + '%';
+    $hpBar.className = 'hp-bar' + (pct <= 25 ? ' danger' : pct <= 50 ? ' warning' : '');
+
+    // HP buttons
+    document.querySelectorAll('[data-hp]').forEach((btn) => {
+      btn.onclick = () => {
+        const delta = parseInt(btn.dataset.hp, 10);
+        character.hp.current = Math.max(0, Math.min(character.hp.max, character.hp.current + delta));
+        saveCharacter();
+        renderCombat();
+        renderHeader();
+      };
+    });
+
+    // Weapons
+    const $weapons = document.getElementById('weapons-list');
+    $weapons.innerHTML = '';
+    (character.weapons || []).forEach((w, i) => {
+      const row = document.createElement('div');
+      row.className = 'weapon-row';
+      row.innerHTML =
+        '<span class="weapon-name">' + w.name + '</span>' +
+        '<span class="weapon-atk">' + w.attack + '</span>' +
+        '<span class="weapon-dmg">' + w.damage + '</span>' +
+        '<button class="btn-remove">&times;</button>';
+      row.querySelector('.btn-remove').addEventListener('click', () => {
+        character.weapons.splice(i, 1);
+        saveCharacter();
+        renderCombat();
+      });
+      $weapons.appendChild(row);
+    });
+
+    document.getElementById('btn-add-weapon').onclick = () => {
+      const name = document.getElementById('weapon-name');
+      const atk = document.getElementById('weapon-atk');
+      const dmg = document.getElementById('weapon-dmg');
+      if (!name.value) return;
+      if (!character.weapons) character.weapons = [];
+      character.weapons.push({ name: name.value, attack: atk.value, damage: dmg.value });
+      name.value = ''; atk.value = ''; dmg.value = '';
+      saveCharacter();
+      renderCombat();
+    };
+  }
+
+  // --- Sorts ---
+  async function loadSpells() {
+    const maxLevel = maxSpellLevel();
+    const res = await apiFetch('/api/spells?class=' + encodeURIComponent(character.class || '') + '&maxLevel=' + maxLevel);
+    if (res.ok) {
+      spellsCache = await res.json();
+      renderSpellsList();
+    }
+  }
+
+  function maxSpellLevel() {
+    const slots = character.spellSlots || {};
+    let max = 0;
+    for (const lvl of Object.keys(slots)) {
+      if (slots[lvl] > 0 && parseInt(lvl, 10) > max) max = parseInt(lvl, 10);
+    }
+    return max;
+  }
+
+  function renderSpellSlots() {
+    const $slots = document.getElementById('spell-slots');
+    $slots.innerHTML = '';
+    const slots = character.spellSlots || {};
+    const used = character.spellSlotsUsed || {};
+
+    for (const [lvl, total] of Object.entries(slots)) {
+      if (total <= 0) continue;
+      const group = document.createElement('div');
+      group.className = 'slot-group';
+      group.innerHTML = '<div class="slot-label">Niv. ' + lvl + '</div>';
+      const circles = document.createElement('div');
+      circles.className = 'slot-circles';
+      const usedCount = used[lvl] || 0;
+      for (let i = 0; i < total; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'slot-circle' + (i < usedCount ? ' used' : '');
+        circle.addEventListener('click', () => {
+          if (!character.spellSlotsUsed) character.spellSlotsUsed = {};
+          if (i < (character.spellSlotsUsed[lvl] || 0)) {
+            character.spellSlotsUsed[lvl] = i;
+          } else {
+            character.spellSlotsUsed[lvl] = i + 1;
+          }
+          saveCharacter();
+          renderSpellSlots();
+        });
+        circles.appendChild(circle);
+      }
+      group.appendChild(circles);
+      $slots.appendChild(group);
+    }
+
+    document.getElementById('btn-long-rest').onclick = () => {
+      character.spellSlotsUsed = {};
+      character.hp.current = character.hp.max;
+      saveCharacter();
+      renderSpellSlots();
+      renderCombat();
+      renderHeader();
+    };
+  }
+
+  function renderSpellsList() {
+    const $list = document.getElementById('spells-list');
+    const search = (document.getElementById('spell-search').value || '').toLowerCase();
+    const levelFilter = document.getElementById('spell-level-filter').value;
+    $list.innerHTML = '';
+
+    if (!spellsCache || spellsCache.length === 0) {
+      $list.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;">Aucun sort chargé. Ajoutez des sorts dans data/spells.json</p>';
+      return;
+    }
+
+    let filtered = spellsCache;
+    if (search) filtered = filtered.filter((s) => s.name.toLowerCase().includes(search));
+    if (levelFilter !== '') filtered = filtered.filter((s) => s.level === parseInt(levelFilter, 10));
+
+    // Group by level
+    const groups = {};
+    for (const spell of filtered) {
+      const lvl = spell.level;
+      if (!groups[lvl]) groups[lvl] = [];
+      groups[lvl].push(spell);
+    }
+
+    for (const lvl of Object.keys(groups).sort((a, b) => a - b)) {
+      const div = document.createElement('div');
+      div.className = 'spell-level-group';
+      div.innerHTML = '<h3>' + (lvl === '0' ? 'Cantrips' : 'Niveau ' + lvl) + '</h3>';
+
+      for (const spell of groups[lvl]) {
+        const known = (character.knownSpells || []).includes(spell.id);
+        if (!known) continue;
+        const prepared = (character.preparedSpells || []).includes(spell.id);
+        const item = document.createElement('div');
+        item.className = 'spell-item';
+        item.innerHTML =
+          '<span class="spell-name">' + spell.name + '</span>' +
+          '<div class="spell-prepared ' + (prepared ? '' : 'not-prepared') + '" title="' + (prepared ? 'Préparé' : 'Non préparé') + '"></div>';
+
+        item.addEventListener('click', (e) => {
+          if (e.target.classList.contains('spell-prepared') || e.target.closest('.spell-prepared')) {
+            togglePrepared(spell.id);
+            return;
+          }
+          showSpellModal(spell);
+        });
+
+        div.appendChild(item);
+      }
+
+      if (div.querySelectorAll('.spell-item').length > 0) {
+        $list.appendChild(div);
+      }
+    }
+  }
+
+  function togglePrepared(spellId) {
+    if (!character.preparedSpells) character.preparedSpells = [];
+    const idx = character.preparedSpells.indexOf(spellId);
+    if (idx >= 0) {
+      character.preparedSpells.splice(idx, 1);
+    } else {
+      character.preparedSpells.push(spellId);
+    }
+    saveCharacter();
+    renderSpellsList();
+  }
+
+  function showSpellModal(spell) {
+    document.getElementById('spell-modal-name').textContent = spell.name;
+    document.getElementById('spell-modal-meta').innerHTML =
+      '<div><strong>Niveau :</strong> ' + (spell.level === 0 ? 'Cantrip' : spell.level) + '</div>' +
+      '<div><strong>École :</strong> ' + (spell.school || '—') + '</div>' +
+      '<div><strong>Temps d\'incantation :</strong> ' + (spell.castingTime || '—') + '</div>' +
+      '<div><strong>Portée :</strong> ' + (spell.range || '—') + '</div>' +
+      '<div><strong>Composantes :</strong> ' + (spell.components || '—') + '</div>' +
+      '<div><strong>Durée :</strong> ' + (spell.duration || '—') + '</div>';
+
+    let desc = '<p>' + (spell.description || '').replace(/\n/g, '</p><p>') + '</p>';
+    if (spell.higherLevels) {
+      desc += '<div class="higher-levels"><strong>Aux niveaux supérieurs :</strong> ' + spell.higherLevels + '</div>';
+    }
+    document.getElementById('spell-modal-desc').innerHTML = desc;
+    $spellModal.classList.remove('hidden');
+  }
+
+  // Spell filters
+  document.getElementById('spell-search').addEventListener('input', renderSpellsList);
+  document.getElementById('spell-level-filter').addEventListener('change', renderSpellsList);
+
+  // --- Capacites ---
+  function renderCapacites() {
+    renderTagList('traits-list', character.traits || [], 'traits');
+    renderTagList('features-list', character.classFeatures || [], 'classFeatures');
+
+    const $notes = document.getElementById('notes');
+    $notes.value = character.notes || '';
+    $notes.onchange = () => {
+      character.notes = $notes.value;
+      saveCharacter();
+    };
+
+    document.getElementById('btn-add-trait').onclick = () => addTag('trait-input', 'traits');
+    document.getElementById('btn-add-feature').onclick = () => addTag('feature-input', 'classFeatures');
+  }
+
+  function renderTagList(containerId, items, field) {
+    const $container = document.getElementById(containerId);
+    $container.innerHTML = '';
+    items.forEach((item, i) => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
+      tag.querySelector('.btn-remove').addEventListener('click', () => {
+        character[field].splice(i, 1);
+        saveCharacter();
+        renderCapacites();
+      });
+      $container.appendChild(tag);
+    });
+  }
+
+  function addTag(inputId, field) {
+    const input = document.getElementById(inputId);
+    if (!input.value.trim()) return;
+    if (!character[field]) character[field] = [];
+    character[field].push(input.value.trim());
+    input.value = '';
+    saveCharacter();
+    renderCapacites();
+  }
+
+  // --- Inventaire ---
+  function renderInventaire() {
+    document.getElementById('gold-amount').textContent = character.gold || 0;
+
+    document.querySelectorAll('[data-gold]').forEach((btn) => {
+      btn.onclick = () => {
+        const delta = parseInt(btn.dataset.gold, 10);
+        character.gold = Math.max(0, (character.gold || 0) + delta);
+        saveCharacter();
+        renderInventaire();
+      };
+    });
+
+    const $equip = document.getElementById('equipment-list');
+    $equip.innerHTML = '';
+    (character.equipment || []).forEach((item, i) => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
+      tag.querySelector('.btn-remove').addEventListener('click', () => {
+        character.equipment.splice(i, 1);
+        saveCharacter();
+        renderInventaire();
+      });
+      $equip.appendChild(tag);
+    });
+
+    document.getElementById('btn-add-equip').onclick = () => {
+      const input = document.getElementById('equip-input');
+      if (!input.value.trim()) return;
+      if (!character.equipment) character.equipment = [];
+      character.equipment.push(input.value.trim());
+      input.value = '';
+      saveCharacter();
+      renderInventaire();
+    };
+  }
+
+  // --- Level Up ---
+  $btnLevelUp.addEventListener('click', startLevelUp);
+
+  async function startLevelUp() {
+    const newLevel = character.level + 1;
+    let progression = null;
+
+    if (character.class) {
+      const res = await apiFetch('/api/progression/' + encodeURIComponent(character.class.toLowerCase()) + '/' + newLevel);
+      if (res.ok) progression = await res.json();
+    }
+
+    let html = '<h2>Monter au niveau ' + newLevel + '</h2>';
+
+    // Step 1 — Auto changes preview
+    html += '<div class="levelup-step"><h3>Changements automatiques</h3><ul>';
+    if (progression) {
+      html += '<li>Bonus de maîtrise : +' + progression.proficiencyBonus + '</li>';
+      html += '<li>Emplacements de sorts : ' + JSON.stringify(progression.spellSlots || {}) + '</li>';
+      if (progression.features && progression.features.length > 0) {
+        html += '<li>Nouvelles capacités : ' + progression.features.join(', ') + '</li>';
+      }
+    }
+    html += '<li>Dé de vie : +1d' + (progression ? progression.hitDie : '?') + '</li>';
+    html += '</ul></div>';
+
+    // Step 2 — HP increase
+    const conMod = mod(character.stats.constitution);
+    html += '<div class="levelup-step"><h3>Augmentation des PV</h3>';
+    html += '<p>Dé de vie : d' + (progression ? progression.hitDie : '?') + ' (mod CON : ' + (conMod >= 0 ? '+' : '') + conMod + ')</p>';
+    html += '<div class="levelup-input">';
+    html += '<label>Résultat du jet (ou moyenne) :</label>';
+    html += '<input type="number" id="levelup-hp-roll" min="1" max="' + (progression ? progression.hitDie : 12) + '" value="' + Math.ceil((progression ? progression.hitDie : 8) / 2 + 1) + '">';
+    html += '</div></div>';
+
+    // Step 3 — Ability Score Improvement
+    if (progression && progression.choices && progression.choices.abilityScoreImprovement) {
+      html += '<div class="levelup-step"><h3>Amélioration de caractéristique</h3>';
+      html += '<p>+2 à une caractéristique ou +1 à deux caractéristiques</p>';
+      html += '<div class="levelup-input">';
+      html += '<select id="levelup-asi-1"><option value="">Choisir...</option>';
+      for (const [key, label] of Object.entries(STATS)) {
+        html += '<option value="' + key + '">' + label + ' (' + character.stats[key] + ')</option>';
+      }
+      html += '</select>';
+      html += '<select id="levelup-asi-2"><option value="">Aucune (2e)</option>';
+      for (const [key, label] of Object.entries(STATS)) {
+        html += '<option value="' + key + '">' + label + ' (' + character.stats[key] + ')</option>';
+      }
+      html += '</select>';
+      html += '<p style="font-size:0.75rem;color:var(--text-dim)">1 stat = +2, 2 stats = +1 chacune</p>';
+      html += '</div></div>';
+    }
+
+    // Confirm
+    html += '<button class="btn-primary" id="btn-confirm-levelup">Confirmer la montée de niveau</button>';
+
+    $levelupContent.innerHTML = html;
+    $levelupModal.classList.remove('hidden');
+
+    document.getElementById('btn-confirm-levelup').addEventListener('click', () => {
+      applyLevelUp(newLevel, progression);
+    });
+  }
+
+  function applyLevelUp(newLevel, progression) {
+    // Level
+    character.level = newLevel;
+
+    // Proficiency & spell slots
+    if (progression) {
+      character.proficiencyBonus = progression.proficiencyBonus;
+      character.spellSlots = progression.spellSlots || character.spellSlots;
+
+      // New features
+      if (progression.features) {
+        if (!character.classFeatures) character.classFeatures = [];
+        for (const f of progression.features) {
+          if (!character.classFeatures.includes(f)) character.classFeatures.push(f);
+        }
+      }
+    }
+
+    // HP
+    const hpRoll = parseInt(document.getElementById('levelup-hp-roll').value, 10) || 1;
+    const conMod = mod(character.stats.constitution);
+    const hpGain = Math.max(1, hpRoll + conMod);
+    character.hp.max += hpGain;
+    character.hp.current += hpGain;
+
+    // ASI
+    const asi1El = document.getElementById('levelup-asi-1');
+    const asi2El = document.getElementById('levelup-asi-2');
+    if (asi1El && asi1El.value) {
+      const asi2 = asi2El ? asi2El.value : '';
+      if (asi2) {
+        character.stats[asi1El.value] = (character.stats[asi1El.value] || 10) + 1;
+        character.stats[asi2] = (character.stats[asi2] || 10) + 1;
+      } else {
+        character.stats[asi1El.value] = (character.stats[asi1El.value] || 10) + 2;
+      }
+    }
+
+    saveCharacter();
+    $levelupModal.classList.add('hidden');
+    spellsCache = null;
+    renderAll();
+  }
+
+  // --- Modal close ---
+  document.querySelectorAll('.modal-close').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      btn.closest('.modal').classList.add('hidden');
+    });
+  });
+
+  document.querySelectorAll('.modal').forEach((modal) => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  });
+
+  // --- Init ---
+  if (localStorage.getItem('jdr-token')) {
+    loadApp();
+  }
+})();
