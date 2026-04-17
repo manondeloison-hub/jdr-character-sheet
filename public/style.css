@@ -89,6 +89,99 @@ body {
 
 #login-error { color: var(--danger); margin-top: 0.5rem; font-size: 0.85rem; }
 
+/* --- XP Section --- */
+.xp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.xp-level-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.xp-level-label, .xp-prof-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.xp-prof-label { margin-left: 1rem; }
+
+.xp-level-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.xp-prof-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.xp-bar-container {
+  height: 8px;
+  background: var(--bg-input);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.xp-amounts {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.xp-next {
+  color: var(--text-dim);
+}
+
+.xp-add-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.xp-add-row input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.btn-add-xp {
+  padding: 0.5rem 1rem;
+  background: var(--gold-dim);
+  color: #1a1a2e;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-add-xp:hover { background: var(--gold); }
+
 /* --- Profil toolbar --- */
 .profil-toolbar {
   display: flex;

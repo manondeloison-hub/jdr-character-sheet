@@ -136,9 +136,14 @@
     });
   });
 
+  function profBonusFromLevel(level) {
+    return Math.floor((level - 1) / 4) + 2;
+  }
+
   // --- Render all ---
   function renderAll() {
     renderHeader();
+    renderXp();
     renderProfil();
     renderCombat();
     renderCapacites();
@@ -159,6 +164,56 @@
     const canLevelUp = character.level < 20 && character.xp >= XP_THRESHOLDS[character.level];
     $btnLevelUp.classList.toggle('hidden', !canLevelUp);
   }
+
+  // --- XP & Niveau ---
+  function renderXp() {
+    const xp    = character.xp || 0;
+    const level = character.level || 1;
+
+    document.getElementById('xp-level-value').textContent = level;
+    document.getElementById('xp-prof-value').textContent  = '+' + profBonusFromLevel(level);
+    document.getElementById('xp-current-display').textContent = xp.toLocaleString('fr-FR') + ' XP';
+
+    if (level >= 20) {
+      document.getElementById('xp-next-display').textContent = 'Niveau maximum atteint';
+      document.getElementById('xp-bar').style.width = '100%';
+    } else {
+      const xpCurrent = XP_THRESHOLDS[level - 1];
+      const xpNext    = XP_THRESHOLDS[level];
+      const pct = Math.min(100, Math.max(0, ((xp - xpCurrent) / (xpNext - xpCurrent)) * 100));
+      document.getElementById('xp-next-display').textContent =
+        '/ ' + xpNext.toLocaleString('fr-FR') + ' XP pour niveau ' + (level + 1);
+      document.getElementById('xp-bar').style.width = pct + '%';
+    }
+  }
+
+  function addXp(amount) {
+    if (!amount || amount <= 0) return;
+    character.xp = (character.xp || 0) + amount;
+
+    // Montée(s) de niveau automatique(s)
+    while (character.level < 20 && character.xp >= XP_THRESHOLDS[character.level]) {
+      character.level += 1;
+      character.proficiencyBonus = profBonusFromLevel(character.level);
+    }
+
+    saveCharacter();
+    renderXp();
+    renderHeader();
+    renderProfil(); // met à jour le bonus de maîtrise affiché
+  }
+
+  document.getElementById('btn-add-xp').addEventListener('click', () => {
+    const input = document.getElementById('xp-add-input');
+    const amount = parseInt(input.value, 10);
+    if (!amount || amount <= 0) return;
+    addXp(amount);
+    input.value = '';
+  });
+
+  document.getElementById('xp-add-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('btn-add-xp').click();
+  });
 
   // --- Profil ---
   function renderProfil() {
