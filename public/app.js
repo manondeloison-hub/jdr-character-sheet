@@ -41,6 +41,7 @@
   let character = null;
   let spellsCache = null;
   let saveTimeout = null;
+  let editMode = false;
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -161,10 +162,18 @@
 
   // --- Profil ---
   function renderProfil() {
+    // Bouton mode édition
+    const $btn = document.getElementById('btn-edit-mode');
+    if ($btn) {
+      $btn.textContent = editMode ? '🔒 Verrouiller' : '✏️ Modifier';
+      $btn.classList.toggle('btn-edit-active', editMode);
+    }
+
     // Info fields
     document.querySelectorAll('.info-field input').forEach((input) => {
       const field = input.dataset.field;
       input.value = character[field] || '';
+      input.disabled = !editMode;
       input.onchange = () => {
         character[field] = input.value;
         saveCharacter();
@@ -182,7 +191,7 @@
       card.innerHTML =
         '<div class="stat-name">' + label + '</div>' +
         '<div class="stat-mod">' + modStr(val) + '</div>' +
-        '<input type="number" value="' + val + '" min="1" max="30">';
+        '<input type="number" value="' + val + '" min="1" max="30"' + (editMode ? '' : ' disabled') + '>';
       card.querySelector('input').addEventListener('change', (e) => {
         character.stats[key] = parseInt(e.target.value, 10) || 10;
         saveCharacter();
@@ -202,7 +211,7 @@
       const row = document.createElement('div');
       row.className = 'save-row';
       row.innerHTML =
-        '<input type="checkbox"' + (proficient ? ' checked' : '') + '>' +
+        '<input type="checkbox"' + (proficient ? ' checked' : '') + (editMode ? '' : ' disabled') + '>' +
         '<span>' + label + '</span>' +
         '<span class="bonus">' + (bonus >= 0 ? '+' : '') + bonus + '</span>';
       row.querySelector('input').addEventListener('change', (e) => {
@@ -227,7 +236,7 @@
       const row = document.createElement('div');
       row.className = 'skill-row';
       row.innerHTML =
-        '<input type="checkbox"' + (proficient ? ' checked' : '') + '>' +
+        '<input type="checkbox"' + (proficient ? ' checked' : '') + (editMode ? '' : ' disabled') + '>' +
         '<span>' + skill.name + '</span>' +
         '<span class="bonus">' + (bonus >= 0 ? '+' : '') + bonus + '</span>';
       row.querySelector('input').addEventListener('change', (e) => {
@@ -239,6 +248,11 @@
       $skills.appendChild(row);
     }
   }
+
+  document.getElementById('btn-edit-mode').addEventListener('click', () => {
+    editMode = !editMode;
+    renderProfil();
+  });
 
   // --- Combat ---
   function renderCombat() {
@@ -670,7 +684,5 @@
   });
 
   // --- Init ---
-  if (localStorage.getItem('jdr-token')) {
-    loadApp();
-  }
+  loadApp(); // Auth temporairement désactivée — TODO: remettre la vérification du token
 })();

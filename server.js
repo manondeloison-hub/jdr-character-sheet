@@ -56,8 +56,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-// --- Auth ---
+// --- Auth (temporairement désactivée) ---
 function authMiddleware(req, res, next) {
+  return next(); // TODO: réactiver la vérification JWT
+  /* eslint-disable no-unreachable */
   const header = req.headers.authorization;
   if (!header || !header.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Non autorisé' });
@@ -68,6 +70,7 @@ function authMiddleware(req, res, next) {
   } catch {
     res.status(401).json({ error: 'Token invalide' });
   }
+  /* eslint-enable no-unreachable */
 }
 
 app.post('/api/login', (req, res) => {

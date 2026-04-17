@@ -89,6 +89,45 @@ body {
 
 #login-error { color: var(--danger); margin-top: 0.5rem; font-size: 0.85rem; }
 
+/* --- Profil toolbar --- */
+.profil-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem 0;
+}
+
+.btn-edit-mode {
+  padding: 0.45rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit-mode:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.btn-edit-mode.btn-edit-active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(244, 197, 66, 0.08);
+}
+
+/* Champs verrouillés : apparence normale sans curseur d'édition */
+#tab-profil input:disabled,
+#tab-profil select:disabled {
+  opacity: 1;
+  color: var(--text);
+  background: var(--bg-input);
+  cursor: default;
+  -webkit-text-fill-color: var(--text);
+}
+
 /* --- Header --- */
 #header {
   position: sticky;
