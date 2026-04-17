@@ -628,10 +628,11 @@ main {
 .hp-bar.danger { background: var(--danger); }
 .hp-bar.warning { background: var(--gold); }
 
-.hp-buttons {
+.hp-buttons, .hp-quick-buttons {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+  margin-top: 0.5rem;
 }
 
 .btn-hp {

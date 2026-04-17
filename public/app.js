@@ -308,49 +308,11 @@
     const passivePerception = 10 + mod(character.stats.wisdom) + (perceptionProficient ? character.proficiencyBonus : 0);
     document.getElementById('passive-perception').textContent = passivePerception;
 
-    // Points de vie
-    const $hpMax     = document.getElementById('profil-hp-max');
-    const $hpCurrent = document.getElementById('profil-hp-current');
-    const $hpTemp    = document.getElementById('profil-hp-temp');
-
-    $hpMax.value      = character.hp.max;
-    $hpCurrent.textContent = character.hp.current;
-    $hpTemp.textContent    = character.hp.temp || 0;
-    $hpMax.disabled   = !editMode;
-
-    $hpMax.onchange = () => {
-      character.hp.max = Math.max(1, parseInt($hpMax.value, 10) || 1);
-      if (character.hp.current > character.hp.max) character.hp.current = character.hp.max;
-      saveCharacter();
-      renderProfil();
-      renderHeader();
-    };
   }
 
   document.getElementById('btn-edit-mode').addEventListener('click', () => {
     editMode = !editMode;
     renderProfil();
-  });
-
-  // Boutons PV actuels (+/-)
-  document.querySelectorAll('[data-profil-hp]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const delta = parseInt(btn.dataset.profilHp, 10);
-      character.hp.current = Math.max(0, Math.min(character.hp.max, character.hp.current + delta));
-      saveCharacter();
-      document.getElementById('profil-hp-current').textContent = character.hp.current;
-      renderHeader();
-    });
-  });
-
-  // Boutons PV temporaires (+/-)
-  document.querySelectorAll('[data-profil-temp]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const delta = parseInt(btn.dataset.profilTemp, 10);
-      character.hp.temp = Math.max(0, (character.hp.temp || 0) + delta);
-      saveCharacter();
-      document.getElementById('profil-hp-temp').textContent = character.hp.temp;
-    });
   });
 
   // --- Combat ---
@@ -374,8 +336,10 @@
     // HP
     $hpCurrent.textContent = character.hp.current;
     $hpMax.value = character.hp.max;
+    document.getElementById('hp-temp').textContent = character.hp.temp || 0;
+
     $hpMax.onchange = () => {
-      character.hp.max = parseInt($hpMax.value, 10);
+      character.hp.max = Math.max(1, parseInt($hpMax.value, 10) || 1);
       if (character.hp.current > character.hp.max) character.hp.current = character.hp.max;
       saveCharacter();
       renderCombat();
@@ -386,7 +350,7 @@
     $hpBar.style.width = pct + '%';
     $hpBar.className = 'hp-bar' + (pct <= 25 ? ' danger' : pct <= 50 ? ' warning' : '');
 
-    // HP buttons
+    // Boutons PV actuels
     document.querySelectorAll('[data-hp]').forEach((btn) => {
       btn.onclick = () => {
         const delta = parseInt(btn.dataset.hp, 10);
@@ -394,6 +358,16 @@
         saveCharacter();
         renderCombat();
         renderHeader();
+      };
+    });
+
+    // Boutons PV temporaires
+    document.querySelectorAll('[data-hp-temp]').forEach((btn) => {
+      btn.onclick = () => {
+        const delta = parseInt(btn.dataset.hpTemp, 10);
+        character.hp.temp = Math.max(0, (character.hp.temp || 0) + delta);
+        saveCharacter();
+        document.getElementById('hp-temp').textContent = character.hp.temp;
       };
     });
 

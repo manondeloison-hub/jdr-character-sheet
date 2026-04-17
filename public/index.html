@@ -147,31 +147,6 @@
           </div>
         </div>
 
-        <div class="section-group">
-          <h2>Points de vie</h2>
-          <div class="profil-hp-grid">
-            <div class="profil-hp-block">
-              <span class="profil-hp-label">PV maximum</span>
-              <input type="number" id="profil-hp-max" class="profil-hp-input" min="1">
-            </div>
-            <div class="profil-hp-block">
-              <span class="profil-hp-label">PV actuels</span>
-              <div class="profil-hp-controls">
-                <button class="btn-hp-sm" data-profil-hp="-1">−</button>
-                <span id="profil-hp-current" class="profil-hp-value">10</span>
-                <button class="btn-hp-sm" data-profil-hp="1">+</button>
-              </div>
-            </div>
-            <div class="profil-hp-block">
-              <span class="profil-hp-label">PV temporaires</span>
-              <div class="profil-hp-controls">
-                <button class="btn-hp-sm" data-profil-temp="-1">−</button>
-                <span id="profil-hp-temp" class="profil-hp-value">0</span>
-                <button class="btn-hp-sm" data-profil-temp="1">+</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <!-- COMBAT -->
@@ -197,21 +172,36 @@
 
         <div class="section-group">
           <h2>Points de vie</h2>
-          <div class="hp-section">
-            <div class="hp-display">
-              <span id="hp-current" class="hp-big">10</span>
-              <span class="hp-sep">/</span>
-              <input type="number" id="hp-max" class="hp-big" min="1">
+          <div class="profil-hp-grid">
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV maximum</span>
+              <input type="number" id="hp-max" class="profil-hp-input" min="1">
             </div>
-            <div class="hp-bar-container">
-              <div id="hp-bar" class="hp-bar" style="width: 100%"></div>
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV actuels</span>
+              <div class="profil-hp-controls">
+                <button class="btn-hp-sm" data-hp="-1">−</button>
+                <span id="hp-current" class="profil-hp-value">10</span>
+                <button class="btn-hp-sm" data-hp="1">+</button>
+              </div>
             </div>
-            <div class="hp-buttons">
-              <button class="btn-hp" data-hp="-5">-5</button>
-              <button class="btn-hp" data-hp="-1">-1</button>
-              <button class="btn-hp" data-hp="1">+1</button>
-              <button class="btn-hp" data-hp="5">+5</button>
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV temporaires</span>
+              <div class="profil-hp-controls">
+                <button class="btn-hp-sm" data-hp-temp="-1">−</button>
+                <span id="hp-temp" class="profil-hp-value">0</span>
+                <button class="btn-hp-sm" data-hp-temp="1">+</button>
+              </div>
             </div>
+          </div>
+          <div class="hp-bar-container" style="margin-top:0.75rem">
+            <div id="hp-bar" class="hp-bar" style="width:100%"></div>
+          </div>
+          <div class="hp-quick-buttons">
+            <button class="btn-hp" data-hp="-5">−5</button>
+            <button class="btn-hp" data-hp="-1">−1</button>
+            <button class="btn-hp" data-hp="1">+1</button>
+            <button class="btn-hp" data-hp="5">+5</button>
           </div>
         </div>
 
