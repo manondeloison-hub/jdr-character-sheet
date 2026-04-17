@@ -87,6 +87,21 @@
               <label>Sous-classe</label>
               <input type="text" data-field="subclass">
             </div>
+            <div class="info-field">
+              <label>Alignement</label>
+              <select data-field="alignment">
+                <option value="">—</option>
+                <option value="Loyal Bon">Loyal Bon</option>
+                <option value="Neutre Bon">Neutre Bon</option>
+                <option value="Chaotique Bon">Chaotique Bon</option>
+                <option value="Loyal Neutre">Loyal Neutre</option>
+                <option value="Neutre">Neutre</option>
+                <option value="Chaotique Neutre">Chaotique Neutre</option>
+                <option value="Loyal Mauvais">Loyal Mauvais</option>
+                <option value="Neutre Mauvais">Neutre Mauvais</option>
+                <option value="Chaotique Mauvais">Chaotique Mauvais</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -126,6 +141,36 @@
         <div class="section-group">
           <h2>Compétences</h2>
           <div id="skills-list" class="skills-grid"></div>
+          <div class="passive-perception-row">
+            <span class="passive-label">Perception passive</span>
+            <span id="passive-perception" class="passive-value">10</span>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2>Points de vie</h2>
+          <div class="profil-hp-grid">
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV maximum</span>
+              <input type="number" id="profil-hp-max" class="profil-hp-input" min="1">
+            </div>
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV actuels</span>
+              <div class="profil-hp-controls">
+                <button class="btn-hp-sm" data-profil-hp="-1">−</button>
+                <span id="profil-hp-current" class="profil-hp-value">10</span>
+                <button class="btn-hp-sm" data-profil-hp="1">+</button>
+              </div>
+            </div>
+            <div class="profil-hp-block">
+              <span class="profil-hp-label">PV temporaires</span>
+              <div class="profil-hp-controls">
+                <button class="btn-hp-sm" data-profil-temp="-1">−</button>
+                <span id="profil-hp-temp" class="profil-hp-value">0</span>
+                <button class="btn-hp-sm" data-profil-temp="1">+</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

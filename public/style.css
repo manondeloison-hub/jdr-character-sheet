@@ -89,6 +89,101 @@ body {
 
 #login-error { color: var(--danger); margin-top: 0.5rem; font-size: 0.85rem; }
 
+/* --- Perception passive --- */
+.passive-perception-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.passive-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.passive-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* --- PV profil --- */
+.profil-hp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.profil-hp-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.profil-hp-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.profil-hp-input {
+  width: 70px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 0.1rem;
+}
+
+.profil-hp-input:disabled {
+  opacity: 1;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  cursor: default;
+}
+
+.profil-hp-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profil-hp-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-hp-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.btn-hp-sm:hover { background: var(--accent); border-color: var(--accent); }
+
 /* --- XP Section --- */
 .xp-section {
   display: flex;
@@ -360,7 +455,8 @@ main {
   letter-spacing: 0.05em;
 }
 
-.info-field input {
+.info-field input,
+.info-field select {
   width: 100%;
   padding: 0.5rem 0.6rem;
   background: var(--bg-input);
