@@ -145,11 +145,56 @@
     renderHeader();
     renderXp();
     renderProfil();
+    renderDeathSaves();
     renderCombat();
     renderCapacites();
     renderInventaire();
     renderSpellSlots();
     if (spellsCache) renderSpellsList();
+  }
+
+  // --- Jets contre la mort ---
+  function renderDeathSaves() {
+    const section = document.getElementById('death-saves-section');
+    if (character.hp.current > 0) {
+      section.classList.add('hidden');
+      return;
+    }
+    section.classList.remove('hidden');
+
+    if (!character.deathSaves) character.deathSaves = { successes: 0, failures: 0 };
+    const ds = character.deathSaves;
+
+    function buildCircles(containerId, type, count, colorClass) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const circle = document.createElement('span');
+        circle.className = 'death-circle ' + colorClass + (i < count ? ' filled' : '');
+        circle.addEventListener('click', () => {
+          // Clic sur un cercle rempli = on retire, sur vide = on ajoute
+          ds[type] = (i < ds[type]) ? i : Math.min(3, i + 1);
+          saveCharacter();
+          renderDeathSaves();
+        });
+        container.appendChild(circle);
+      }
+    }
+
+    buildCircles('death-success-circles', 'successes', ds.successes, 'circle-success');
+    buildCircles('death-failure-circles', 'failures',  ds.failures,  'circle-failure');
+
+    const $status = document.getElementById('death-status');
+    if (ds.failures >= 3) {
+      $status.textContent = 'Mort(e)…';
+      $status.className = 'death-status status-dead';
+    } else if (ds.successes >= 3) {
+      $status.textContent = 'Stabilisé(e) ✓';
+      $status.className = 'death-status status-stable';
+    } else {
+      $status.textContent = '';
+      $status.className = 'death-status';
+    }
   }
 
   // --- Header ---
@@ -353,10 +398,16 @@
     // Boutons PV actuels
     document.querySelectorAll('[data-hp]').forEach((btn) => {
       btn.onclick = () => {
+        const wasZero = character.hp.current === 0;
         const delta = parseInt(btn.dataset.hp, 10);
         character.hp.current = Math.max(0, Math.min(character.hp.max, character.hp.current + delta));
+        // Soin après mort imminente : reset des jets
+        if (wasZero && character.hp.current > 0) {
+          character.deathSaves = { successes: 0, failures: 0 };
+        }
         saveCharacter();
         renderCombat();
+        renderDeathSaves();
         renderHeader();
       };
     });

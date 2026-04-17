@@ -112,6 +112,69 @@ body {
   color: var(--gold);
 }
 
+/* --- Jets contre la mort --- */
+#death-saves-section {
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  background: rgba(231, 76, 60, 0.06);
+}
+
+#death-saves-section h2 {
+  color: var(--danger);
+}
+
+.death-saves {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.death-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.death-label {
+  font-size: 0.85rem;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.success-label { color: var(--success); }
+.failure-label { color: var(--danger); }
+
+.death-circles {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.death-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg-input);
+}
+
+.death-circle:hover { transform: scale(1.1); }
+
+.circle-success.filled { background: var(--success); border-color: var(--success); }
+.circle-failure.filled { background: var(--danger);  border-color: var(--danger); }
+.circle-success:not(.filled):hover { border-color: var(--success); }
+.circle-failure:not(.filled):hover { border-color: var(--danger); }
+
+.death-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.status-stable { color: var(--success); }
+.status-dead   { color: var(--danger); }
+
 /* --- PV profil --- */
 .profil-hp-grid {
   display: grid;
