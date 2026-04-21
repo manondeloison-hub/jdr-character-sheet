@@ -558,6 +558,30 @@ main {
   line-height: 1.2;
 }
 
+.stat-total {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+
+.stat-hoverable {
+  cursor: default;
+  border-radius: 4px;
+  padding: 0 0.25rem;
+  transition: background 0.15s;
+}
+
+.stat-hoverable:hover {
+  background: rgba(244, 197, 66, 0.12);
+  color: var(--gold);
+}
+
+.stat-racial {
+  font-size: 0.7rem;
+  color: var(--success);
+  margin-top: 0.15rem;
+}
+
 .stat-card input {
   width: 3rem;
   text-align: center;
@@ -567,6 +591,39 @@ main {
   border-radius: 4px;
   color: var(--text);
   font-size: 0.85rem;
+}
+
+/* --- Stat tooltip --- */
+.stat-tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  min-width: 130px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.tt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-dim);
+  padding: 0.1rem 0;
+}
+
+.tt-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--gold);
+  font-weight: 700;
+  padding-top: 0.3rem;
+  margin-top: 0.2rem;
+  border-top: 1px solid var(--border);
 }
 
 /* --- Saves & Skills --- */

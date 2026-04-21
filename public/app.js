@@ -32,6 +32,45 @@
     { name: 'Tromperie', ability: 'charisma' },
   ];
 
+  // Bonus raciaux D&D 5e (valeur normalisée en minuscules)
+  const RACIAL_BONUSES = {
+    'haute-elfe':            { dexterity: 2, intelligence: 1 },
+    'high elf':              { dexterity: 2, intelligence: 1 },
+    'elfe des bois':         { dexterity: 2, wisdom: 1 },
+    'wood elf':              { dexterity: 2, wisdom: 1 },
+    'elfe noir':             { dexterity: 2, charisma: 1 },
+    'drow':                  { dexterity: 2, charisma: 1 },
+    'elfe':                  { dexterity: 2 },
+    'elf':                   { dexterity: 2 },
+    'nain des collines':     { constitution: 2, wisdom: 1 },
+    'hill dwarf':            { constitution: 2, wisdom: 1 },
+    'nain des montagnes':    { constitution: 2, strength: 2 },
+    'mountain dwarf':        { constitution: 2, strength: 2 },
+    'nain':                  { constitution: 2 },
+    'dwarf':                 { constitution: 2 },
+    'humain':                { strength: 1, dexterity: 1, constitution: 1, intelligence: 1, wisdom: 1, charisma: 1 },
+    'human':                 { strength: 1, dexterity: 1, constitution: 1, intelligence: 1, wisdom: 1, charisma: 1 },
+    'halfelin pied-léger':   { dexterity: 2, charisma: 1 },
+    'lightfoot halfling':    { dexterity: 2, charisma: 1 },
+    'halfelin robuste':      { dexterity: 2, constitution: 1 },
+    'stout halfling':        { dexterity: 2, constitution: 1 },
+    'halfelin':              { dexterity: 2 },
+    'halfling':              { dexterity: 2 },
+    'gnome des roches':      { intelligence: 2, constitution: 1 },
+    'rock gnome':            { intelligence: 2, constitution: 1 },
+    'gnome des forêts':      { intelligence: 2, dexterity: 1 },
+    'forest gnome':          { intelligence: 2, dexterity: 1 },
+    'gnome':                 { intelligence: 2 },
+    'demi-elfe':             { charisma: 2 },
+    'half-elf':              { charisma: 2 },
+    'demi-orc':              { strength: 2, constitution: 1 },
+    'half-orc':              { strength: 2, constitution: 1 },
+    'tieffelin':             { intelligence: 1, charisma: 2 },
+    'tiefling':              { intelligence: 1, charisma: 2 },
+    'draconide':             { strength: 2, charisma: 1 },
+    'dragonborn':            { strength: 2, charisma: 1 },
+  };
+
   const XP_THRESHOLDS = [
     0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
@@ -98,6 +137,7 @@
       return;
     }
     character = await res.json();
+    initStatsBase();
     $login.classList.add('hidden');
     $app.classList.remove('hidden');
     renderAll();
@@ -138,6 +178,29 @@
 
   function profBonusFromLevel(level) {
     return Math.floor((level - 1) / 4) + 2;
+  }
+
+  function getRacialBonus(race) {
+    if (!race) return {};
+    return RACIAL_BONUSES[race.toLowerCase().trim()] || {};
+  }
+
+  function recalcStats() {
+    const racial = getRacialBonus(character.race);
+    for (const key of Object.keys(STATS)) {
+      character.stats[key] = (character.statsBase[key] || 10) + (racial[key] || 0);
+    }
+  }
+
+  // Migration : si statsBase absent, déduire les bases depuis les totaux actuels
+  function initStatsBase() {
+    if (!character.statsBase) {
+      character.statsBase = {};
+      const racial = getRacialBonus(character.race);
+      for (const key of Object.keys(STATS)) {
+        character.statsBase[key] = (character.stats[key] || 10) - (racial[key] || 0);
+      }
+    }
   }
 
   // --- Render all ---
@@ -276,6 +339,11 @@
       el.disabled = !editMode;
       el.onchange = () => {
         character[field] = el.value;
+        if (field === 'race') {
+          recalcStats();
+          renderProfil();
+          renderCombat();
+        }
         saveCharacter();
         renderHeader();
       };
@@ -284,21 +352,54 @@
     // Stats
     const $grid = document.getElementById('stats-grid');
     $grid.innerHTML = '';
+    const racial = getRacialBonus(character.race);
     for (const [key, label] of Object.entries(STATS)) {
-      const val = character.stats[key] || 10;
+      const base       = character.statsBase[key] || 10;
+      const racialVal  = racial[key] || 0;
+      const total      = base + racialVal;
       const card = document.createElement('div');
       card.className = 'stat-card';
+
+      let racialBadge = '';
+      if (racialVal !== 0) {
+        racialBadge = '<div class="stat-racial">' + (racialVal > 0 ? '+' : '') + racialVal + ' race</div>';
+      }
+
       card.innerHTML =
         '<div class="stat-name">' + label + '</div>' +
-        '<div class="stat-mod">' + modStr(val) + '</div>' +
-        '<input type="number" value="' + val + '" min="1" max="30"' + (editMode ? '' : ' disabled') + '>';
-      card.querySelector('input').addEventListener('change', (e) => {
-        character.stats[key] = parseInt(e.target.value, 10) || 10;
-        saveCharacter();
-        renderProfil();
-        renderCombat();
-        renderHeader();
+        '<div class="stat-mod">' + modStr(total) + '</div>' +
+        '<div class="stat-total stat-hoverable">' + total + '</div>' +
+        (editMode
+          ? '<input type="number" value="' + base + '" min="1" max="30">' + racialBadge
+          : '');
+
+      // Tooltip au survol de la valeur totale
+      const totalEl = card.querySelector('.stat-total');
+      totalEl.addEventListener('mouseenter', () => {
+        const tooltip = document.getElementById('stat-tooltip');
+        let html = '<div class="tt-row"><span>Base</span><span>' + base + '</span></div>';
+        if (racialVal !== 0) {
+          html += '<div class="tt-row"><span>Race</span><span>' + (racialVal > 0 ? '+' : '') + racialVal + '</span></div>';
+        }
+        html += '<div class="tt-total"><span>Total</span><span>' + total + '</span></div>';
+        tooltip.innerHTML = html;
+        tooltip.classList.remove('hidden');
       });
+      totalEl.addEventListener('mouseleave', () => {
+        document.getElementById('stat-tooltip').classList.add('hidden');
+      });
+
+      if (editMode) {
+        card.querySelector('input').addEventListener('change', (e) => {
+          character.statsBase[key] = parseInt(e.target.value, 10) || 10;
+          recalcStats();
+          saveCharacter();
+          renderProfil();
+          renderCombat();
+          renderHeader();
+        });
+      }
+
       $grid.appendChild(card);
     }
 
@@ -358,6 +459,15 @@
   document.getElementById('btn-edit-mode').addEventListener('click', () => {
     editMode = !editMode;
     renderProfil();
+  });
+
+  // Tooltip position
+  document.addEventListener('mousemove', (e) => {
+    const tooltip = document.getElementById('stat-tooltip');
+    if (!tooltip.classList.contains('hidden')) {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 10) + 'px';
+    }
   });
 
   // --- Combat ---

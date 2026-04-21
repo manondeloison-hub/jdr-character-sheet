@@ -32,6 +32,10 @@ const DEFAULT_CHARACTER = {
     strength: 8, dexterity: 16, constitution: 12,
     intelligence: 16, wisdom: 13, charisma: 10,
   },
+  statsBase: {
+    strength: 8, dexterity: 14, constitution: 12,
+    intelligence: 15, wisdom: 13, charisma: 10,
+  },
   hp: { max: 14, current: 14 },
   armorClass: 13,
   speed: 9,
