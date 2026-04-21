@@ -71,6 +71,14 @@
     'dragonborn':            { strength: 2, charisma: 1 },
   };
 
+  const CURRENCIES = [
+    { key: 'pp', label: 'Platine',  hint: '1 pp = 10 po' },
+    { key: 'po', label: 'Or',       hint: '1 po = 10 pa' },
+    { key: 'pe', label: 'Électrum', hint: '1 pe = 5 pa'  },
+    { key: 'pa', label: 'Argent',   hint: '1 pa = 10 pc' },
+    { key: 'pc', label: 'Cuivre',   hint: ''             },
+  ];
+
   const EQUIP_SLOTS_LEFT = [
     { key: 'head1',  label: 'Tête',       icon: '🪖' },
     { key: 'head2',  label: 'Tête (acc.)', icon: '👓' },
@@ -824,14 +832,34 @@
       $portrait.classList.add('equip-portrait-placeholder');
     }
 
-    // Or
-    document.getElementById('gold-amount').textContent = character.gold || 0;
-    document.querySelectorAll('[data-gold]').forEach((btn) => {
-      btn.onclick = () => {
-        character.gold = Math.max(0, (character.gold || 0) + parseInt(btn.dataset.gold, 10));
-        saveCharacter();
-        document.getElementById('gold-amount').textContent = character.gold;
-      };
+    // Monnaie — migration depuis l'ancien champ gold
+    if (!character.currency) {
+      character.currency = { pp: 0, po: character.gold || 0, pe: 0, pa: 0, pc: 0 };
+    }
+
+    const $currency = document.getElementById('currency-display');
+    $currency.innerHTML = '';
+    CURRENCIES.forEach(({ key, label }) => {
+      const item = document.createElement('div');
+      item.className = 'currency-item currency-' + key;
+      item.innerHTML =
+        '<span class="currency-coin">' + key + '</span>' +
+        '<span class="currency-name">' + label + '</span>' +
+        '<div class="currency-controls">' +
+          '<button class="btn-currency" data-ckey="' + key + '" data-delta="-1">−</button>' +
+          '<span class="currency-value" id="val-' + key + '">' + (character.currency[key] || 0) + '</span>' +
+          '<button class="btn-currency" data-ckey="' + key + '" data-delta="1">+</button>' +
+        '</div>';
+      item.querySelectorAll('.btn-currency').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const k = btn.dataset.ckey;
+          const d = parseInt(btn.dataset.delta, 10);
+          character.currency[k] = Math.max(0, (character.currency[k] || 0) + d);
+          document.getElementById('val-' + k).textContent = character.currency[k];
+          saveCharacter();
+        });
+      });
+      $currency.appendChild(item);
     });
 
     // Autres objets

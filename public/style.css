@@ -975,67 +975,112 @@ main {
   padding: 0;
 }
 
-/* --- Equipment doll --- */
+/* ================================================
+   ÉQUIPEMENT — style Fantasy D&D
+   ================================================ */
+
 .equip-doll {
   display: grid;
-  grid-template-columns: 1fr 110px 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 1fr 160px 1fr;
+  gap: 0.6rem;
   align-items: start;
+  background:
+    radial-gradient(ellipse at center, rgba(30,20,50,0.6) 0%, rgba(8,6,18,0.95) 100%);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.6rem;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Coins décoratifs */
+.equip-doll::before,
+.equip-doll::after {
+  content: '✦';
+  position: absolute;
+  color: var(--gold-dim);
+  font-size: 0.65rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.equip-doll::before { top: 5px; left: 7px; }
+.equip-doll::after  { bottom: 5px; right: 7px; }
 
 .equip-col {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
+/* Slot — forme de carte rune */
 .equip-slot {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.15rem;
-  padding: 0.4rem 0.35rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: border-color 0.15s;
+  gap: 0.12rem;
+  padding: 0.4rem 0.3rem 0.35rem;
+  background: linear-gradient(160deg, rgba(12,10,28,0.95) 0%, rgba(18,14,38,0.95) 100%);
+  border: 1px solid rgba(176,149,46,0.35);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(244,197,66,0.06),
+    0 2px 4px rgba(0,0,0,0.4);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.equip-slot::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(244,197,66,0.05);
+  border-radius: 4px;
+  pointer-events: none;
 }
 
 .equip-slot:focus-within {
   border-color: var(--gold-dim);
+  box-shadow:
+    inset 0 1px 0 rgba(244,197,66,0.1),
+    0 0 10px rgba(244,197,66,0.12);
 }
 
-.equip-slot-icon { font-size: 1.1rem; line-height: 1; }
+.equip-slot-icon {
+  font-size: 1rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+}
 
 .equip-slot-label {
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-dim);
+  font-family: var(--font-title);
+  font-size: 0.5rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.05em;
 }
 
 .equip-slot-input {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(176,149,46,0.25);
   color: var(--text);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   text-align: center;
   padding: 0.1rem 0;
   outline: none;
 }
 
 .equip-slot-input:focus { border-bottom-color: var(--gold-dim); }
+.equip-slot-input::placeholder { color: rgba(138,138,154,0.4); }
 
 .equip-slot-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
-/* Portrait */
+/* Portrait central */
 .equip-portrait-wrap {
   display: flex;
   flex-direction: column;
@@ -1044,62 +1089,170 @@ main {
 }
 
 .equip-portrait-placeholder {
-  width: 100px;
-  height: 210px;
-  background: var(--bg-input);
-  border: 2px dashed var(--border);
+  width: 150px;
+  height: 300px;
+  background: radial-gradient(ellipse at 50% 30%,
+    rgba(30,20,55,0.9) 0%, rgba(8,6,18,0.98) 80%);
+  border: 2px solid var(--gold-dim);
   border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow:
+    0 0 25px rgba(244,197,66,0.12),
+    inset 0 0 30px rgba(0,0,0,0.6);
+  position: relative;
 }
 
-.portrait-icon { font-size: 3rem; opacity: 0.4; }
+.equip-portrait-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(244,197,66,0.12);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.portrait-icon {
+  font-size: 4rem;
+  opacity: 0.25;
+  filter: drop-shadow(0 2px 8px rgba(244,197,66,0.2));
+}
 
 .equip-portrait-img {
-  width: 100px;
-  height: 210px;
+  width: 150px;
+  height: 300px;
   object-fit: cover;
   border-radius: var(--radius);
-  border: 2px solid var(--border);
+  border: 2px solid var(--gold-dim);
+  box-shadow: 0 0 25px rgba(244,197,66,0.18);
   display: block;
 }
 
 .btn-portrait-toggle {
-  background: var(--bg-input);
-  border: 1px solid var(--border);
+  background: rgba(12,10,28,0.9);
+  border: 1px solid rgba(176,149,46,0.35);
   border-radius: var(--radius);
-  padding: 0.25rem 0.5rem;
-  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  color: var(--text-dim);
-  transition: border-color 0.15s;
+  color: var(--gold-dim);
+  transition: all 0.2s;
 }
 
-.btn-portrait-toggle:hover { border-color: var(--gold-dim); }
-
-.portrait-url-row {
-  width: 100%;
+.btn-portrait-toggle:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 8px rgba(244,197,66,0.2);
 }
+
+.portrait-url-row { width: 100%; }
 
 .portrait-url-row input {
   width: 100%;
   padding: 0.35rem 0.5rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
+  background: rgba(8,6,18,0.9);
+  border: 1px solid var(--gold-dim);
   border-radius: var(--radius);
   color: var(--text);
   font-size: 0.75rem;
 }
 
-/* --- Gold --- */
-.gold-section {
+/* ================================================
+   MONNAIE D&D
+   ================================================ */
+
+.currency-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.currency-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.25rem;
+  background: linear-gradient(160deg, rgba(12,10,28,0.95) 0%, rgba(18,14,38,0.95) 100%);
+  border: 1px solid rgba(176,149,46,0.3);
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+}
+
+.currency-item:hover { border-color: var(--gold-dim); }
+
+.currency-coin {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-weight: 700;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  border: 2px solid;
 }
 
+.currency-pp .currency-coin { color: #dde0f0; border-color: #9090c0; background: rgba(144,144,192,0.12); }
+.currency-po .currency-coin { color: var(--gold); border-color: var(--gold-dim); background: rgba(244,197,66,0.1); }
+.currency-pe .currency-coin { color: #b8d060; border-color: #88a040; background: rgba(136,160,64,0.1); }
+.currency-pa .currency-coin { color: #c8ccd8; border-color: #8890a8; background: rgba(136,144,168,0.1); }
+.currency-pc .currency-coin { color: #d08050; border-color: #a05828; background: rgba(160,88,40,0.1); }
+
+.currency-name {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  font-family: var(--font-title);
+}
+
+.currency-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-currency {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(176,149,46,0.3);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.btn-currency:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.currency-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 24px;
+  text-align: center;
+}
+
+.currency-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Legacy — kept for compatibility */
 .gold-big {
   font-size: 2rem;
   font-weight: 700;
