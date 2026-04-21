@@ -113,32 +113,47 @@ body {
 }
 
 /* --- Jets contre la mort --- */
-#death-saves-section {
+.death-saves-section {
+  margin: 0 1rem 0.75rem;
+  padding: 0.6rem 1rem;
   border: 1px solid var(--danger);
   border-radius: var(--radius);
   background: rgba(231, 76, 60, 0.06);
 }
 
-#death-saves-section h2 {
-  color: var(--danger);
-}
-
-.death-saves {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.death-row {
+.death-saves-inline {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.death-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.death-col-right {
+  align-items: flex-end;
+}
+
+.death-center {
+  text-align: center;
+  flex: 1;
+}
+
+.death-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--danger);
+  display: block;
 }
 
 .death-label {
-  font-size: 0.85rem;
-  width: 60px;
-  flex-shrink: 0;
+  font-size: 0.7rem;
 }
 
 .success-label { color: var(--success); }
@@ -146,12 +161,12 @@ body {
 
 .death-circles {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .death-circle {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 2px solid var(--border);
   cursor: pointer;
@@ -159,7 +174,7 @@ body {
   background: var(--bg-input);
 }
 
-.death-circle:hover { transform: scale(1.1); }
+.death-circle:hover { transform: scale(1.12); }
 
 .circle-success.filled { background: var(--success); border-color: var(--success); }
 .circle-failure.filled { background: var(--danger);  border-color: var(--danger); }
@@ -167,9 +182,10 @@ body {
 .circle-failure:not(.filled):hover { border-color: var(--danger); }
 
 .death-status {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
+  min-height: 1em;
 }
 
 .status-stable { color: var(--success); }
