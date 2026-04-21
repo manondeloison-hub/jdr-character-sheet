@@ -71,6 +71,21 @@
     'dragonborn':            { strength: 2, charisma: 1 },
   };
 
+  const EQUIP_SLOTS_LEFT = [
+    { key: 'head1',  label: 'Tête',       icon: '🪖' },
+    { key: 'head2',  label: 'Tête (acc.)', icon: '👓' },
+    { key: 'chest',  label: 'Buste',       icon: '🥋' },
+    { key: 'legs',   label: 'Jambes',      icon: '👖' },
+    { key: 'feet',   label: 'Pieds',       icon: '👢' },
+  ];
+
+  const EQUIP_SLOTS_RIGHT = [
+    { key: 'back',        label: 'Dos',        icon: '🧣' },
+    { key: 'neck',        label: 'Cou',        icon: '📿' },
+    { key: 'wristLeft',   label: 'Poignet G',  icon: '⌚', pairKey: 'wristRight',  pairLabel: 'Poignet D' },
+    { key: 'fingerLeft',  label: 'Doigt G',    icon: '💍', pairKey: 'fingerRight', pairLabel: 'Doigt D' },
+  ];
+
   const XP_THRESHOLDS = [
     0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
@@ -758,18 +773,68 @@
   }
 
   // --- Inventaire ---
-  function renderInventaire() {
-    document.getElementById('gold-amount').textContent = character.gold || 0;
+  function makeEquipSlot(key, label, icon) {
+    if (!character.equipmentSlots) character.equipmentSlots = {};
+    const div = document.createElement('div');
+    div.className = 'equip-slot';
+    const val = character.equipmentSlots[key] || '';
+    div.innerHTML =
+      '<span class="equip-slot-icon">' + icon + '</span>' +
+      '<span class="equip-slot-label">' + label + '</span>' +
+      '<input type="text" class="equip-slot-input" placeholder="—" value="' + val.replace(/"/g, '&quot;') + '">';
+    div.querySelector('input').addEventListener('change', (e) => {
+      if (!character.equipmentSlots) character.equipmentSlots = {};
+      character.equipmentSlots[key] = e.target.value;
+      saveCharacter();
+    });
+    return div;
+  }
 
+  function renderInventaire() {
+    if (!character.equipmentSlots) character.equipmentSlots = {};
+
+    // Slots colonne gauche
+    const $left = document.getElementById('equip-col-left');
+    $left.innerHTML = '';
+    EQUIP_SLOTS_LEFT.forEach(s => $left.appendChild(makeEquipSlot(s.key, s.label, s.icon)));
+
+    // Slots colonne droite (avec paires)
+    const $right = document.getElementById('equip-col-right');
+    $right.innerHTML = '';
+    EQUIP_SLOTS_RIGHT.forEach(s => {
+      if (s.pairKey) {
+        const pair = document.createElement('div');
+        pair.className = 'equip-slot-pair';
+        pair.appendChild(makeEquipSlot(s.key, s.label, s.icon));
+        pair.appendChild(makeEquipSlot(s.pairKey, s.pairLabel, s.icon));
+        $right.appendChild(pair);
+      } else {
+        $right.appendChild(makeEquipSlot(s.key, s.label, s.icon));
+      }
+    });
+
+    // Portrait
+    const $portrait = document.getElementById('equip-portrait-display');
+    const url = character.portrait || '';
+    if (url) {
+      $portrait.innerHTML = '<img src="' + url + '" alt="Portrait" class="equip-portrait-img">';
+      $portrait.classList.remove('equip-portrait-placeholder');
+    } else {
+      $portrait.innerHTML = '<span class="portrait-icon">👤</span>';
+      $portrait.classList.add('equip-portrait-placeholder');
+    }
+
+    // Or
+    document.getElementById('gold-amount').textContent = character.gold || 0;
     document.querySelectorAll('[data-gold]').forEach((btn) => {
       btn.onclick = () => {
-        const delta = parseInt(btn.dataset.gold, 10);
-        character.gold = Math.max(0, (character.gold || 0) + delta);
+        character.gold = Math.max(0, (character.gold || 0) + parseInt(btn.dataset.gold, 10));
         saveCharacter();
-        renderInventaire();
+        document.getElementById('gold-amount').textContent = character.gold;
       };
     });
 
+    // Autres objets
     const $equip = document.getElementById('equipment-list');
     $equip.innerHTML = '';
     (character.equipment || []).forEach((item, i) => {
@@ -794,6 +859,24 @@
       renderInventaire();
     };
   }
+
+  // Portrait URL toggle
+  document.getElementById('btn-portrait-toggle').addEventListener('click', () => {
+    const row = document.getElementById('portrait-url-row');
+    row.classList.toggle('hidden');
+    if (!row.classList.contains('hidden')) {
+      const input = document.getElementById('portrait-url-input');
+      input.value = character.portrait || '';
+      input.focus();
+    }
+  });
+
+  document.getElementById('portrait-url-input').addEventListener('change', (e) => {
+    character.portrait = e.target.value.trim();
+    saveCharacter();
+    renderInventaire();
+    document.getElementById('portrait-url-row').classList.add('hidden');
+  });
 
   // --- Level Up ---
   $btnLevelUp.addEventListener('click', startLevelUp);

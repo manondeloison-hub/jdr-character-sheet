@@ -54,10 +54,10 @@
     <!-- TABS NAV -->
     <nav id="tabs">
       <button class="tab active" data-tab="profil">Profil</button>
+      <button class="tab" data-tab="inventaire">Équipement</button>
       <button class="tab" data-tab="combat">Combat</button>
       <button class="tab" data-tab="sorts">Sorts</button>
       <button class="tab" data-tab="capacites">Capacités</button>
-      <button class="tab" data-tab="inventaire">Inventaire</button>
     </nav>
 
     <!-- TAB CONTENTS -->
@@ -290,13 +290,38 @@
         </div>
       </section>
 
-      <!-- INVENTAIRE -->
+      <!-- ÉQUIPEMENT -->
       <section id="tab-inventaire" class="tab-content hidden">
+
+        <div class="section-group">
+          <h2>Équipement porté</h2>
+          <div class="equip-doll">
+
+            <!-- Colonne gauche -->
+            <div class="equip-col" id="equip-col-left"></div>
+
+            <!-- Portrait central -->
+            <div class="equip-portrait-wrap">
+              <div id="equip-portrait-display" class="equip-portrait-placeholder">
+                <span class="portrait-icon">👤</span>
+              </div>
+              <div class="portrait-url-row hidden" id="portrait-url-row">
+                <input type="text" id="portrait-url-input" placeholder="URL de l'image…">
+              </div>
+              <button id="btn-portrait-toggle" class="btn-portrait-toggle" title="Changer l'image">🖼</button>
+            </div>
+
+            <!-- Colonne droite -->
+            <div class="equip-col" id="equip-col-right"></div>
+
+          </div>
+        </div>
+
         <div class="section-group">
           <h2>Or</h2>
           <div class="gold-section">
-            <button class="btn-hp" data-gold="-10">-10</button>
-            <button class="btn-hp" data-gold="-1">-1</button>
+            <button class="btn-hp" data-gold="-10">−10</button>
+            <button class="btn-hp" data-gold="-1">−1</button>
             <span id="gold-amount" class="gold-big">0</span>
             <button class="btn-hp" data-gold="1">+1</button>
             <button class="btn-hp" data-gold="10">+10</button>
@@ -304,13 +329,14 @@
         </div>
 
         <div class="section-group">
-          <h2>Équipement</h2>
+          <h2>Autres objets</h2>
           <div id="equipment-list" class="tag-list"></div>
           <div class="add-row">
             <input type="text" id="equip-input" placeholder="Nouvel objet...">
             <button id="btn-add-equip" class="btn-add">+</button>
           </div>
         </div>
+
       </section>
 
     </main>

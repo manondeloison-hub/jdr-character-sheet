@@ -975,6 +975,123 @@ main {
   padding: 0;
 }
 
+/* --- Equipment doll --- */
+.equip-doll {
+  display: grid;
+  grid-template-columns: 1fr 110px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.equip-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.equip-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.15rem;
+  padding: 0.4rem 0.35rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s;
+}
+
+.equip-slot:focus-within {
+  border-color: var(--gold-dim);
+}
+
+.equip-slot-icon { font-size: 1.1rem; line-height: 1; }
+
+.equip-slot-label {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.equip-slot-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.72rem;
+  text-align: center;
+  padding: 0.1rem 0;
+  outline: none;
+}
+
+.equip-slot-input:focus { border-bottom-color: var(--gold-dim); }
+
+.equip-slot-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+/* Portrait */
+.equip-portrait-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.equip-portrait-placeholder {
+  width: 100px;
+  height: 210px;
+  background: var(--bg-input);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portrait-icon { font-size: 3rem; opacity: 0.4; }
+
+.equip-portrait-img {
+  width: 100px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  display: block;
+}
+
+.btn-portrait-toggle {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition: border-color 0.15s;
+}
+
+.btn-portrait-toggle:hover { border-color: var(--gold-dim); }
+
+.portrait-url-row {
+  width: 100%;
+}
+
+.portrait-url-row input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
 /* --- Gold --- */
 .gold-section {
   display: flex;
