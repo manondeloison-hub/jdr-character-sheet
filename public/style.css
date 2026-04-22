@@ -1479,15 +1479,39 @@ main {
   gap: 0.1rem;
 }
 
+.consommable-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .consommable-name {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text);
 }
 
+.consommable-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.cat-soins            { color: #f06292; border-color: #f06292; background: rgba(240,98,146,0.1); }
+.cat-caracteristiques { color: #ffb74d; border-color: #ffb74d; background: rgba(255,183,77,0.1); }
+.cat-mobilite         { color: #66bb6a; border-color: #66bb6a; background: rgba(102,187,106,0.1); }
+.cat-transformation   { color: #ab47bc; border-color: #ab47bc; background: rgba(171,71,188,0.1); }
+.cat-autres           { color: #4db6ac; border-color: #4db6ac; background: rgba(77,182,172,0.1); }
+
 .consommable-desc {
   font-size: 0.75rem;
   color: var(--text-dim);
+  margin-top: 0.1rem;
 }
 
 .consommable-ctrl {

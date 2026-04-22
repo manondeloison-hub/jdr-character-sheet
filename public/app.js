@@ -906,13 +906,18 @@
         // Migration : anciens items stockés comme string
         const name = typeof item === 'string' ? item : item.name;
         const desc = typeof item === 'string' ? '' : (item.desc || '');
+        const cat  = typeof item === 'string' ? '' : (item.cat  || '');
         const qty  = typeof item === 'string' ? 1  : (item.qty  || 1);
+        const catSlug = cat.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-');
 
         const row = document.createElement('div');
         row.className = 'consommable-row';
         row.innerHTML =
           '<div class="consommable-info">' +
-            '<span class="consommable-name">' + name + '</span>' +
+            '<div class="consommable-header-row">' +
+              '<span class="consommable-name">' + name + '</span>' +
+              (cat ? '<span class="consommable-tag cat-' + catSlug + '">' + cat + '</span>' : '') +
+            '</div>' +
             (desc ? '<span class="consommable-desc">' + desc + '</span>' : '') +
           '</div>' +
           '<div class="consommable-ctrl">' +
@@ -1018,7 +1023,7 @@
       row.querySelector('.btn-potion-add').addEventListener('click', () => {
         const qty = parseInt(qtyEl.textContent, 10);
         if (!character.equipment) character.equipment = [];
-        character.equipment.push({ name: potion.name, desc: potion.desc, qty });
+        character.equipment.push({ name: potion.name, desc: potion.desc, cat: potion.cat, qty });
         saveCharacter();
         renderInventaire();
         document.getElementById('potion-modal').classList.add('hidden');
