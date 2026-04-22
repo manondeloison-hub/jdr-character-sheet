@@ -325,9 +325,17 @@
 
         <div class="section-group">
           <h2 id="consommables-header" class="section-collapsible">Consommables <span id="consommables-toggle">▼</span></h2>
-          <div id="equipment-list"></div>
-          <div class="add-row">
+          <div id="consommables-body">
+            <div id="equipment-list"></div>
             <button id="btn-add-equip" class="btn-add-potion">+ Ajouter un consommable</button>
+          </div>
+        </div>
+
+        <div class="section-group">
+          <h2 id="quetes-header" class="section-collapsible">Objets de quête <span id="quetes-toggle">▼</span></h2>
+          <div id="quetes-body">
+            <div id="quest-list"></div>
+            <button id="btn-add-quest" class="btn-add-potion">+ Ajouter un objet de quête</button>
           </div>
         </div>
 
@@ -337,6 +345,31 @@
 
     <!-- STAT TOOLTIP -->
     <div id="stat-tooltip" class="stat-tooltip hidden"></div>
+
+    <!-- QUEST ITEM ADD MODAL -->
+    <div id="quest-add-modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h2>Ajouter un objet de quête</h2>
+        <div class="quest-form">
+          <label>Nom de l'objet</label>
+          <input type="text" id="quest-name-input" placeholder="Ex : Épée brisée du roi…">
+          <label>Description</label>
+          <textarea id="quest-desc-input" rows="4" placeholder="Description, histoire, utilité…"></textarea>
+          <button id="btn-quest-confirm" class="btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUEST ITEM DETAIL MODAL -->
+    <div id="quest-detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <h2 id="quest-detail-name"></h2>
+        <p id="quest-detail-desc" class="quest-detail-desc"></p>
+        <button id="btn-quest-delete" class="btn-quest-delete">Supprimer</button>
+      </div>
+    </div>
 
     <!-- POTION PICKER MODAL -->
     <div id="potion-modal" class="modal hidden">

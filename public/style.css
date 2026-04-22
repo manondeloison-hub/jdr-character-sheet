@@ -1719,6 +1719,95 @@ main {
   padding: 1rem 0;
 }
 
+/* --- Objets de quête --- */
+.quest-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.quest-row:hover {
+  border-color: var(--gold-dim);
+  background: rgba(244,197,66,0.05);
+}
+
+.quest-name {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.quest-has-desc {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* Quest form */
+.quest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quest-form label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+}
+
+.quest-form input,
+.quest-form textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  resize: vertical;
+}
+
+.quest-form input:focus,
+.quest-form textarea:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+.quest-form .btn-primary { margin-top: 0.5rem; }
+
+/* Quest detail */
+.quest-detail-desc {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.btn-quest-delete {
+  padding: 0.4rem 0.85rem;
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  color: var(--danger);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-quest-delete:hover {
+  background: rgba(231,76,60,0.12);
+}
+
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

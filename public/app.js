@@ -137,6 +137,7 @@
   let saveTimeout = null;
   let editMode = false;
   let consumablesCollapsed = false;
+  let questCollapsed = false;
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -898,10 +899,10 @@
     // Consommables
     const $equip = document.getElementById('equipment-list');
     $equip.innerHTML = '';
-    const collapsed = consumablesCollapsed;
-    document.getElementById('consommables-toggle').textContent = collapsed ? '▶' : '▼';
+    document.getElementById('consommables-toggle').textContent = consumablesCollapsed ? '▶' : '▼';
+    document.getElementById('consommables-body').classList.toggle('hidden', consumablesCollapsed);
 
-    if (!collapsed) {
+    if (!consumablesCollapsed) {
       (character.equipment || []).forEach((item, i) => {
         // Migration : anciens items stockés comme string
         const name = typeof item === 'string' ? item : item.name;
@@ -951,6 +952,26 @@
     }
 
     document.getElementById('btn-add-equip').onclick = () => openPotionModal();
+
+    // Objets de quête
+    if (!character.questItems) character.questItems = [];
+    const $quest = document.getElementById('quest-list');
+    $quest.innerHTML = '';
+    document.getElementById('quetes-toggle').textContent = questCollapsed ? '▶' : '▼';
+    document.getElementById('quetes-body').classList.toggle('hidden', questCollapsed);
+
+    if (!questCollapsed) {
+      character.questItems.forEach((item, i) => {
+        const row = document.createElement('div');
+        row.className = 'quest-row';
+        row.innerHTML = '<span class="quest-name">' + item.name + '</span>';
+        if (item.desc) row.innerHTML += '<span class="quest-has-desc" title="A une description">📖</span>';
+        row.addEventListener('click', () => openQuestDetail(i));
+        $quest.appendChild(row);
+      });
+    }
+
+    document.getElementById('btn-add-quest').onclick = () => openQuestAddModal();
   }
 
   // --- Potion Modal ---
@@ -1039,6 +1060,43 @@
     consumablesCollapsed = !consumablesCollapsed;
     renderInventaire();
   });
+
+  document.getElementById('quetes-header').addEventListener('click', () => {
+    questCollapsed = !questCollapsed;
+    renderInventaire();
+  });
+
+  // --- Quest modals ---
+  function openQuestAddModal() {
+    document.getElementById('quest-name-input').value = '';
+    document.getElementById('quest-desc-input').value = '';
+    document.getElementById('quest-add-modal').classList.remove('hidden');
+    document.getElementById('quest-name-input').focus();
+  }
+
+  document.getElementById('btn-quest-confirm').addEventListener('click', () => {
+    const name = document.getElementById('quest-name-input').value.trim();
+    if (!name) return;
+    const desc = document.getElementById('quest-desc-input').value.trim();
+    if (!character.questItems) character.questItems = [];
+    character.questItems.push({ name, desc });
+    saveCharacter();
+    renderInventaire();
+    document.getElementById('quest-add-modal').classList.add('hidden');
+  });
+
+  function openQuestDetail(i) {
+    const item = character.questItems[i];
+    document.getElementById('quest-detail-name').textContent = item.name;
+    document.getElementById('quest-detail-desc').textContent = item.desc || 'Aucune description.';
+    document.getElementById('btn-quest-delete').onclick = () => {
+      character.questItems.splice(i, 1);
+      saveCharacter();
+      renderInventaire();
+      document.getElementById('quest-detail-modal').classList.add('hidden');
+    };
+    document.getElementById('quest-detail-modal').classList.remove('hidden');
+  }
 
   // Portrait URL toggle
   document.getElementById('btn-portrait-toggle').addEventListener('click', () => {
