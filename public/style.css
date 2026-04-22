@@ -1168,6 +1168,12 @@ main {
   gap: 0.5rem;
 }
 
+@media (max-width: 480px) {
+  .currency-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .currency-item {
   display: flex;
   flex-direction: column;
