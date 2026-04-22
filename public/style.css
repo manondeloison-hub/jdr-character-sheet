@@ -1444,6 +1444,165 @@ main {
   .tab { font-size: 0.7rem; padding: 0.6rem 0.3rem; }
 }
 
+/* --- Potion picker --- */
+.btn-add-potion {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: rgba(244,197,66,0.1);
+  border: 1px dashed rgba(176,149,46,0.4);
+  border-radius: var(--radius);
+  color: var(--gold-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.btn-add-potion:hover {
+  background: rgba(244,197,66,0.18);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.potion-search-row {
+  margin-bottom: 0.75rem;
+}
+
+.potion-search-row input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.potion-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.potion-filter-btn {
+  padding: 0.3rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.potion-filter-btn:hover { border-color: var(--gold-dim); color: var(--gold-dim); }
+
+.potion-filter-btn.active {
+  background: rgba(244,197,66,0.15);
+  border-color: var(--gold-dim);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.potion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.potion-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s;
+}
+
+.potion-row:hover { border-color: var(--gold-dim); }
+
+.potion-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.potion-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.potion-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.potion-add-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.btn-qty-p {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(176,149,46,0.35);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.btn-qty-p:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.potion-qty {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 0.85rem;
+}
+
+.btn-potion-add {
+  padding: 0.3rem 0.65rem;
+  background: rgba(244,197,66,0.12);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-potion-add:hover {
+  background: rgba(244,197,66,0.25);
+  border-color: var(--gold);
+}
+
+.potion-empty {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 1rem 0;
+}
+
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

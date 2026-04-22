@@ -99,6 +99,38 @@
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
   ];
 
+  const POTIONS = [
+    { name: 'Potion de soins',              cat: 'Soins',           desc: '2d4+2 PV' },
+    { name: 'Potion de soins supérieure',   cat: 'Soins',           desc: '4d4+4 PV' },
+    { name: 'Potion de soins excellente',   cat: 'Soins',           desc: '8d4+8 PV' },
+    { name: 'Potion de soins suprême',      cat: 'Soins',           desc: '10d4+20 PV' },
+    { name: 'Élixir de santé',              cat: 'Soins',           desc: 'Supprime maladies et états' },
+    { name: 'Potion de résistance',         cat: 'Soins',           desc: 'Résistance à un type de dégâts pendant 1h' },
+    { name: 'Potion de vaillance',          cat: 'Soins',           desc: 'Immunité à la peur, 5 PV temp. pendant 1h' },
+    { name: 'Potion de force de géant des collines',  cat: 'Caractéristiques', desc: 'FOR 21 pendant 1h' },
+    { name: 'Potion de force de géant de pierre',     cat: 'Caractéristiques', desc: 'FOR 23 pendant 1h' },
+    { name: 'Potion de force de géant de givre',      cat: 'Caractéristiques', desc: 'FOR 29 pendant 1h' },
+    { name: 'Potion de force de géant du feu',        cat: 'Caractéristiques', desc: 'FOR 25 pendant 1h' },
+    { name: 'Potion de force de géant des nuages',    cat: 'Caractéristiques', desc: 'FOR 27 pendant 1h' },
+    { name: 'Potion de force de géant des tempêtes',  cat: 'Caractéristiques', desc: 'FOR 29 pendant 1h' },
+    { name: 'Potion d\'invulnérabilité',    cat: 'Caractéristiques', desc: 'Résistance à tous les dégâts pendant 1 min' },
+    { name: 'Potion de vitesse',            cat: 'Mobilité',        desc: 'Effet Hâte pendant 1 min' },
+    { name: 'Potion de vol',                cat: 'Mobilité',        desc: 'Vitesse de vol 60 ft pendant 1h' },
+    { name: 'Potion d\'escalade',           cat: 'Mobilité',        desc: 'Vitesse d\'escalade égale à la vitesse pendant 1h' },
+    { name: 'Potion de respiration aquatique', cat: 'Mobilité',     desc: 'Respirer sous l\'eau pendant 1h' },
+    { name: 'Huile glissante',              cat: 'Mobilité',        desc: 'Surface ou créature glissante' },
+    { name: 'Potion de forme gazeuse',      cat: 'Transformation',  desc: 'Forme gazeuse pendant 1h' },
+    { name: 'Potion de rétrécissement',     cat: 'Transformation',  desc: 'Taille réduite de moitié pendant 1d4h' },
+    { name: 'Potion d\'agrandissement',     cat: 'Transformation',  desc: 'Taille doublée pendant 1d4h' },
+    { name: 'Potion de métamorphose animale', cat: 'Transformation', desc: 'Se transformer en animal CR ≤ 1 pendant 1h' },
+    { name: 'Potion d\'invisibilité',       cat: 'Autres',          desc: 'Invisible jusqu\'à attaque ou sort' },
+    { name: 'Potion de lecture des pensées',cat: 'Autres',          desc: 'Détection des pensées pendant 1h' },
+    { name: 'Philtre d\'amour',             cat: 'Autres',          desc: 'Charme une créature pendant 1h' },
+    { name: 'Huile éthérée',               cat: 'Autres',          desc: 'Plan éthéré pendant 1h' },
+  ];
+
+  const POTION_CATS = ['Toutes', 'Soins', 'Caractéristiques', 'Mobilité', 'Transformation', 'Autres'];
+
   // --- State ---
   let character = null;
   let spellsCache = null;
@@ -877,16 +909,91 @@
       $equip.appendChild(tag);
     });
 
-    document.getElementById('btn-add-equip').onclick = () => {
-      const input = document.getElementById('equip-input');
-      if (!input.value.trim()) return;
-      if (!character.equipment) character.equipment = [];
-      character.equipment.push(input.value.trim());
-      input.value = '';
-      saveCharacter();
-      renderInventaire();
-    };
+    document.getElementById('btn-add-equip').onclick = () => openPotionModal();
   }
+
+  // --- Potion Modal ---
+  let potionCatFilter = 'Toutes';
+
+  function openPotionModal() {
+    potionCatFilter = 'Toutes';
+    document.getElementById('potion-search').value = '';
+    renderPotionFilters();
+    renderPotionList();
+    document.getElementById('potion-modal').classList.remove('hidden');
+  }
+
+  function renderPotionFilters() {
+    const $f = document.getElementById('potion-filters');
+    $f.innerHTML = '';
+    POTION_CATS.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'potion-filter-btn' + (cat === potionCatFilter ? ' active' : '');
+      btn.textContent = cat;
+      btn.addEventListener('click', () => {
+        potionCatFilter = cat;
+        renderPotionFilters();
+        renderPotionList();
+      });
+      $f.appendChild(btn);
+    });
+  }
+
+  function renderPotionList() {
+    const $list = document.getElementById('potion-list');
+    const search = document.getElementById('potion-search').value.toLowerCase();
+    $list.innerHTML = '';
+
+    const filtered = POTIONS.filter(p => {
+      const matchCat = potionCatFilter === 'Toutes' || p.cat === potionCatFilter;
+      const matchSearch = !search || p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      $list.innerHTML = '<p class="potion-empty">Aucune potion trouvée.</p>';
+      return;
+    }
+
+    filtered.forEach(potion => {
+      const row = document.createElement('div');
+      row.className = 'potion-row';
+      row.innerHTML =
+        '<div class="potion-info">' +
+          '<span class="potion-name">' + potion.name + '</span>' +
+          '<span class="potion-desc">' + potion.desc + '</span>' +
+        '</div>' +
+        '<div class="potion-add-ctrl">' +
+          '<button class="btn-qty-p" data-d="-1">−</button>' +
+          '<span class="potion-qty">1</span>' +
+          '<button class="btn-qty-p" data-d="1">+</button>' +
+          '<button class="btn-potion-add">Ajouter</button>' +
+        '</div>';
+
+      const qtyEl = row.querySelector('.potion-qty');
+      row.querySelectorAll('.btn-qty-p').forEach(btn => {
+        btn.addEventListener('click', () => {
+          let q = parseInt(qtyEl.textContent, 10) + parseInt(btn.dataset.d, 10);
+          if (q < 1) q = 1;
+          qtyEl.textContent = q;
+        });
+      });
+
+      row.querySelector('.btn-potion-add').addEventListener('click', () => {
+        const qty = parseInt(qtyEl.textContent, 10);
+        if (!character.equipment) character.equipment = [];
+        const entry = qty > 1 ? potion.name + ' ×' + qty : potion.name;
+        character.equipment.push(entry);
+        saveCharacter();
+        renderInventaire();
+        document.getElementById('potion-modal').classList.add('hidden');
+      });
+
+      $list.appendChild(row);
+    });
+  }
+
+  document.getElementById('potion-search').addEventListener('input', renderPotionList);
 
   // Portrait URL toggle
   document.getElementById('btn-portrait-toggle').addEventListener('click', () => {

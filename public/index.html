@@ -327,8 +327,7 @@
           <h2>Consommables</h2>
           <div id="equipment-list" class="tag-list"></div>
           <div class="add-row">
-            <input type="text" id="equip-input" placeholder="Nouvelle potion...">
-            <button id="btn-add-equip" class="btn-add">+</button>
+            <button id="btn-add-equip" class="btn-add-potion">+ Ajouter une potion</button>
           </div>
         </div>
 
@@ -338,6 +337,19 @@
 
     <!-- STAT TOOLTIP -->
     <div id="stat-tooltip" class="stat-tooltip hidden"></div>
+
+    <!-- POTION PICKER MODAL -->
+    <div id="potion-modal" class="modal hidden">
+      <div class="modal-content modal-large">
+        <button class="modal-close">&times;</button>
+        <h2>Ajouter une potion</h2>
+        <div class="potion-search-row">
+          <input type="text" id="potion-search" placeholder="Rechercher...">
+        </div>
+        <div class="potion-filters" id="potion-filters"></div>
+        <div id="potion-list" class="potion-list"></div>
+      </div>
+    </div>
 
     <!-- SPELL DETAIL MODAL -->
     <div id="spell-modal" class="modal hidden">
