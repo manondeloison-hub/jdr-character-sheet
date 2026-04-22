@@ -1086,16 +1086,46 @@
   });
 
   function openQuestDetail(i) {
+    showQuestViewMode(i);
+    document.getElementById('quest-detail-modal').classList.remove('hidden');
+  }
+
+  function showQuestViewMode(i) {
     const item = character.questItems[i];
+    document.getElementById('quest-view-mode').classList.remove('hidden');
+    document.getElementById('quest-edit-mode').classList.add('hidden');
     document.getElementById('quest-detail-name').textContent = item.name;
     document.getElementById('quest-detail-desc').textContent = item.desc || 'Aucune description.';
+
+    document.getElementById('btn-quest-edit').onclick = () => showQuestEditMode(i);
+
     document.getElementById('btn-quest-delete').onclick = () => {
       character.questItems.splice(i, 1);
       saveCharacter();
       renderInventaire();
       document.getElementById('quest-detail-modal').classList.add('hidden');
     };
-    document.getElementById('quest-detail-modal').classList.remove('hidden');
+  }
+
+  function showQuestEditMode(i) {
+    const item = character.questItems[i];
+    document.getElementById('quest-view-mode').classList.add('hidden');
+    document.getElementById('quest-edit-mode').classList.remove('hidden');
+    document.getElementById('quest-edit-name').value = item.name;
+    document.getElementById('quest-edit-desc').value = item.desc || '';
+    document.getElementById('quest-edit-name').focus();
+
+    document.getElementById('btn-quest-save').onclick = () => {
+      const newName = document.getElementById('quest-edit-name').value.trim();
+      if (!newName) return;
+      character.questItems[i].name = newName;
+      character.questItems[i].desc = document.getElementById('quest-edit-desc').value.trim();
+      saveCharacter();
+      renderInventaire();
+      showQuestViewMode(i);
+    };
+
+    document.getElementById('btn-quest-cancel').onclick = () => showQuestViewMode(i);
   }
 
   // Portrait URL toggle

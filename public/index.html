@@ -365,9 +365,32 @@
     <div id="quest-detail-modal" class="modal hidden">
       <div class="modal-content">
         <button class="modal-close">&times;</button>
-        <h2 id="quest-detail-name"></h2>
-        <p id="quest-detail-desc" class="quest-detail-desc"></p>
-        <button id="btn-quest-delete" class="btn-quest-delete">Supprimer</button>
+
+        <!-- Mode lecture -->
+        <div id="quest-view-mode">
+          <h2 id="quest-detail-name"></h2>
+          <p id="quest-detail-desc" class="quest-detail-desc"></p>
+          <div class="quest-detail-actions">
+            <button id="btn-quest-edit" class="btn-secondary">✏️ Modifier</button>
+            <button id="btn-quest-delete" class="btn-quest-delete">Supprimer</button>
+          </div>
+        </div>
+
+        <!-- Mode édition -->
+        <div id="quest-edit-mode" class="hidden">
+          <h2>Modifier l'objet</h2>
+          <div class="quest-form">
+            <label>Nom de l'objet</label>
+            <input type="text" id="quest-edit-name">
+            <label>Description</label>
+            <textarea id="quest-edit-desc" rows="4"></textarea>
+            <div class="quest-edit-btns">
+              <button id="btn-quest-save" class="btn-primary">Enregistrer</button>
+              <button id="btn-quest-cancel" class="btn-secondary">Annuler</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
