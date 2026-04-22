@@ -1444,6 +1444,98 @@ main {
   .tab { font-size: 0.7rem; padding: 0.6rem 0.3rem; }
 }
 
+/* --- Section collapsible --- */
+.section-collapsible {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-collapsible span {
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+}
+
+.section-collapsible:hover { color: var(--gold); }
+
+/* --- Consommable rows --- */
+.consommable-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+}
+
+.consommable-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.consommable-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.consommable-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.consommable-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.consommable-qty {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 0.85rem;
+}
+
+.btn-qty-c {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(176,149,46,0.35);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.btn-qty-c:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.btn-remove-c {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.25rem;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.btn-remove-c:hover { color: var(--danger); }
+
 /* --- Potion picker --- */
 .btn-add-potion {
   width: 100%;

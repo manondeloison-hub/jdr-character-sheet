@@ -136,6 +136,7 @@
   let spellsCache = null;
   let saveTimeout = null;
   let editMode = false;
+  let consumablesCollapsed = false;
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -894,20 +895,55 @@
       $currency.appendChild(item);
     });
 
-    // Autres objets
+    // Consommables
     const $equip = document.getElementById('equipment-list');
     $equip.innerHTML = '';
-    (character.equipment || []).forEach((item, i) => {
-      const tag = document.createElement('span');
-      tag.className = 'tag';
-      tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
-      tag.querySelector('.btn-remove').addEventListener('click', () => {
-        character.equipment.splice(i, 1);
-        saveCharacter();
-        renderInventaire();
+    const collapsed = consumablesCollapsed;
+    document.getElementById('consommables-toggle').textContent = collapsed ? '▶' : '▼';
+
+    if (!collapsed) {
+      (character.equipment || []).forEach((item, i) => {
+        // Migration : anciens items stockés comme string
+        const name = typeof item === 'string' ? item : item.name;
+        const desc = typeof item === 'string' ? '' : (item.desc || '');
+        const qty  = typeof item === 'string' ? 1  : (item.qty  || 1);
+
+        const row = document.createElement('div');
+        row.className = 'consommable-row';
+        row.innerHTML =
+          '<div class="consommable-info">' +
+            '<span class="consommable-name">' + name + '</span>' +
+            (desc ? '<span class="consommable-desc">' + desc + '</span>' : '') +
+          '</div>' +
+          '<div class="consommable-ctrl">' +
+            '<button class="btn-qty-c" data-i="' + i + '" data-d="-1">−</button>' +
+            '<span class="consommable-qty">' + qty + '</span>' +
+            '<button class="btn-qty-c" data-i="' + i + '" data-d="1">+</button>' +
+            '<button class="btn-remove-c" data-i="' + i + '">✕</button>' +
+          '</div>';
+
+        row.querySelectorAll('.btn-qty-c').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.i, 10);
+            const it = character.equipment[idx];
+            const newQty = ((typeof it === 'string' ? 1 : it.qty) || 1) + parseInt(btn.dataset.d, 10);
+            if (newQty < 1) return;
+            if (typeof it === 'string') character.equipment[idx] = { name: it, desc: '', qty: newQty };
+            else it.qty = newQty;
+            saveCharacter();
+            renderInventaire();
+          });
+        });
+
+        row.querySelector('.btn-remove-c').addEventListener('click', () => {
+          character.equipment.splice(i, 1);
+          saveCharacter();
+          renderInventaire();
+        });
+
+        $equip.appendChild(row);
       });
-      $equip.appendChild(tag);
-    });
+    }
 
     document.getElementById('btn-add-equip').onclick = () => openPotionModal();
   }
@@ -982,8 +1018,7 @@
       row.querySelector('.btn-potion-add').addEventListener('click', () => {
         const qty = parseInt(qtyEl.textContent, 10);
         if (!character.equipment) character.equipment = [];
-        const entry = qty > 1 ? potion.name + ' ×' + qty : potion.name;
-        character.equipment.push(entry);
+        character.equipment.push({ name: potion.name, desc: potion.desc, qty });
         saveCharacter();
         renderInventaire();
         document.getElementById('potion-modal').classList.add('hidden');
@@ -994,6 +1029,11 @@
   }
 
   document.getElementById('potion-search').addEventListener('input', renderPotionList);
+
+  document.getElementById('consommables-header').addEventListener('click', () => {
+    consumablesCollapsed = !consumablesCollapsed;
+    renderInventaire();
+  });
 
   // Portrait URL toggle
   document.getElementById('btn-portrait-toggle').addEventListener('click', () => {
