@@ -324,6 +324,14 @@
         </div>
 
         <div class="section-group">
+          <h2 id="weapons-inv-header" class="section-collapsible">Armes <span id="weapons-inv-toggle">▼</span></h2>
+          <div id="weapons-inv-body">
+            <div id="weapons-inv-list"></div>
+            <button id="btn-add-weapon-inv" class="btn-add-potion">+ Ajouter une arme</button>
+          </div>
+        </div>
+
+        <div class="section-group">
           <h2 id="consommables-header" class="section-collapsible">Consommables <span id="consommables-toggle">▼</span></h2>
           <div id="consommables-body">
             <div id="equipment-list"></div>
@@ -391,6 +399,80 @@
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- WEAPON ADD/EDIT MODAL -->
+    <div id="weapon-inv-modal" class="modal hidden">
+      <div class="modal-content modal-large weapon-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2 id="weapon-modal-title">Ajouter une arme</h2>
+
+        <div class="wm-section">
+          <label class="wm-label">Nom de l'arme</label>
+          <input type="text" id="wm-name" placeholder="Ex : Épée des cendres…">
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Type d'arme</label>
+          <input type="text" id="wm-type-search" placeholder="Rechercher un type…">
+          <div class="wm-type-filters" id="wm-type-filters"></div>
+          <div class="wm-type-list" id="wm-type-list"></div>
+          <div id="wm-type-selected" class="wm-selected-badge hidden"></div>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Bonus d'attaque et de dégâts</label>
+          <select id="wm-atk-bonus" class="wm-select">
+            <option value="">Aucun</option>
+            <option value="+1">+1</option>
+            <option value="+2">+2</option>
+            <option value="+3">+3</option>
+            <option value="+4">+4</option>
+            <option value="+5">+5</option>
+          </select>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Dégâts bonus</label>
+          <div id="wm-dmg-rows"></div>
+          <button id="btn-wm-add-dmg" class="wm-add-row-btn">+ Ajouter des dégâts</button>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Sorts associés</label>
+          <input type="text" id="wm-spell-search" placeholder="Rechercher un sort…">
+          <div id="wm-spell-results" class="wm-spell-results"></div>
+          <div id="wm-spell-selected" class="wm-spell-selected"></div>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Description</label>
+          <textarea id="wm-desc" rows="3" placeholder="Histoire, propriétés spéciales…"></textarea>
+        </div>
+
+        <div class="wm-actions">
+          <button id="btn-wm-confirm" class="btn-primary">Ajouter</button>
+          <button id="btn-wm-cancel" class="btn-secondary">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEAPON DETAIL MODAL -->
+    <div id="weapon-inv-detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div id="weapon-detail-view">
+          <h2 id="wd-name"></h2>
+          <div id="wd-meta" class="wd-meta"></div>
+          <div id="wd-dmg" class="wd-dmg"></div>
+          <div id="wd-spells" class="wd-spells"></div>
+          <p id="wd-desc" class="wd-desc"></p>
+          <div class="quest-detail-actions">
+            <button id="btn-wd-edit" class="btn-secondary">✏️ Modifier</button>
+            <button id="btn-wd-delete" class="btn-quest-delete">Supprimer</button>
+          </div>
+        </div>
       </div>
     </div>
 

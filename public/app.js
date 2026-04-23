@@ -99,6 +99,51 @@
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
   ];
 
+  const WEAPON_TYPES = [
+    { name: 'Bâton',             cat: 'Corps à corps courante' },
+    { name: 'Dague',             cat: 'Corps à corps courante' },
+    { name: 'Faucille',          cat: 'Corps à corps courante' },
+    { name: 'Gourdin',           cat: 'Corps à corps courante' },
+    { name: 'Hachette',          cat: 'Corps à corps courante' },
+    { name: 'Javeline',          cat: 'Corps à corps courante' },
+    { name: 'Lance',             cat: 'Corps à corps courante' },
+    { name: 'Marteau léger',     cat: 'Corps à corps courante' },
+    { name: 'Masse d\'armes',    cat: 'Corps à corps courante' },
+    { name: 'Serpe',             cat: 'Corps à corps courante' },
+    { name: 'Arbalète légère',   cat: 'Distance courante' },
+    { name: 'Arc court',         cat: 'Distance courante' },
+    { name: 'Fronde',            cat: 'Distance courante' },
+    { name: 'Dard',              cat: 'Distance courante' },
+    { name: 'Cimeterre',         cat: 'Corps à corps de guerre' },
+    { name: 'Épée courte',       cat: 'Corps à corps de guerre' },
+    { name: 'Épée longue',       cat: 'Corps à corps de guerre' },
+    { name: 'Épée à deux mains', cat: 'Corps à corps de guerre' },
+    { name: 'Fléau',             cat: 'Corps à corps de guerre' },
+    { name: 'Fouet',             cat: 'Corps à corps de guerre' },
+    { name: 'Grande hache',      cat: 'Corps à corps de guerre' },
+    { name: 'Hache d\'armes',    cat: 'Corps à corps de guerre' },
+    { name: 'Hallebarde',        cat: 'Corps à corps de guerre' },
+    { name: 'Lance d\'arçon',    cat: 'Corps à corps de guerre' },
+    { name: 'Maillet',           cat: 'Corps à corps de guerre' },
+    { name: 'Marteau de guerre', cat: 'Corps à corps de guerre' },
+    { name: 'Morgenstern',       cat: 'Corps à corps de guerre' },
+    { name: 'Pic de guerre',     cat: 'Corps à corps de guerre' },
+    { name: 'Rapière',           cat: 'Corps à corps de guerre' },
+    { name: 'Trident',           cat: 'Corps à corps de guerre' },
+    { name: 'Coutille',          cat: 'Corps à corps de guerre' },
+    { name: 'Arbalète à main',   cat: 'Distance de guerre' },
+    { name: 'Arbalète lourde',   cat: 'Distance de guerre' },
+    { name: 'Arc long',          cat: 'Distance de guerre' },
+    { name: 'Filet',             cat: 'Distance de guerre' },
+    { name: 'Sarbacane',         cat: 'Distance de guerre' },
+  ];
+
+  const WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
+
+  const DAMAGE_TYPES = ['Acide', 'Contondant', 'Éclair', 'Feu', 'Force', 'Froid', 'Nécrotique', 'Perforant', 'Poison', 'Psychique', 'Radiant', 'Tonnerre', 'Tranchant'];
+
+  const RECOVERY_OPTIONS = ['Repos long', 'Repos court', 'Chaque aube', 'À volonté'];
+
   const POTIONS = [
     { name: 'Potion de soins',              cat: 'Soins',           desc: '2d4+2 PV' },
     { name: 'Potion de soins supérieure',   cat: 'Soins',           desc: '4d4+4 PV' },
@@ -138,6 +183,10 @@
   let editMode = false;
   let consumablesCollapsed = false;
   let questCollapsed = false;
+  let weaponsInvCollapsed = false;
+  let weaponTypeCatFilter = 'Tous';
+  let allSpellsCache = null;
+  let weaponEditIndex = null;
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -896,6 +945,28 @@
       $currency.appendChild(item);
     });
 
+    // Armes inventaire
+    if (!character.inventoryWeapons) character.inventoryWeapons = [];
+    const $wlist = document.getElementById('weapons-inv-list');
+    $wlist.innerHTML = '';
+    document.getElementById('weapons-inv-toggle').textContent = weaponsInvCollapsed ? '▶' : '▼';
+    document.getElementById('weapons-inv-body').classList.toggle('hidden', weaponsInvCollapsed);
+    if (!weaponsInvCollapsed) {
+      character.inventoryWeapons.forEach((w, i) => {
+        const row = document.createElement('div');
+        row.className = 'weapon-inv-row';
+        const bonus = w.atkBonus ? '<span class="weapon-inv-bonus">' + w.atkBonus + '</span>' : '';
+        const type  = w.type    ? '<span class="weapon-inv-type">'  + w.type    + '</span>' : '';
+        row.innerHTML =
+          '<span class="weapon-inv-name">' + w.name + '</span>' +
+          type + bonus +
+          (w.spells && w.spells.length ? '<span class="weapon-inv-spells-badge">✨ ' + w.spells.length + '</span>' : '');
+        row.addEventListener('click', () => openWeaponDetail(i));
+        $wlist.appendChild(row);
+      });
+    }
+    document.getElementById('btn-add-weapon-inv').onclick = () => openWeaponModal(null);
+
     // Consommables
     const $equip = document.getElementById('equipment-list');
     $equip.innerHTML = '';
@@ -1055,6 +1126,269 @@
   }
 
   document.getElementById('potion-search').addEventListener('input', renderPotionList);
+
+  document.getElementById('weapons-inv-header').addEventListener('click', () => {
+    weaponsInvCollapsed = !weaponsInvCollapsed;
+    renderInventaire();
+  });
+
+  // --- Weapon modal ---
+  async function fetchAllSpells() {
+    if (allSpellsCache) return allSpellsCache;
+    const res = await apiFetch('/api/spells');
+    if (res.ok) allSpellsCache = await res.json();
+    return allSpellsCache || [];
+  }
+
+  function openWeaponModal(editIdx) {
+    weaponEditIndex = editIdx;
+    const modal = document.getElementById('weapon-inv-modal');
+    const w = editIdx !== null ? character.inventoryWeapons[editIdx] : null;
+
+    document.getElementById('weapon-modal-title').textContent = w ? 'Modifier l\'arme' : 'Ajouter une arme';
+    document.getElementById('btn-wm-confirm').textContent = w ? 'Enregistrer' : 'Ajouter';
+    document.getElementById('wm-name').value = w ? w.name : '';
+    document.getElementById('wm-atk-bonus').value = w ? (w.atkBonus || '') : '';
+    document.getElementById('wm-desc').value = w ? (w.desc || '') : '';
+    document.getElementById('wm-type-search').value = '';
+    weaponTypeCatFilter = 'Tous';
+
+    // Type sélectionné
+    const selType = w ? (w.type || '') : '';
+    const $sel = document.getElementById('wm-type-selected');
+    if (selType) { $sel.textContent = selType; $sel.classList.remove('hidden'); $sel.dataset.value = selType; }
+    else { $sel.textContent = ''; $sel.classList.add('hidden'); $sel.dataset.value = ''; }
+
+    // Dégâts bonus
+    const dmgRows = w ? (w.damageBonus || []) : [];
+    renderWmDmgRows(dmgRows.map(d => ({ type: d.type, amount: d.amount })));
+
+    // Sorts
+    renderWmSpellSelected(w ? (w.spells || []) : []);
+
+    renderWmTypeFilters();
+    renderWmTypeList();
+    renderWmSpellResults('');
+    modal.classList.remove('hidden');
+    document.getElementById('wm-name').focus();
+  }
+
+  function renderWmTypeFilters() {
+    const $f = document.getElementById('wm-type-filters');
+    $f.innerHTML = '';
+    WEAPON_TYPE_CATS.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'potion-filter-btn' + (cat === weaponTypeCatFilter ? ' active' : '');
+      btn.textContent = cat;
+      btn.addEventListener('click', () => { weaponTypeCatFilter = cat; renderWmTypeFilters(); renderWmTypeList(); });
+      $f.appendChild(btn);
+    });
+  }
+
+  function renderWmTypeList() {
+    const $list = document.getElementById('wm-type-list');
+    const search = document.getElementById('wm-type-search').value.toLowerCase();
+    $list.innerHTML = '';
+    const selVal = document.getElementById('wm-type-selected').dataset.value || '';
+
+    WEAPON_TYPES
+      .filter(wt => (weaponTypeCatFilter === 'Tous' || wt.cat === weaponTypeCatFilter) && (!search || wt.name.toLowerCase().includes(search)))
+      .forEach(wt => {
+        const item = document.createElement('div');
+        item.className = 'wm-type-item' + (wt.name === selVal ? ' selected' : '');
+        item.textContent = wt.name;
+        item.addEventListener('click', () => {
+          const $sel = document.getElementById('wm-type-selected');
+          $sel.textContent = wt.name;
+          $sel.dataset.value = wt.name;
+          $sel.classList.remove('hidden');
+          renderWmTypeList();
+        });
+        $list.appendChild(item);
+      });
+  }
+
+  document.getElementById('wm-type-search').addEventListener('input', renderWmTypeList);
+
+  // Dégâts bonus
+  function renderWmDmgRows(rows) {
+    const $c = document.getElementById('wm-dmg-rows');
+    $c.innerHTML = '';
+    rows.forEach((row, i) => {
+      const div = document.createElement('div');
+      div.className = 'wm-dmg-row';
+      div.innerHTML =
+        '<select class="wm-dmg-type wm-select">' +
+          DAMAGE_TYPES.map(t => '<option value="' + t + '"' + (t === row.type ? ' selected' : '') + '>' + t + '</option>').join('') +
+        '</select>' +
+        '<input type="text" class="wm-dmg-amount" placeholder="+1d6" value="' + (row.amount || '') + '">' +
+        '<button class="btn-wm-del-dmg">✕</button>';
+      div.querySelector('.btn-wm-del-dmg').addEventListener('click', () => {
+        rows.splice(i, 1);
+        renderWmDmgRows(rows);
+      });
+      $c.appendChild(div);
+    });
+    $c._rows = rows;
+  }
+
+  document.getElementById('btn-wm-add-dmg').addEventListener('click', () => {
+    const $c = document.getElementById('wm-dmg-rows');
+    const rows = $c._rows || [];
+    rows.push({ type: 'Radiant', amount: '' });
+    renderWmDmgRows(rows);
+  });
+
+  // Sorts
+  async function renderWmSpellResults(search) {
+    const $r = document.getElementById('wm-spell-results');
+    $r.innerHTML = '';
+    if (!search) return;
+    const spells = await fetchAllSpells();
+    const filtered = spells.filter(s => s.name.toLowerCase().includes(search.toLowerCase())).slice(0, 8);
+    filtered.forEach(spell => {
+      const item = document.createElement('div');
+      item.className = 'wm-spell-result-item';
+      item.textContent = spell.name + (spell.level === 0 ? ' (cantrip)' : ' (niv.' + spell.level + ')');
+      item.addEventListener('click', () => {
+        const $sel = document.getElementById('wm-spell-selected');
+        const existing = [...$sel.querySelectorAll('.wm-spell-chip')].map(c => c.dataset.id);
+        if (existing.includes(spell.id)) return;
+        addWmSpellChip($sel, { id: spell.id, name: spell.name, uses: 1, usesLeft: 1, recovery: 'Repos long' });
+        document.getElementById('wm-spell-search').value = '';
+        document.getElementById('wm-spell-results').innerHTML = '';
+      });
+      $r.appendChild(item);
+    });
+  }
+
+  function addWmSpellChip($container, sp) {
+    const chip = document.createElement('div');
+    chip.className = 'wm-spell-chip';
+    chip.dataset.id = sp.id;
+    chip.innerHTML =
+      '<span class="wm-chip-name">' + sp.name + '</span>' +
+      '<div class="wm-chip-controls">' +
+        '<label>Utilisations</label>' +
+        '<input type="number" class="wm-chip-uses" min="1" value="' + (sp.uses || 1) + '">' +
+        '<label>Récupération</label>' +
+        '<select class="wm-chip-recovery">' +
+          RECOVERY_OPTIONS.map(r => '<option value="' + r + '"' + (r === sp.recovery ? ' selected' : '') + '>' + r + '</option>').join('') +
+        '</select>' +
+      '</div>' +
+      '<button class="btn-wm-del-spell">✕</button>';
+    chip.querySelector('.btn-wm-del-spell').addEventListener('click', () => chip.remove());
+    $container.appendChild(chip);
+  }
+
+  function renderWmSpellSelected(spells) {
+    const $sel = document.getElementById('wm-spell-selected');
+    $sel.innerHTML = '';
+    spells.forEach(sp => addWmSpellChip($sel, sp));
+  }
+
+  document.getElementById('wm-spell-search').addEventListener('input', (e) => renderWmSpellResults(e.target.value));
+
+  // Confirmation
+  document.getElementById('btn-wm-confirm').addEventListener('click', () => {
+    const name = document.getElementById('wm-name').value.trim();
+    if (!name) { document.getElementById('wm-name').focus(); return; }
+
+    const type     = document.getElementById('wm-type-selected').dataset.value || '';
+    const atkBonus = document.getElementById('wm-atk-bonus').value;
+    const desc     = document.getElementById('wm-desc').value.trim();
+
+    // Dégâts bonus
+    const $dmgRows = document.getElementById('wm-dmg-rows');
+    const damageBonus = [...$dmgRows.querySelectorAll('.wm-dmg-row')].map(row => ({
+      type:   row.querySelector('.wm-dmg-type').value,
+      amount: row.querySelector('.wm-dmg-amount').value.trim(),
+    })).filter(d => d.amount);
+
+    // Sorts
+    const spells = [...document.getElementById('wm-spell-selected').querySelectorAll('.wm-spell-chip')].map(chip => ({
+      id:       chip.dataset.id,
+      name:     chip.querySelector('.wm-chip-name').textContent,
+      uses:     parseInt(chip.querySelector('.wm-chip-uses').value, 10) || 1,
+      usesLeft: parseInt(chip.querySelector('.wm-chip-uses').value, 10) || 1,
+      recovery: chip.querySelector('.wm-chip-recovery').value,
+    }));
+
+    const weapon = { name, type, atkBonus, damageBonus, spells, desc };
+
+    if (!character.inventoryWeapons) character.inventoryWeapons = [];
+    if (weaponEditIndex !== null) {
+      weapon.spells = spells.map((s, si) => ({ ...s, usesLeft: character.inventoryWeapons[weaponEditIndex].spells?.[si]?.usesLeft ?? s.uses }));
+      character.inventoryWeapons[weaponEditIndex] = weapon;
+    } else {
+      character.inventoryWeapons.push(weapon);
+    }
+    saveCharacter();
+    renderInventaire();
+    document.getElementById('weapon-inv-modal').classList.add('hidden');
+  });
+
+  document.getElementById('btn-wm-cancel').addEventListener('click', () => {
+    document.getElementById('weapon-inv-modal').classList.add('hidden');
+  });
+
+  // Weapon detail
+  function openWeaponDetail(i) {
+    const w = character.inventoryWeapons[i];
+    document.getElementById('wd-name').textContent = w.name;
+
+    let meta = '';
+    if (w.type)     meta += '<span class="weapon-inv-type">'  + w.type    + '</span> ';
+    if (w.atkBonus) meta += '<span class="weapon-inv-bonus">' + w.atkBonus + ' att./dégâts</span>';
+    document.getElementById('wd-meta').innerHTML = meta;
+
+    let dmg = '';
+    if (w.damageBonus && w.damageBonus.length) {
+      dmg = '<div class="wd-section-title">Dégâts bonus</div>' +
+        w.damageBonus.map(d => '<span class="wd-dmg-tag">' + d.amount + ' ' + d.type + '</span>').join('');
+    }
+    document.getElementById('wd-dmg').innerHTML = dmg;
+
+    let spellsHtml = '';
+    if (w.spells && w.spells.length) {
+      spellsHtml = '<div class="wd-section-title">Sorts associés</div>' +
+        w.spells.map((s, si) =>
+          '<div class="wd-spell-row">' +
+            '<span class="wd-spell-name">✨ ' + s.name + '</span>' +
+            '<div class="wd-spell-uses">' +
+              '<button class="btn-spell-use" data-wi="' + i + '" data-si="' + si + '" data-d="-1">−</button>' +
+              '<span class="wd-uses-left">' + (s.usesLeft ?? s.uses) + ' / ' + s.uses + '</span>' +
+              '<button class="btn-spell-use" data-wi="' + i + '" data-si="' + si + '" data-d="1">+</button>' +
+              '<span class="wd-recovery">(' + s.recovery + ')</span>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+    }
+    document.getElementById('wd-spells').innerHTML = spellsHtml;
+    document.getElementById('wd-spells').querySelectorAll('.btn-spell-use').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wi = parseInt(btn.dataset.wi, 10);
+        const si = parseInt(btn.dataset.si, 10);
+        const sp = character.inventoryWeapons[wi].spells[si];
+        sp.usesLeft = Math.max(0, Math.min(sp.uses, (sp.usesLeft ?? sp.uses) + parseInt(btn.dataset.d, 10)));
+        saveCharacter();
+        openWeaponDetail(wi);
+      });
+    });
+
+    document.getElementById('wd-desc').textContent = w.desc || '';
+    document.getElementById('btn-wd-edit').onclick = () => {
+      document.getElementById('weapon-inv-detail-modal').classList.add('hidden');
+      openWeaponModal(i);
+    };
+    document.getElementById('btn-wd-delete').onclick = () => {
+      character.inventoryWeapons.splice(i, 1);
+      saveCharacter();
+      renderInventaire();
+      document.getElementById('weapon-inv-detail-modal').classList.add('hidden');
+    };
+    document.getElementById('weapon-inv-detail-modal').classList.remove('hidden');
+  }
 
   document.getElementById('consommables-header').addEventListener('click', () => {
     consumablesCollapsed = !consumablesCollapsed;
