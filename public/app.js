@@ -102,44 +102,48 @@
   ];
 
   // hands: 1 = une main, 2 = deux mains, 'V' = polyvalente
+  // icon: emoji affiché sur la ligne d'inventaire
+  // baseDmg: type de dégâts de base
   const WEAPON_TYPES = [
-    { name: 'Bâton',             cat: 'Corps à corps courante',  hands: 'V' },
-    { name: 'Dague',             cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Faucille',          cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Gourdin',           cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Hachette',          cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Javeline',          cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Lance',             cat: 'Corps à corps courante',  hands: 'V' },
-    { name: 'Marteau léger',     cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Masse d\'armes',    cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Serpe',             cat: 'Corps à corps courante',  hands: 1   },
-    { name: 'Arbalète légère',   cat: 'Distance courante',       hands: 2   },
-    { name: 'Arc court',         cat: 'Distance courante',       hands: 2   },
-    { name: 'Fronde',            cat: 'Distance courante',       hands: 1   },
-    { name: 'Dard',              cat: 'Distance courante',       hands: 1   },
-    { name: 'Cimeterre',         cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Épée courte',       cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Épée longue',       cat: 'Corps à corps de guerre', hands: 'V' },
-    { name: 'Épée à deux mains', cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Fléau',             cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Fouet',             cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Grande hache',      cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Hache d\'armes',    cat: 'Corps à corps de guerre', hands: 'V' },
-    { name: 'Hallebarde',        cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Lance d\'arçon',    cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Maillet',           cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Marteau de guerre', cat: 'Corps à corps de guerre', hands: 'V' },
-    { name: 'Morgenstern',       cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Pic de guerre',     cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Rapière',           cat: 'Corps à corps de guerre', hands: 1   },
-    { name: 'Trident',           cat: 'Corps à corps de guerre', hands: 'V' },
-    { name: 'Coutille',          cat: 'Corps à corps de guerre', hands: 2   },
-    { name: 'Arbalète à main',   cat: 'Distance de guerre',      hands: 1   },
-    { name: 'Arbalète lourde',   cat: 'Distance de guerre',      hands: 2   },
-    { name: 'Arc long',          cat: 'Distance de guerre',      hands: 2   },
-    { name: 'Filet',             cat: 'Distance de guerre',      hands: 1   },
-    { name: 'Sarbacane',         cat: 'Distance de guerre',      hands: 1   },
+    { name: 'Bâton',             cat: 'Corps à corps courante',  hands: 'V', icon: '🪄', baseDmg: 'Contondant'  },
+    { name: 'Dague',             cat: 'Corps à corps courante',  hands: 1,   icon: '🗡️', baseDmg: 'Perforant'   },
+    { name: 'Faucille',          cat: 'Corps à corps courante',  hands: 1,   icon: '🌙', baseDmg: 'Tranchant'   },
+    { name: 'Gourdin',           cat: 'Corps à corps courante',  hands: 1,   icon: '🪵', baseDmg: 'Contondant'  },
+    { name: 'Hachette',          cat: 'Corps à corps courante',  hands: 1,   icon: '🪓', baseDmg: 'Tranchant'   },
+    { name: 'Javeline',          cat: 'Corps à corps courante',  hands: 1,   icon: '🔱', baseDmg: 'Perforant'   },
+    { name: 'Lance',             cat: 'Corps à corps courante',  hands: 'V', icon: '🔱', baseDmg: 'Perforant'   },
+    { name: 'Marteau léger',     cat: 'Corps à corps courante',  hands: 1,   icon: '🔨', baseDmg: 'Contondant'  },
+    { name: 'Masse d\'armes',    cat: 'Corps à corps courante',  hands: 1,   icon: '🔨', baseDmg: 'Contondant'  },
+    { name: 'Serpe',             cat: 'Corps à corps courante',  hands: 1,   icon: '🌙', baseDmg: 'Tranchant'   },
+    { name: 'Arbalète légère',   cat: 'Distance courante',       hands: 2,   icon: '🎯', baseDmg: 'Perforant'   },
+    { name: 'Arc court',         cat: 'Distance courante',       hands: 2,   icon: '🏹', baseDmg: 'Perforant'   },
+    { name: 'Fronde',            cat: 'Distance courante',       hands: 1,   icon: '🪨', baseDmg: 'Contondant'  },
+    { name: 'Dard',              cat: 'Distance courante',       hands: 1,   icon: '🎯', baseDmg: 'Perforant'   },
+    { name: 'Cimeterre',         cat: 'Corps à corps de guerre', hands: 1,   icon: '⚔️', baseDmg: 'Tranchant'   },
+    { name: 'Épée courte',       cat: 'Corps à corps de guerre', hands: 1,   icon: '🗡️', baseDmg: 'Perforant'   },
+    { name: 'Épée longue',       cat: 'Corps à corps de guerre', hands: 'V', icon: '⚔️', baseDmg: 'Tranchant'   },
+    { name: 'Épée à deux mains', cat: 'Corps à corps de guerre', hands: 2,   icon: '⚔️', baseDmg: 'Tranchant'   },
+    { name: 'Fléau',             cat: 'Corps à corps de guerre', hands: 1,   icon: '⛓️', baseDmg: 'Contondant'  },
+    { name: 'Fouet',             cat: 'Corps à corps de guerre', hands: 1,   icon: '➿', baseDmg: 'Tranchant'   },
+    { name: 'Grande hache',      cat: 'Corps à corps de guerre', hands: 2,   icon: '🪓', baseDmg: 'Tranchant'   },
+    { name: 'Hache d\'armes',    cat: 'Corps à corps de guerre', hands: 'V', icon: '🪓', baseDmg: 'Tranchant'   },
+    { name: 'Hallebarde',        cat: 'Corps à corps de guerre', hands: 2,   icon: '🔱', baseDmg: 'Tranchant'   },
+    { name: 'Lance d\'arçon',    cat: 'Corps à corps de guerre', hands: 2,   icon: '🔱', baseDmg: 'Perforant'   },
+    { name: 'Maillet',           cat: 'Corps à corps de guerre', hands: 2,   icon: '🔨', baseDmg: 'Contondant'  },
+    { name: 'Marteau de guerre', cat: 'Corps à corps de guerre', hands: 'V', icon: '🔨', baseDmg: 'Contondant'  },
+    { name: 'Morgenstern',       cat: 'Corps à corps de guerre', hands: 1,   icon: '🔨', baseDmg: 'Perforant'   },
+    { name: 'Pic de guerre',     cat: 'Corps à corps de guerre', hands: 1,   icon: '⛏️', baseDmg: 'Perforant'   },
+    { name: 'Rapière',           cat: 'Corps à corps de guerre', hands: 1,   icon: '🤺', baseDmg: 'Perforant'   },
+    { name: 'Trident',           cat: 'Corps à corps de guerre', hands: 'V', icon: '🔱', baseDmg: 'Perforant'   },
+    { name: 'Coutille',          cat: 'Corps à corps de guerre', hands: 2,   icon: '🔱', baseDmg: 'Tranchant'   },
+    { name: 'Arbalète à main',   cat: 'Distance de guerre',      hands: 1,   icon: '🎯', baseDmg: 'Perforant'   },
+    { name: 'Arbalète lourde',   cat: 'Distance de guerre',      hands: 2,   icon: '🎯', baseDmg: 'Perforant'   },
+    { name: 'Arc long',          cat: 'Distance de guerre',      hands: 2,   icon: '🏹', baseDmg: 'Perforant'   },
+    { name: 'Filet',             cat: 'Distance de guerre',      hands: 1,   icon: '🕸️', baseDmg: 'Contondant'  },
+    { name: 'Sarbacane',         cat: 'Distance de guerre',      hands: 1,   icon: '💨', baseDmg: 'Perforant'   },
   ];
+
+  const WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
 
   const WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
 
@@ -958,14 +962,46 @@
     document.getElementById('weapons-inv-body').classList.toggle('hidden', weaponsInvCollapsed);
     if (!weaponsInvCollapsed) {
       character.inventoryWeapons.forEach((w, i) => {
+        const wt     = WEAPON_TYPES.find(t => t.name === w.type) || {};
+        const icon   = wt.icon || '⚔️';
+        const equipped = !!w.equipped;
+
+        // Tags dégâts : base + bonus
+        let dmgTags = '';
+        if (wt.baseDmg) dmgTags += '<span class="wtag wtag-dmg">' + wt.baseDmg + '</span>';
+        (w.damageBonus || []).forEach(d => {
+          if (d.type && d.amount) dmgTags += '<span class="wtag wtag-dmg">' + d.amount + ' ' + d.type + '</span>';
+        });
+
+        // Tags propriétés
+        let propTags = '';
+        if (w.hands === 'V')  propTags += '<span class="wtag wtag-prop">Polyvalente</span>';
+        if (w.hands === 2)    propTags += '<span class="wtag wtag-prop">2 mains</span>';
+        (w.properties || []).forEach(p => { propTags += '<span class="wtag wtag-prop">' + p + '</span>'; });
+        if (w.atkBonus)       propTags += '<span class="wtag wtag-bonus">' + w.atkBonus + '</span>';
+        if (w.spells && w.spells.length) propTags += '<span class="wtag wtag-spell">✨ ' + w.spells.length + ' sort' + (w.spells.length > 1 ? 's' : '') + '</span>';
+
         const row = document.createElement('div');
-        row.className = 'weapon-inv-row';
-        const bonus = w.atkBonus ? '<span class="weapon-inv-bonus">' + w.atkBonus + '</span>' : '';
-        const type  = w.type    ? '<span class="weapon-inv-type">'  + w.type    + '</span>' : '';
+        row.className = 'weapon-inv-row' + (equipped ? ' weapon-equipped' : '');
         row.innerHTML =
-          '<span class="weapon-inv-name">' + w.name + '</span>' +
-          type + bonus +
-          (w.spells && w.spells.length ? '<span class="weapon-inv-spells-badge">✨ ' + w.spells.length + '</span>' : '');
+          '<span class="weapon-inv-icon">' + icon + '</span>' +
+          '<div class="weapon-inv-body">' +
+            '<div class="weapon-inv-top">' +
+              '<span class="weapon-inv-name">' + w.name + '</span>' +
+              (w.type ? '<span class="weapon-inv-type">' + w.type + '</span>' : '') +
+              '<button class="btn-weapon-equip' + (equipped ? ' is-equipped' : '') + '" data-i="' + i + '" title="' + (equipped ? 'Équipée — cliquer pour déséquiper' : 'Non équipée — cliquer pour équiper') + '">' +
+                (equipped ? '✅' : '○') +
+              '</button>' +
+            '</div>' +
+            (dmgTags || propTags ? '<div class="weapon-inv-tags">' + dmgTags + propTags + '</div>' : '') +
+          '</div>';
+
+        row.querySelector('.btn-weapon-equip').addEventListener('click', (e) => {
+          e.stopPropagation();
+          character.inventoryWeapons[i].equipped = !character.inventoryWeapons[i].equipped;
+          saveCharacter();
+          renderInventaire();
+        });
         row.addEventListener('click', () => openWeaponDetail(i));
         $wlist.appendChild(row);
       });
@@ -1275,6 +1311,9 @@
     const dmgRows = w ? (w.damageBonus || []) : [];
     renderWmDmgRows(dmgRows.map(d => ({ type: d.type, amount: d.amount })));
 
+    // Propriétés
+    renderWmProperties(w ? (w.properties || []) : []);
+
     // Sorts
     renderWmSpellSelected(w ? (w.spells || []) : []);
 
@@ -1352,6 +1391,22 @@
     renderWmDmgRows(rows);
   });
 
+  function renderWmProperties(selected) {
+    const $c = document.getElementById('wm-properties');
+    $c.innerHTML = '';
+    WEAPON_PROPERTIES.forEach(prop => {
+      const label = document.createElement('label');
+      label.className = 'wm-prop-label';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = prop;
+      cb.checked = selected.includes(prop);
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(' ' + prop));
+      $c.appendChild(label);
+    });
+  }
+
   // Sorts
   async function renderWmSpellResults(search) {
     const $r = document.getElementById('wm-spell-results');
@@ -1407,10 +1462,11 @@
     const name = document.getElementById('wm-name').value.trim();
     if (!name) { document.getElementById('wm-name').focus(); return; }
 
-    const type     = document.getElementById('wm-type-selected').dataset.value || '';
-    const hands    = document.getElementById('wm-hands').value;
-    const atkBonus = document.getElementById('wm-atk-bonus').value;
-    const desc     = document.getElementById('wm-desc').value.trim();
+    const type       = document.getElementById('wm-type-selected').dataset.value || '';
+    const hands      = document.getElementById('wm-hands').value;
+    const atkBonus   = document.getElementById('wm-atk-bonus').value;
+    const desc       = document.getElementById('wm-desc').value.trim();
+    const properties = [...document.querySelectorAll('#wm-properties input:checked')].map(cb => cb.value);
 
     // Dégâts bonus
     const $dmgRows = document.getElementById('wm-dmg-rows');
@@ -1428,7 +1484,8 @@
       recovery: chip.querySelector('.wm-chip-recovery').value,
     }));
 
-    const weapon = { name, type, hands, atkBonus, damageBonus, spells, desc };
+    const equipped = weaponEditIndex !== null ? (character.inventoryWeapons[weaponEditIndex].equipped || false) : false;
+    const weapon = { name, type, hands, atkBonus, damageBonus, properties, spells, desc, equipped };
 
     if (!character.inventoryWeapons) character.inventoryWeapons = [];
     if (weaponEditIndex !== null) {

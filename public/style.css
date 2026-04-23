@@ -1826,6 +1826,93 @@ main {
   background: rgba(231,76,60,0.12);
 }
 
+/* --- Tags armes --- */
+.weapon-inv-row {
+  align-items: flex-start;
+}
+
+.weapon-equipped {
+  border-color: rgba(102,187,106,0.5);
+  background: linear-gradient(90deg, rgba(102,187,106,0.04) 0%, var(--bg-input) 100%);
+}
+
+.weapon-inv-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+
+.weapon-inv-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.weapon-inv-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.weapon-inv-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.wtag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.wtag-dmg   { color: #ef9a9a; border-color: rgba(231,76,60,0.35);   background: rgba(231,76,60,0.08); }
+.wtag-prop  { color: var(--text-dim); border-color: var(--border); background: transparent; }
+.wtag-bonus { color: #66bb6a; border-color: rgba(102,187,106,0.4);  background: rgba(102,187,106,0.08); }
+.wtag-spell { color: #ce93d8; border-color: rgba(171,71,188,0.35);  background: rgba(171,71,188,0.08); }
+
+.btn-weapon-equip {
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  opacity: 0.5;
+  transition: opacity 0.15s, transform 0.15s;
+  line-height: 1;
+}
+
+.btn-weapon-equip:hover { opacity: 1; transform: scale(1.15); }
+.btn-weapon-equip.is-equipped { opacity: 1; }
+
+/* Propriétés dans la modale */
+.wm-properties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+}
+
+.wm-prop-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.wm-prop-label input[type="checkbox"] {
+  accent-color: var(--gold-dim);
+  cursor: pointer;
+}
+
 /* --- Emplacements main --- */
 .hand-slot {
   cursor: default;
