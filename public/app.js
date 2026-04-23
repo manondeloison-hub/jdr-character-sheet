@@ -99,43 +99,44 @@
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
   ];
 
+  // hands: 1 = une main, 2 = deux mains, 'V' = polyvalente
   const WEAPON_TYPES = [
-    { name: 'Bâton',             cat: 'Corps à corps courante' },
-    { name: 'Dague',             cat: 'Corps à corps courante' },
-    { name: 'Faucille',          cat: 'Corps à corps courante' },
-    { name: 'Gourdin',           cat: 'Corps à corps courante' },
-    { name: 'Hachette',          cat: 'Corps à corps courante' },
-    { name: 'Javeline',          cat: 'Corps à corps courante' },
-    { name: 'Lance',             cat: 'Corps à corps courante' },
-    { name: 'Marteau léger',     cat: 'Corps à corps courante' },
-    { name: 'Masse d\'armes',    cat: 'Corps à corps courante' },
-    { name: 'Serpe',             cat: 'Corps à corps courante' },
-    { name: 'Arbalète légère',   cat: 'Distance courante' },
-    { name: 'Arc court',         cat: 'Distance courante' },
-    { name: 'Fronde',            cat: 'Distance courante' },
-    { name: 'Dard',              cat: 'Distance courante' },
-    { name: 'Cimeterre',         cat: 'Corps à corps de guerre' },
-    { name: 'Épée courte',       cat: 'Corps à corps de guerre' },
-    { name: 'Épée longue',       cat: 'Corps à corps de guerre' },
-    { name: 'Épée à deux mains', cat: 'Corps à corps de guerre' },
-    { name: 'Fléau',             cat: 'Corps à corps de guerre' },
-    { name: 'Fouet',             cat: 'Corps à corps de guerre' },
-    { name: 'Grande hache',      cat: 'Corps à corps de guerre' },
-    { name: 'Hache d\'armes',    cat: 'Corps à corps de guerre' },
-    { name: 'Hallebarde',        cat: 'Corps à corps de guerre' },
-    { name: 'Lance d\'arçon',    cat: 'Corps à corps de guerre' },
-    { name: 'Maillet',           cat: 'Corps à corps de guerre' },
-    { name: 'Marteau de guerre', cat: 'Corps à corps de guerre' },
-    { name: 'Morgenstern',       cat: 'Corps à corps de guerre' },
-    { name: 'Pic de guerre',     cat: 'Corps à corps de guerre' },
-    { name: 'Rapière',           cat: 'Corps à corps de guerre' },
-    { name: 'Trident',           cat: 'Corps à corps de guerre' },
-    { name: 'Coutille',          cat: 'Corps à corps de guerre' },
-    { name: 'Arbalète à main',   cat: 'Distance de guerre' },
-    { name: 'Arbalète lourde',   cat: 'Distance de guerre' },
-    { name: 'Arc long',          cat: 'Distance de guerre' },
-    { name: 'Filet',             cat: 'Distance de guerre' },
-    { name: 'Sarbacane',         cat: 'Distance de guerre' },
+    { name: 'Bâton',             cat: 'Corps à corps courante',  hands: 'V' },
+    { name: 'Dague',             cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Faucille',          cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Gourdin',           cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Hachette',          cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Javeline',          cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Lance',             cat: 'Corps à corps courante',  hands: 'V' },
+    { name: 'Marteau léger',     cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Masse d\'armes',    cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Serpe',             cat: 'Corps à corps courante',  hands: 1   },
+    { name: 'Arbalète légère',   cat: 'Distance courante',       hands: 2   },
+    { name: 'Arc court',         cat: 'Distance courante',       hands: 2   },
+    { name: 'Fronde',            cat: 'Distance courante',       hands: 1   },
+    { name: 'Dard',              cat: 'Distance courante',       hands: 1   },
+    { name: 'Cimeterre',         cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Épée courte',       cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Épée longue',       cat: 'Corps à corps de guerre', hands: 'V' },
+    { name: 'Épée à deux mains', cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Fléau',             cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Fouet',             cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Grande hache',      cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Hache d\'armes',    cat: 'Corps à corps de guerre', hands: 'V' },
+    { name: 'Hallebarde',        cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Lance d\'arçon',    cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Maillet',           cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Marteau de guerre', cat: 'Corps à corps de guerre', hands: 'V' },
+    { name: 'Morgenstern',       cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Pic de guerre',     cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Rapière',           cat: 'Corps à corps de guerre', hands: 1   },
+    { name: 'Trident',           cat: 'Corps à corps de guerre', hands: 'V' },
+    { name: 'Coutille',          cat: 'Corps à corps de guerre', hands: 2   },
+    { name: 'Arbalète à main',   cat: 'Distance de guerre',      hands: 1   },
+    { name: 'Arbalète lourde',   cat: 'Distance de guerre',      hands: 2   },
+    { name: 'Arc long',          cat: 'Distance de guerre',      hands: 2   },
+    { name: 'Filet',             cat: 'Distance de guerre',      hands: 1   },
+    { name: 'Sarbacane',         cat: 'Distance de guerre',      hands: 1   },
   ];
 
   const WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
@@ -888,6 +889,7 @@
     const $left = document.getElementById('equip-col-left');
     $left.innerHTML = '';
     EQUIP_SLOTS_LEFT.forEach(s => $left.appendChild(makeEquipSlot(s.key, s.label, s.icon)));
+    $left.appendChild(makeHandSlot('left', 'Main G'));
 
     // Slots colonne droite (avec paires)
     const $right = document.getElementById('equip-col-right');
@@ -903,6 +905,7 @@
         $right.appendChild(makeEquipSlot(s.key, s.label, s.icon));
       }
     });
+    $right.appendChild(makeHandSlot('right', 'Main D'));
 
     // Portrait
     const $portrait = document.getElementById('equip-portrait-display');
@@ -1127,6 +1130,112 @@
 
   document.getElementById('potion-search').addEventListener('input', renderPotionList);
 
+  // --- Emplacements main ---
+  function getWeaponByName(name) {
+    return (character.inventoryWeapons || []).find(w => w.name === name) || null;
+  }
+
+  function getWeaponHands(name) {
+    if (!name) return 1;
+    const w = getWeaponByName(name);
+    return w ? (w.hands || 1) : 1;
+  }
+
+  function makeHandSlot(side, label) {
+    if (!character.handSlots) character.handSlots = { left: '', right: '' };
+    const other   = side === 'left' ? 'right' : 'left';
+    const myName  = character.handSlots[side]  || '';
+    const othName = character.handSlots[other] || '';
+    const myH     = getWeaponHands(myName);
+    const othH    = getWeaponHands(othName);
+
+    // Ce slot est bloqué par une arme 2M dans l'autre main
+    const lockedBy2H = othName && othH === 2;
+    // Ce slot contient une arme polyvalente tenue à 2 mains (autre main vide)
+    const versatile2H = myName && myH === 'V' && !othName;
+
+    const div = document.createElement('div');
+    div.className = 'equip-slot hand-slot' + (lockedBy2H ? ' hand-locked' : '');
+
+    if (lockedBy2H) {
+      div.innerHTML =
+        '<span class="equip-slot-icon">🔒</span>' +
+        '<span class="equip-slot-label">' + label + '</span>' +
+        '<span class="hand-locked-label">' + othName + '</span>';
+      return div;
+    }
+
+    const icon = myName ? (getWeaponByName(myName) ? '⚔️' : '🛡️') : '✋';
+    div.innerHTML =
+      '<span class="equip-slot-icon">' + icon + '</span>' +
+      '<span class="equip-slot-label">' + label + '</span>' +
+      '<div class="hand-slot-picker">' +
+        '<span class="hand-slot-name">' + (myName || '—') + '</span>' +
+        '<button class="btn-hand-pick" data-side="' + side + '">▾</button>' +
+        (myName ? '<button class="btn-hand-clear" data-side="' + side + '">✕</button>' : '') +
+      '</div>' +
+      (versatile2H ? '<span class="hand-versatile-badge">2 mains</span>' : '');
+
+    // Dropdown picker
+    div.querySelector('.btn-hand-pick').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.hand-slot-dropdown').forEach(d => d.remove());
+      const dropdown = document.createElement('div');
+      dropdown.className = 'hand-slot-dropdown';
+
+      const weapons = character.inventoryWeapons || [];
+      if (weapons.length === 0) {
+        dropdown.innerHTML = '<div class="hand-drop-empty">Aucune arme dans l\'inventaire</div>';
+      } else {
+        weapons.forEach(w => {
+          const opt = document.createElement('div');
+          opt.className = 'hand-drop-item';
+          const handsLabel = w.hands === 2 ? '(2M)' : w.hands === 'V' ? '(Poly.)' : '(1M)';
+          opt.innerHTML = '<span>' + w.name + '</span><span class="hand-drop-tag">' + handsLabel + '</span>';
+          opt.addEventListener('click', () => {
+            if (!character.handSlots) character.handSlots = { left: '', right: '' };
+            character.handSlots[side] = w.name;
+            // Arme 2 mains : libérer l'autre main automatiquement
+            if (w.hands === 2) character.handSlots[other] = '';
+            saveCharacter();
+            renderInventaire();
+            dropdown.remove();
+          });
+          dropdown.appendChild(opt);
+        });
+      }
+
+      // Texte libre
+      const freeRow = document.createElement('div');
+      freeRow.className = 'hand-drop-free';
+      freeRow.innerHTML = '<input type="text" placeholder="Autre (bouclier, torche…)" value="' + (myName && !getWeaponByName(myName) ? myName : '') + '">';
+      freeRow.querySelector('input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          character.handSlots[side] = e.target.value.trim();
+          saveCharacter();
+          renderInventaire();
+          dropdown.remove();
+        }
+      });
+      dropdown.appendChild(freeRow);
+
+      div.appendChild(dropdown);
+      setTimeout(() => document.addEventListener('click', () => dropdown.remove(), { once: true }), 0);
+    });
+
+    const clearBtn = div.querySelector('.btn-hand-clear');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        character.handSlots[side] = '';
+        saveCharacter();
+        renderInventaire();
+      });
+    }
+
+    return div;
+  }
+
   document.getElementById('weapons-inv-header').addEventListener('click', () => {
     weaponsInvCollapsed = !weaponsInvCollapsed;
     renderInventaire();
@@ -1149,6 +1258,7 @@
     document.getElementById('btn-wm-confirm').textContent = w ? 'Enregistrer' : 'Ajouter';
     document.getElementById('wm-name').value = w ? w.name : '';
     document.getElementById('wm-atk-bonus').value = w ? (w.atkBonus || '') : '';
+    document.getElementById('wm-hands').value = w ? (w.hands || 1) : 1;
     document.getElementById('wm-desc').value = w ? (w.desc || '') : '';
     document.getElementById('wm-type-search').value = '';
     weaponTypeCatFilter = 'Tous';
@@ -1202,6 +1312,7 @@
           $sel.textContent = wt.name;
           $sel.dataset.value = wt.name;
           $sel.classList.remove('hidden');
+          if (wt.hands) document.getElementById('wm-hands').value = wt.hands;
           renderWmTypeList();
         });
         $list.appendChild(item);
@@ -1295,6 +1406,7 @@
     if (!name) { document.getElementById('wm-name').focus(); return; }
 
     const type     = document.getElementById('wm-type-selected').dataset.value || '';
+    const hands    = document.getElementById('wm-hands').value;
     const atkBonus = document.getElementById('wm-atk-bonus').value;
     const desc     = document.getElementById('wm-desc').value.trim();
 
@@ -1314,7 +1426,7 @@
       recovery: chip.querySelector('.wm-chip-recovery').value,
     }));
 
-    const weapon = { name, type, atkBonus, damageBonus, spells, desc };
+    const weapon = { name, type, hands, atkBonus, damageBonus, spells, desc };
 
     if (!character.inventoryWeapons) character.inventoryWeapons = [];
     if (weaponEditIndex !== null) {
