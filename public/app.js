@@ -913,36 +913,59 @@
   function makeEquipSlot(key, label, icon) {
     if (!character.equipmentSlots) character.equipmentSlots = {};
 
-    // Map doll keys to inventory slot type keys (merged pairs)
-    const invKey = (key === 'wristLeft' || key === 'wristRight') ? 'wrist' :
-                   (key === 'fingerLeft' || key === 'fingerRight') ? 'finger' : key;
-    const isPairRight = key === 'wristRight' || key === 'fingerRight';
-    const equippedItems = (character.inventoryEquipment || []).filter(it => it.equipped && it.slotType === invKey);
-    const equippedItem = isPairRight ? (equippedItems[1] || null) : (equippedItems[0] || null);
+    const invType = key === 'wristLeft' || key === 'wristRight' ? 'wrist' :
+                    key === 'fingerLeft' || key === 'fingerRight' ? 'finger' : key;
+    const myName = character.equipmentSlots[key] || '';
 
     const div = document.createElement('div');
-    div.className = 'equip-slot' + (equippedItem ? ' equip-slot-filled' : '');
+    div.className = 'equip-slot' + (myName ? ' equip-slot-filled' : '');
+    div.innerHTML =
+      '<span class="equip-slot-icon">' + icon + '</span>' +
+      '<span class="equip-slot-label">' + label + '</span>' +
+      '<div class="hand-slot-picker">' +
+        '<span class="hand-slot-name">' + (myName || '—') + '</span>' +
+        '<button class="btn-hand-pick">▾</button>' +
+        (myName ? '<button class="btn-hand-clear">✕</button>' : '') +
+      '</div>';
 
-    if (equippedItem) {
-      const ca = equippedItem.slotType === 'chest' && equippedItem.baseCA
-        ? ' · CA ' + (equippedItem.baseCA + (equippedItem.armorBonus || 0))
-        : equippedItem.slotType === 'shield' && equippedItem.shieldBonus
-          ? ' · +' + equippedItem.shieldBonus + ' CA'
-          : '';
-      div.innerHTML =
-        '<span class="equip-slot-icon">' + icon + '</span>' +
-        '<span class="equip-slot-label">' + label + '</span>' +
-        '<span class="equip-slot-item-name">' + equippedItem.name + ca + '</span>';
-    } else {
-      const val = character.equipmentSlots[key] || '';
-      div.innerHTML =
-        '<span class="equip-slot-icon">' + icon + '</span>' +
-        '<span class="equip-slot-label">' + label + '</span>' +
-        '<input type="text" class="equip-slot-input" placeholder="—" value="' + val.replace(/"/g, '&quot;') + '">';
-      div.querySelector('input').addEventListener('change', (e) => {
-        if (!character.equipmentSlots) character.equipmentSlots = {};
-        character.equipmentSlots[key] = e.target.value;
+    div.querySelector('.btn-hand-pick').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.hand-slot-dropdown').forEach(d => d.remove());
+      const dropdown = document.createElement('div');
+      dropdown.className = 'hand-slot-dropdown';
+
+      const items = (character.inventoryEquipment || []).filter(it => it.slotType === invType);
+      if (items.length === 0) {
+        dropdown.innerHTML = '<div class="hand-drop-empty">Aucun objet de ce type dans l\'inventaire</div>';
+      } else {
+        items.forEach(it => {
+          const opt = document.createElement('div');
+          opt.className = 'hand-drop-item' + (it.name === myName ? ' selected' : '');
+          let detail = '';
+          if (it.slotType === 'chest' && it.baseCA) detail = 'CA ' + (it.baseCA + (it.armorBonus || 0));
+          else if (it.slotType === 'shield' && it.shieldBonus) detail = '+' + it.shieldBonus + ' CA';
+          opt.innerHTML = '<span>' + it.name + '</span>' + (detail ? '<span class="hand-drop-tag">' + detail + '</span>' : '');
+          opt.addEventListener('click', () => {
+            character.equipmentSlots[key] = it.name;
+            saveCharacter();
+            renderInventaire();
+            dropdown.remove();
+          });
+          dropdown.appendChild(opt);
+        });
+      }
+
+      div.appendChild(dropdown);
+      setTimeout(() => document.addEventListener('click', () => dropdown.remove(), { once: true }), 0);
+    });
+
+    const clearBtn = div.querySelector('.btn-hand-clear');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        character.equipmentSlots[key] = '';
         saveCharacter();
+        renderInventaire();
       });
     }
     return div;

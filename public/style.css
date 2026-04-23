@@ -443,6 +443,15 @@ body {
 #header-hp { color: var(--success); font-weight: 700; }
 #header-xp { color: var(--gold); font-weight: 600; }
 
+.header-build {
+  font-size: 0.65rem;
+  color: rgba(138,138,154,0.45);
+  align-self: flex-end;
+  padding-bottom: 2px;
+  font-family: var(--font-title);
+  letter-spacing: 0.03em;
+}
+
 .btn-level-up {
   padding: 0.4rem 0.75rem;
   background: var(--gold);
