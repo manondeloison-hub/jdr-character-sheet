@@ -85,6 +85,7 @@
     { key: 'chest',  label: 'Buste',       icon: '🥋' },
     { key: 'legs',   label: 'Jambes',      icon: '👖' },
     { key: 'feet',   label: 'Pieds',       icon: '👢' },
+    { key: 'belt',   label: 'Ceinture',    icon: '🪢' },
   ];
 
   const EQUIP_SLOTS_RIGHT = [
@@ -92,6 +93,7 @@
     { key: 'neck',        label: 'Cou',        icon: '📿' },
     { key: 'wristLeft',   label: 'Poignet G',  icon: '⌚', pairKey: 'wristRight',  pairLabel: 'Poignet D' },
     { key: 'fingerLeft',  label: 'Doigt G',    icon: '💍', pairKey: 'fingerRight', pairLabel: 'Doigt D' },
+    { key: 'outfit',      label: 'Tenue',       icon: '👘' },
   ];
 
   const XP_THRESHOLDS = [
