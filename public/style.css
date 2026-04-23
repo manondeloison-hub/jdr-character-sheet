@@ -1074,6 +1074,19 @@ main {
 .equip-slot-input:focus { border-bottom-color: var(--gold-dim); }
 .equip-slot-input::placeholder { color: rgba(138,138,154,0.4); }
 
+.equip-slot-filled {
+  border-color: rgba(244,197,66,0.4);
+  background: linear-gradient(135deg, rgba(244,197,66,0.06) 0%, rgba(244,197,66,0.02) 100%);
+}
+
+.equip-slot-item-name {
+  font-size: 0.65rem;
+  color: var(--gold);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
 .equip-slot-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;

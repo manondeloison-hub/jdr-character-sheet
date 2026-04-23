@@ -146,20 +146,18 @@
   const WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
 
   const EQUIPMENT_SLOT_TYPES = [
-    { key: 'head1',      label: 'Tête',           icon: '🪖' },
-    { key: 'head2',      label: 'Tête (accessoire)', icon: '👓' },
-    { key: 'chest',      label: 'Buste (armure)',  icon: '🥋' },
-    { key: 'legs',       label: 'Jambes',          icon: '👖' },
-    { key: 'feet',       label: 'Pieds',           icon: '👢' },
-    { key: 'belt',       label: 'Ceinture',        icon: '🪢' },
-    { key: 'back',       label: 'Dos',             icon: '🧣' },
-    { key: 'neck',       label: 'Cou',             icon: '📿' },
-    { key: 'wristLeft',  label: 'Poignet G',       icon: '⌚' },
-    { key: 'wristRight', label: 'Poignet D',       icon: '⌚' },
-    { key: 'fingerLeft', label: 'Doigt G',         icon: '💍' },
-    { key: 'fingerRight',label: 'Doigt D',         icon: '💍' },
-    { key: 'outfit',     label: 'Tenue',           icon: '👘' },
-    { key: 'shield',     label: 'Bouclier',        icon: '🛡️' },
+    { key: 'head1',  label: 'Tête',             icon: '🪖' },
+    { key: 'head2',  label: 'Tête (accessoire)', icon: '👓' },
+    { key: 'chest',  label: 'Buste (armure)',    icon: '🥋' },
+    { key: 'legs',   label: 'Jambes',            icon: '👖' },
+    { key: 'feet',   label: 'Pieds',             icon: '👢' },
+    { key: 'belt',   label: 'Ceinture',          icon: '🪢' },
+    { key: 'back',   label: 'Dos',               icon: '🧣' },
+    { key: 'neck',   label: 'Cou',               icon: '📿' },
+    { key: 'wrist',  label: 'Poignet',           icon: '⌚' },
+    { key: 'finger', label: 'Doigt',             icon: '💍' },
+    { key: 'outfit', label: 'Tenue',             icon: '👘' },
+    { key: 'shield', label: 'Bouclier',          icon: '🛡️' },
   ];
 
   const ARMOR_CATEGORIES = {
@@ -914,18 +912,39 @@
   // --- Inventaire ---
   function makeEquipSlot(key, label, icon) {
     if (!character.equipmentSlots) character.equipmentSlots = {};
+
+    // Map doll keys to inventory slot type keys (merged pairs)
+    const invKey = (key === 'wristLeft' || key === 'wristRight') ? 'wrist' :
+                   (key === 'fingerLeft' || key === 'fingerRight') ? 'finger' : key;
+    const isPairRight = key === 'wristRight' || key === 'fingerRight';
+    const equippedItems = (character.inventoryEquipment || []).filter(it => it.equipped && it.slotType === invKey);
+    const equippedItem = isPairRight ? (equippedItems[1] || null) : (equippedItems[0] || null);
+
     const div = document.createElement('div');
-    div.className = 'equip-slot';
-    const val = character.equipmentSlots[key] || '';
-    div.innerHTML =
-      '<span class="equip-slot-icon">' + icon + '</span>' +
-      '<span class="equip-slot-label">' + label + '</span>' +
-      '<input type="text" class="equip-slot-input" placeholder="—" value="' + val.replace(/"/g, '&quot;') + '">';
-    div.querySelector('input').addEventListener('change', (e) => {
-      if (!character.equipmentSlots) character.equipmentSlots = {};
-      character.equipmentSlots[key] = e.target.value;
-      saveCharacter();
-    });
+    div.className = 'equip-slot' + (equippedItem ? ' equip-slot-filled' : '');
+
+    if (equippedItem) {
+      const ca = equippedItem.slotType === 'chest' && equippedItem.baseCA
+        ? ' · CA ' + (equippedItem.baseCA + (equippedItem.armorBonus || 0))
+        : equippedItem.slotType === 'shield' && equippedItem.shieldBonus
+          ? ' · +' + equippedItem.shieldBonus + ' CA'
+          : '';
+      div.innerHTML =
+        '<span class="equip-slot-icon">' + icon + '</span>' +
+        '<span class="equip-slot-label">' + label + '</span>' +
+        '<span class="equip-slot-item-name">' + equippedItem.name + ca + '</span>';
+    } else {
+      const val = character.equipmentSlots[key] || '';
+      div.innerHTML =
+        '<span class="equip-slot-icon">' + icon + '</span>' +
+        '<span class="equip-slot-label">' + label + '</span>' +
+        '<input type="text" class="equip-slot-input" placeholder="—" value="' + val.replace(/"/g, '&quot;') + '">';
+      div.querySelector('input').addEventListener('change', (e) => {
+        if (!character.equipmentSlots) character.equipmentSlots = {};
+        character.equipmentSlots[key] = e.target.value;
+        saveCharacter();
+      });
+    }
     return div;
   }
 
@@ -1061,7 +1080,7 @@
         const equipped = !!item.equipped;
 
         let tags = '';
-        if (item.slotType === 'chest' && item.baseCA) tags += '<span class="wtag wtag-bonus">CA ' + item.baseCA + '</span>';
+        if (item.slotType === 'chest' && item.baseCA) tags += '<span class="wtag wtag-bonus">CA ' + (item.baseCA + (item.armorBonus || 0)) + (item.armorBonus ? ' (+' + item.armorBonus + ')' : '') + '</span>';
         if (item.slotType === 'shield' && item.shieldBonus) tags += '<span class="wtag wtag-bonus">+' + item.shieldBonus + ' CA</span>';
         (item.statBonuses || []).forEach(b => {
           if (b.stat && b.amount) tags += '<span class="wtag wtag-prop">+' + b.amount + ' ' + (STATS[b.stat] || b.stat) + '</span>';
@@ -1807,6 +1826,7 @@
     if (item && item.slotType === 'chest') {
       document.getElementById('em-armor-cat').value = item.armorCat || '';
       updateEmArmorTypes(item.armorType || '');
+      document.getElementById('em-armor-bonus').value = item.armorBonus || 0;
     } else {
       document.getElementById('em-armor-cat').value = '';
       document.getElementById('em-armor-type').innerHTML = '<option value="">Choisir une catégorie d\'abord…</option>';
@@ -1844,11 +1864,14 @@
   function updateEmArmorInfo() {
     const cat = document.getElementById('em-armor-cat').value;
     const typeName = document.getElementById('em-armor-type').value;
+    const bonus = parseInt(document.getElementById('em-armor-bonus').value, 10) || 0;
     const $info = document.getElementById('em-armor-info');
     const armor = (ARMOR_CATEGORIES[cat] || []).find(a => a.name === typeName);
     if (armor) {
       $info.classList.remove('hidden');
-      document.getElementById('em-armor-ca-display').textContent = 'CA de base : ' + armor.baseCA;
+      const total = armor.baseCA + bonus;
+      const bonusStr = bonus ? ' +' + bonus + ' → CA ' + total : '';
+      document.getElementById('em-armor-ca-display').textContent = 'CA de base : ' + armor.baseCA + bonusStr;
       const dexLabel = armor.dex === 'full' ? 'Dextérité : totale' : armor.dex === 'max2' ? 'Dextérité : max +2' : 'Dextérité : aucune';
       document.getElementById('em-armor-dex-display').textContent = dexLabel;
     } else {
@@ -1929,6 +1952,7 @@
   document.getElementById('em-slot-type').addEventListener('change', updateEmConditionalSections);
   document.getElementById('em-armor-cat').addEventListener('change', () => updateEmArmorTypes(''));
   document.getElementById('em-armor-type').addEventListener('change', updateEmArmorInfo);
+  document.getElementById('em-armor-bonus').addEventListener('change', updateEmArmorInfo);
   document.getElementById('em-spell-search').addEventListener('input', (e) => renderEmSpellResults(e.target.value));
 
   document.getElementById('btn-em-add-stat').addEventListener('click', () => {
@@ -1952,10 +1976,11 @@
     const slotType = document.getElementById('em-slot-type').value;
     const desc = document.getElementById('em-desc').value.trim();
 
-    let armorCat = '', armorType = '', baseCA = 0, dex = '';
+    let armorCat = '', armorType = '', baseCA = 0, dex = '', armorBonus = 0;
     if (slotType === 'chest') {
-      armorCat  = document.getElementById('em-armor-cat').value;
-      armorType = document.getElementById('em-armor-type').value;
+      armorCat   = document.getElementById('em-armor-cat').value;
+      armorType  = document.getElementById('em-armor-type').value;
+      armorBonus = parseInt(document.getElementById('em-armor-bonus').value, 10) || 0;
       const armor = (ARMOR_CATEGORIES[armorCat] || []).find(a => a.name === armorType);
       if (armor) { baseCA = armor.baseCA; dex = armor.dex; }
     }
@@ -1986,7 +2011,7 @@
     }));
 
     const equipped = equipEditIndex !== null ? (character.inventoryEquipment[equipEditIndex].equipped || false) : false;
-    const newItem = { name, slotType, armorCat, armorType, baseCA, dex, shieldBonus, statBonuses, skillBonuses, spells, desc, equipped };
+    const newItem = { name, slotType, armorCat, armorType, baseCA, armorBonus, dex, shieldBonus, statBonuses, skillBonuses, spells, desc, equipped };
 
     if (!character.inventoryEquipment) character.inventoryEquipment = [];
     if (equipEditIndex !== null) {
@@ -2012,7 +2037,9 @@
 
     let meta = '<span class="weapon-inv-type">' + slotDef.icon + ' ' + slotDef.label + '</span>';
     if (item.slotType === 'chest' && item.armorType) {
-      meta += ' <span class="weapon-inv-type">' + item.armorType + ' (CA ' + item.baseCA + ')</span>';
+      const totalCA = item.baseCA + (item.armorBonus || 0);
+      const bonusStr = item.armorBonus ? ' +' + item.armorBonus : '';
+      meta += ' <span class="weapon-inv-type">' + item.armorType + bonusStr + ' (CA ' + totalCA + ')</span>';
     }
     if (item.slotType === 'shield' && item.shieldBonus) {
       meta += ' <span class="weapon-inv-bonus">+' + item.shieldBonus + ' CA</span>';
