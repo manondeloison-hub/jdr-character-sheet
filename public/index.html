@@ -340,6 +340,14 @@
         </div>
 
         <div class="section-group">
+          <h2 id="scrolls-header" class="section-collapsible">Parchemins de sort <span id="scrolls-toggle">▼</span></h2>
+          <div id="scrolls-body">
+            <div id="scrolls-list"></div>
+            <button id="btn-add-scroll" class="btn-add-potion">+ Ajouter un parchemin</button>
+          </div>
+        </div>
+
+        <div class="section-group">
           <h2 id="quetes-header" class="section-collapsible">Objets de quête <span id="quetes-toggle">▼</span></h2>
           <div id="quetes-body">
             <div id="quest-list"></div>
@@ -353,6 +361,19 @@
 
     <!-- STAT TOOLTIP -->
     <div id="stat-tooltip" class="stat-tooltip hidden"></div>
+
+    <!-- SCROLL PICKER MODAL -->
+    <div id="scroll-modal" class="modal hidden">
+      <div class="modal-content modal-large">
+        <button class="modal-close">&times;</button>
+        <h2>Ajouter un parchemin de sort</h2>
+        <div class="potion-search-row">
+          <input type="text" id="scroll-search" placeholder="Rechercher un sort…">
+        </div>
+        <div class="potion-filters" id="scroll-filters"></div>
+        <div id="scroll-spell-list" class="potion-list"></div>
+      </div>
+    </div>
 
     <!-- QUEST ITEM ADD MODAL -->
     <div id="quest-add-modal" class="modal hidden">

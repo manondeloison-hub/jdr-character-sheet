@@ -1513,6 +1513,7 @@ main {
 .cat-mobilite         { color: #66bb6a; border-color: #66bb6a; background: rgba(102,187,106,0.1); }
 .cat-transformation   { color: #ab47bc; border-color: #ab47bc; background: rgba(171,71,188,0.1); }
 .cat-autres           { color: #4db6ac; border-color: #4db6ac; background: rgba(77,182,172,0.1); }
+.cat-parchemin        { color: #ce93d8; border-color: #ab47bc; background: rgba(171,71,188,0.1); }
 
 .consommable-desc {
   font-size: 0.75rem;

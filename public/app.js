@@ -188,9 +188,10 @@
   let spellsCache = null;
   let saveTimeout = null;
   let editMode = false;
-  let consumablesCollapsed = false;
-  let questCollapsed = false;
-  let weaponsInvCollapsed = false;
+  let consumablesCollapsed = true;
+  let questCollapsed = true;
+  let weaponsInvCollapsed = true;
+  let scrollsCollapsed = true;
   let weaponTypeCatFilter = 'Tous';
   let allSpellsCache = null;
   let weaponEditIndex = null;
@@ -1008,6 +1009,50 @@
     }
     document.getElementById('btn-add-weapon-inv').onclick = () => openWeaponModal(null);
 
+    // Parchemins de sort
+    if (!character.spellScrolls) character.spellScrolls = [];
+    const $scrolls = document.getElementById('scrolls-list');
+    $scrolls.innerHTML = '';
+    document.getElementById('scrolls-toggle').textContent = scrollsCollapsed ? '▶' : '▼';
+    document.getElementById('scrolls-body').classList.toggle('hidden', scrollsCollapsed);
+    if (!scrollsCollapsed) {
+      character.spellScrolls.forEach((sc, i) => {
+        const row = document.createElement('div');
+        row.className = 'consommable-row';
+        row.innerHTML =
+          '<div class="consommable-info">' +
+            '<div class="consommable-header-row">' +
+              '<span class="consommable-name">📜 ' + sc.name + '</span>' +
+              '<span class="consommable-tag cat-parchemin">Niv. ' + (sc.level === 0 ? 'C' : sc.level) + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="consommable-ctrl">' +
+            '<button class="btn-qty-c" data-i="' + i + '" data-d="-1">−</button>' +
+            '<span class="consommable-qty">' + (sc.qty || 1) + '</span>' +
+            '<button class="btn-qty-c" data-i="' + i + '" data-d="1">+</button>' +
+            '<button class="btn-remove-c" data-i="' + i + '">✕</button>' +
+          '</div>';
+
+        row.querySelectorAll('.btn-qty-c').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.i, 10);
+            const newQty = (character.spellScrolls[idx].qty || 1) + parseInt(btn.dataset.d, 10);
+            if (newQty < 1) return;
+            character.spellScrolls[idx].qty = newQty;
+            saveCharacter();
+            renderInventaire();
+          });
+        });
+        row.querySelector('.btn-remove-c').addEventListener('click', () => {
+          character.spellScrolls.splice(i, 1);
+          saveCharacter();
+          renderInventaire();
+        });
+        $scrolls.appendChild(row);
+      });
+    }
+    document.getElementById('btn-add-scroll').onclick = () => openScrollModal();
+
     // Consommables
     const $equip = document.getElementById('equipment-list');
     $equip.innerHTML = '';
@@ -1560,6 +1605,93 @@
     };
     document.getElementById('weapon-inv-detail-modal').classList.remove('hidden');
   }
+
+  document.getElementById('scrolls-header').addEventListener('click', () => {
+    scrollsCollapsed = !scrollsCollapsed;
+    renderInventaire();
+  });
+
+  // --- Scroll modal ---
+  let scrollLevelFilter = '';
+
+  function openScrollModal() {
+    scrollLevelFilter = '';
+    document.getElementById('scroll-search').value = '';
+    renderScrollFilters();
+    renderScrollList();
+    document.getElementById('scroll-modal').classList.remove('hidden');
+  }
+
+  const SCROLL_LEVELS = ['Tous', 'Cantrip', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+  function renderScrollFilters() {
+    const $f = document.getElementById('scroll-filters');
+    $f.innerHTML = '';
+    SCROLL_LEVELS.forEach(lvl => {
+      const btn = document.createElement('button');
+      btn.className = 'potion-filter-btn' + (lvl === (scrollLevelFilter || 'Tous') ? ' active' : '');
+      btn.textContent = lvl;
+      btn.addEventListener('click', () => {
+        scrollLevelFilter = lvl === 'Tous' ? '' : (lvl === 'Cantrip' ? '0' : lvl);
+        renderScrollFilters();
+        renderScrollList();
+      });
+      $f.appendChild(btn);
+    });
+  }
+
+  async function renderScrollList() {
+    const $list = document.getElementById('scroll-spell-list');
+    $list.innerHTML = '';
+    const search = document.getElementById('scroll-search').value.toLowerCase();
+    const spells = await fetchAllSpells();
+    const filtered = spells.filter(s => {
+      const matchSearch = !search || s.name.toLowerCase().includes(search);
+      const matchLevel  = scrollLevelFilter === '' || String(s.level) === scrollLevelFilter;
+      return matchSearch && matchLevel;
+    });
+
+    if (filtered.length === 0) {
+      $list.innerHTML = '<p class="potion-empty">Aucun sort trouvé.</p>';
+      return;
+    }
+
+    filtered.slice(0, 40).forEach(spell => {
+      const row = document.createElement('div');
+      row.className = 'potion-row';
+      const lvlLabel = spell.level === 0 ? 'Cantrip' : 'Niv. ' + spell.level;
+      row.innerHTML =
+        '<div class="potion-info">' +
+          '<span class="potion-name">📜 ' + spell.name + '</span>' +
+          '<span class="potion-desc">' + lvlLabel + (spell.school ? ' · ' + spell.school : '') + '</span>' +
+        '</div>' +
+        '<div class="potion-add-ctrl">' +
+          '<button class="btn-qty-p" data-d="-1">−</button>' +
+          '<span class="potion-qty">1</span>' +
+          '<button class="btn-qty-p" data-d="1">+</button>' +
+          '<button class="btn-potion-add">Ajouter</button>' +
+        '</div>';
+
+      const qtyEl = row.querySelector('.potion-qty');
+      row.querySelectorAll('.btn-qty-p').forEach(btn => {
+        btn.addEventListener('click', () => {
+          let q = parseInt(qtyEl.textContent, 10) + parseInt(btn.dataset.d, 10);
+          if (q < 1) q = 1;
+          qtyEl.textContent = q;
+        });
+      });
+      row.querySelector('.btn-potion-add').addEventListener('click', () => {
+        if (!character.spellScrolls) character.spellScrolls = [];
+        character.spellScrolls.push({ id: spell.id, name: spell.name, level: spell.level, qty: parseInt(qtyEl.textContent, 10) });
+        saveCharacter();
+        renderInventaire();
+        document.getElementById('scroll-modal').classList.add('hidden');
+      });
+      $list.appendChild(row);
+    });
+  }
+
+  document.getElementById('scroll-search').addEventListener('input', renderScrollList);
 
   document.getElementById('consommables-header').addEventListener('click', () => {
     consumablesCollapsed = !consumablesCollapsed;
