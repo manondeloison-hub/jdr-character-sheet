@@ -332,6 +332,14 @@
         </div>
 
         <div class="section-group">
+          <h2 id="equip-inv-header" class="section-collapsible">Équipement <span id="equip-inv-toggle">▼</span></h2>
+          <div id="equip-inv-body">
+            <div id="equip-inv-list"></div>
+            <button id="btn-add-equip-inv" class="btn-add-potion">+ Ajouter un équipement</button>
+          </div>
+        </div>
+
+        <div class="section-group">
           <h2 id="consommables-header" class="section-collapsible">Consommables <span id="consommables-toggle">▼</span></h2>
           <div id="consommables-body">
             <div id="equipment-list"></div>
@@ -521,6 +529,99 @@
         </div>
         <div class="potion-filters" id="potion-filters"></div>
         <div id="potion-list" class="potion-list"></div>
+      </div>
+    </div>
+
+    <!-- EQUIPMENT ADD/EDIT MODAL -->
+    <div id="equip-inv-modal" class="modal hidden">
+      <div class="modal-content modal-large weapon-modal-content">
+        <button class="modal-close">&times;</button>
+        <h2 id="equip-modal-title">Ajouter un équipement</h2>
+
+        <div class="wm-section">
+          <label class="wm-label">Nom de l'objet</label>
+          <input type="text" id="em-name" placeholder="Ex : Anneau de protection…">
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Emplacement</label>
+          <select id="em-slot-type" class="wm-select"></select>
+        </div>
+
+        <div class="wm-section hidden" id="em-armor-section">
+          <label class="wm-label">Catégorie d'armure</label>
+          <select id="em-armor-cat" class="wm-select">
+            <option value="">Choisir…</option>
+            <option value="Légère">Légère</option>
+            <option value="Intermédiaire">Intermédiaire</option>
+            <option value="Lourde">Lourde</option>
+          </select>
+          <label class="wm-label" style="margin-top:0.5rem">Type d'armure</label>
+          <select id="em-armor-type" class="wm-select">
+            <option value="">Choisir une catégorie d'abord…</option>
+          </select>
+          <div id="em-armor-info" class="em-armor-info hidden">
+            <span id="em-armor-ca-display"></span>
+            <span id="em-armor-dex-display"></span>
+          </div>
+        </div>
+
+        <div class="wm-section hidden" id="em-shield-section">
+          <label class="wm-label">Bonus de CA</label>
+          <select id="em-shield-bonus" class="wm-select">
+            <option value="2">+2 (standard)</option>
+            <option value="3">+3 (magique)</option>
+            <option value="4">+4 (magique)</option>
+            <option value="5">+5 (magique)</option>
+          </select>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Bonus de caractéristiques</label>
+          <div id="em-stat-rows"></div>
+          <button id="btn-em-add-stat" class="wm-add-row-btn">+ Ajouter un bonus de carac.</button>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Bonus de compétences</label>
+          <div id="em-skill-rows"></div>
+          <button id="btn-em-add-skill" class="wm-add-row-btn">+ Ajouter un bonus de compétence</button>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Sorts associés</label>
+          <input type="text" id="em-spell-search" placeholder="Rechercher un sort…">
+          <div id="em-spell-results" class="wm-spell-results"></div>
+          <div id="em-spell-selected" class="wm-spell-selected"></div>
+        </div>
+
+        <div class="wm-section">
+          <label class="wm-label">Description</label>
+          <textarea id="em-desc" rows="3" placeholder="Propriétés spéciales, histoire…"></textarea>
+        </div>
+
+        <div class="wm-actions">
+          <button id="btn-em-confirm" class="btn-primary">Ajouter</button>
+          <button id="btn-em-cancel" class="btn-secondary">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EQUIPMENT DETAIL MODAL -->
+    <div id="equip-inv-detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div id="equip-detail-view">
+          <h2 id="ed-name"></h2>
+          <div id="ed-meta" class="wd-meta"></div>
+          <div id="ed-bonuses" class="wd-dmg"></div>
+          <div id="ed-spells" class="wd-spells"></div>
+          <p id="ed-desc" class="wd-desc"></p>
+          <div class="quest-detail-actions">
+            <button id="btn-ed-edit" class="btn-secondary">✏️ Modifier</button>
+            <button id="btn-ed-delete" class="btn-quest-delete">Supprimer</button>
+          </div>
+        </div>
       </div>
     </div>
 

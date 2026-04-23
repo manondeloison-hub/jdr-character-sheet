@@ -145,6 +145,44 @@
 
   const WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
 
+  const EQUIPMENT_SLOT_TYPES = [
+    { key: 'head1',      label: 'Tête',           icon: '🪖' },
+    { key: 'head2',      label: 'Tête (accessoire)', icon: '👓' },
+    { key: 'chest',      label: 'Buste (armure)',  icon: '🥋' },
+    { key: 'legs',       label: 'Jambes',          icon: '👖' },
+    { key: 'feet',       label: 'Pieds',           icon: '👢' },
+    { key: 'belt',       label: 'Ceinture',        icon: '🪢' },
+    { key: 'back',       label: 'Dos',             icon: '🧣' },
+    { key: 'neck',       label: 'Cou',             icon: '📿' },
+    { key: 'wristLeft',  label: 'Poignet G',       icon: '⌚' },
+    { key: 'wristRight', label: 'Poignet D',       icon: '⌚' },
+    { key: 'fingerLeft', label: 'Doigt G',         icon: '💍' },
+    { key: 'fingerRight',label: 'Doigt D',         icon: '💍' },
+    { key: 'outfit',     label: 'Tenue',           icon: '👘' },
+    { key: 'shield',     label: 'Bouclier',        icon: '🛡️' },
+  ];
+
+  const ARMOR_CATEGORIES = {
+    'Légère':       [
+      { name: 'Matelassée',  baseCA: 11, dex: 'full' },
+      { name: 'Cuir',        baseCA: 11, dex: 'full' },
+      { name: 'Cuir clouté', baseCA: 12, dex: 'full' },
+    ],
+    'Intermédiaire': [
+      { name: 'Peaux',              baseCA: 12, dex: 'max2' },
+      { name: 'Chemise de mailles', baseCA: 13, dex: 'max2' },
+      { name: 'Écailles',           baseCA: 14, dex: 'max2' },
+      { name: 'Cuirasse',           baseCA: 14, dex: 'max2' },
+      { name: 'Demi-plate',         baseCA: 15, dex: 'max2' },
+    ],
+    'Lourde': [
+      { name: 'Anneaux',          baseCA: 14, dex: 'none' },
+      { name: 'Cottes de mailles',baseCA: 16, dex: 'none' },
+      { name: 'Éclisses',         baseCA: 17, dex: 'none' },
+      { name: 'Harnois',          baseCA: 18, dex: 'none' },
+    ],
+  };
+
   const WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
 
   const DAMAGE_TYPES = ['Acide', 'Contondant', 'Éclair', 'Feu', 'Force', 'Froid', 'Nécrotique', 'Perforant', 'Poison', 'Psychique', 'Radiant', 'Tonnerre', 'Tranchant'];
@@ -195,6 +233,8 @@
   let weaponTypeCatFilter = 'Tous';
   let allSpellsCache = null;
   let weaponEditIndex = null;
+  let equipCollapsed = true;
+  let equipEditIndex = null;
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -1009,6 +1049,55 @@
     }
     document.getElementById('btn-add-weapon-inv').onclick = () => openWeaponModal(null);
 
+    // Équipement inventaire
+    if (!character.inventoryEquipment) character.inventoryEquipment = [];
+    const $einvlist = document.getElementById('equip-inv-list');
+    $einvlist.innerHTML = '';
+    document.getElementById('equip-inv-toggle').textContent = equipCollapsed ? '▶' : '▼';
+    document.getElementById('equip-inv-body').classList.toggle('hidden', equipCollapsed);
+    if (!equipCollapsed) {
+      character.inventoryEquipment.forEach((item, i) => {
+        const slotDef = EQUIPMENT_SLOT_TYPES.find(s => s.key === item.slotType) || { icon: '🎒', label: '' };
+        const equipped = !!item.equipped;
+
+        let tags = '';
+        if (item.slotType === 'chest' && item.baseCA) tags += '<span class="wtag wtag-bonus">CA ' + item.baseCA + '</span>';
+        if (item.slotType === 'shield' && item.shieldBonus) tags += '<span class="wtag wtag-bonus">+' + item.shieldBonus + ' CA</span>';
+        (item.statBonuses || []).forEach(b => {
+          if (b.stat && b.amount) tags += '<span class="wtag wtag-prop">+' + b.amount + ' ' + (STATS[b.stat] || b.stat) + '</span>';
+        });
+        (item.skillBonuses || []).forEach(b => {
+          if (b.skill && b.bonus) tags += '<span class="wtag wtag-prop">+' + b.bonus + ' ' + b.skill + '</span>';
+        });
+        if (item.spells && item.spells.length) tags += '<span class="wtag wtag-spell">✨ ' + item.spells.length + ' sort' + (item.spells.length > 1 ? 's' : '') + '</span>';
+
+        const row = document.createElement('div');
+        row.className = 'weapon-inv-row' + (equipped ? ' weapon-equipped' : '');
+        row.innerHTML =
+          '<span class="weapon-inv-icon">' + slotDef.icon + '</span>' +
+          '<div class="weapon-inv-body">' +
+            '<div class="weapon-inv-top">' +
+              '<span class="weapon-inv-name">' + item.name + '</span>' +
+              (slotDef.label ? '<span class="weapon-inv-type">' + slotDef.label + '</span>' : '') +
+              '<button class="btn-weapon-equip' + (equipped ? ' is-equipped' : '') + '" data-i="' + i + '" title="' + (equipped ? 'Équipé — cliquer pour retirer' : 'Non équipé — cliquer pour équiper') + '">' +
+                (equipped ? '✅' : '○') +
+              '</button>' +
+            '</div>' +
+            (tags ? '<div class="weapon-inv-tags">' + tags + '</div>' : '') +
+          '</div>';
+
+        row.querySelector('.btn-weapon-equip').addEventListener('click', (e) => {
+          e.stopPropagation();
+          character.inventoryEquipment[i].equipped = !character.inventoryEquipment[i].equipped;
+          saveCharacter();
+          renderInventaire();
+        });
+        row.addEventListener('click', () => openEquipDetail(i));
+        $einvlist.appendChild(row);
+      });
+    }
+    document.getElementById('btn-add-equip-inv').onclick = () => openEquipModal(null);
+
     // Parchemins de sort
     if (!character.spellScrolls) character.spellScrolls = [];
     const $scrolls = document.getElementById('scrolls-list');
@@ -1321,6 +1410,11 @@
 
   document.getElementById('weapons-inv-header').addEventListener('click', () => {
     weaponsInvCollapsed = !weaponsInvCollapsed;
+    renderInventaire();
+  });
+
+  document.getElementById('equip-inv-header').addEventListener('click', () => {
+    equipCollapsed = !equipCollapsed;
     renderInventaire();
   });
 
@@ -1692,6 +1786,290 @@
   }
 
   document.getElementById('scroll-search').addEventListener('input', renderScrollList);
+
+  // --- Equipment modal ---
+  function openEquipModal(editIdx) {
+    equipEditIndex = editIdx;
+    const item = editIdx !== null ? character.inventoryEquipment[editIdx] : null;
+
+    document.getElementById('equip-modal-title').textContent = item ? 'Modifier l\'équipement' : 'Ajouter un équipement';
+    document.getElementById('btn-em-confirm').textContent = item ? 'Enregistrer' : 'Ajouter';
+    document.getElementById('em-name').value = item ? item.name : '';
+    document.getElementById('em-desc').value = item ? (item.desc || '') : '';
+
+    const $slotSel = document.getElementById('em-slot-type');
+    $slotSel.innerHTML = EQUIPMENT_SLOT_TYPES.map(s =>
+      '<option value="' + s.key + '"' + (item && item.slotType === s.key ? ' selected' : '') + '>' + s.icon + ' ' + s.label + '</option>'
+    ).join('');
+
+    updateEmConditionalSections();
+
+    if (item && item.slotType === 'chest') {
+      document.getElementById('em-armor-cat').value = item.armorCat || '';
+      updateEmArmorTypes(item.armorType || '');
+    } else {
+      document.getElementById('em-armor-cat').value = '';
+      document.getElementById('em-armor-type').innerHTML = '<option value="">Choisir une catégorie d\'abord…</option>';
+      document.getElementById('em-armor-info').classList.add('hidden');
+    }
+    if (item && item.slotType === 'shield') {
+      document.getElementById('em-shield-bonus').value = item.shieldBonus || 2;
+    }
+
+    renderEmStatRows(item ? (item.statBonuses || []) : []);
+    renderEmSkillRows(item ? (item.skillBonuses || []) : []);
+    renderEmSpellSelected(item ? (item.spells || []) : []);
+    document.getElementById('em-spell-search').value = '';
+    document.getElementById('em-spell-results').innerHTML = '';
+
+    document.getElementById('equip-inv-modal').classList.remove('hidden');
+    document.getElementById('em-name').focus();
+  }
+
+  function updateEmConditionalSections() {
+    const slotType = document.getElementById('em-slot-type').value;
+    document.getElementById('em-armor-section').classList.toggle('hidden', slotType !== 'chest');
+    document.getElementById('em-shield-section').classList.toggle('hidden', slotType !== 'shield');
+  }
+
+  function updateEmArmorTypes(selectedName) {
+    const cat = document.getElementById('em-armor-cat').value;
+    const $t = document.getElementById('em-armor-type');
+    const armors = ARMOR_CATEGORIES[cat] || [];
+    $t.innerHTML = '<option value="">Choisir…</option>' +
+      armors.map(a => '<option value="' + a.name + '"' + (a.name === selectedName ? ' selected' : '') + '>' + a.name + ' (CA ' + a.baseCA + ')</option>').join('');
+    updateEmArmorInfo();
+  }
+
+  function updateEmArmorInfo() {
+    const cat = document.getElementById('em-armor-cat').value;
+    const typeName = document.getElementById('em-armor-type').value;
+    const $info = document.getElementById('em-armor-info');
+    const armor = (ARMOR_CATEGORIES[cat] || []).find(a => a.name === typeName);
+    if (armor) {
+      $info.classList.remove('hidden');
+      document.getElementById('em-armor-ca-display').textContent = 'CA de base : ' + armor.baseCA;
+      const dexLabel = armor.dex === 'full' ? 'Dextérité : totale' : armor.dex === 'max2' ? 'Dextérité : max +2' : 'Dextérité : aucune';
+      document.getElementById('em-armor-dex-display').textContent = dexLabel;
+    } else {
+      $info.classList.add('hidden');
+    }
+  }
+
+  function renderEmStatRows(rows) {
+    const $c = document.getElementById('em-stat-rows');
+    $c.innerHTML = '';
+    rows.forEach((row, i) => {
+      const div = document.createElement('div');
+      div.className = 'wm-dmg-row';
+      div.innerHTML =
+        '<select class="em-stat-key wm-select">' +
+          Object.entries(STATS).map(([k, v]) => '<option value="' + k + '"' + (k === row.stat ? ' selected' : '') + '>' + v + '</option>').join('') +
+        '</select>' +
+        '<input type="number" class="em-stat-amount wm-dmg-amount" placeholder="+2" value="' + (row.amount || '') + '">' +
+        '<button class="btn-em-del-stat">✕</button>';
+      div.querySelector('.btn-em-del-stat').addEventListener('click', () => {
+        rows.splice(i, 1);
+        renderEmStatRows(rows);
+      });
+      $c.appendChild(div);
+    });
+    $c._rows = rows;
+  }
+
+  function renderEmSkillRows(rows) {
+    const $c = document.getElementById('em-skill-rows');
+    $c.innerHTML = '';
+    rows.forEach((row, i) => {
+      const div = document.createElement('div');
+      div.className = 'wm-dmg-row';
+      div.innerHTML =
+        '<select class="em-skill-key wm-select">' +
+          SKILLS.map(s => '<option value="' + s.name + '"' + (s.name === row.skill ? ' selected' : '') + '>' + s.name + '</option>').join('') +
+        '</select>' +
+        '<input type="number" class="em-skill-bonus wm-dmg-amount" placeholder="+2" value="' + (row.bonus || '') + '">' +
+        '<button class="btn-em-del-skill">✕</button>';
+      div.querySelector('.btn-em-del-skill').addEventListener('click', () => {
+        rows.splice(i, 1);
+        renderEmSkillRows(rows);
+      });
+      $c.appendChild(div);
+    });
+    $c._rows = rows;
+  }
+
+  async function renderEmSpellResults(search) {
+    const $r = document.getElementById('em-spell-results');
+    $r.innerHTML = '';
+    if (!search) return;
+    const spells = await fetchAllSpells();
+    const filtered = spells.filter(s => s.name.toLowerCase().includes(search.toLowerCase())).slice(0, 8);
+    filtered.forEach(spell => {
+      const item = document.createElement('div');
+      item.className = 'wm-spell-result-item';
+      item.textContent = spell.name + (spell.level === 0 ? ' (cantrip)' : ' (niv.' + spell.level + ')');
+      item.addEventListener('click', () => {
+        const $sel = document.getElementById('em-spell-selected');
+        const existing = [...$sel.querySelectorAll('.wm-spell-chip')].map(c => c.dataset.id);
+        if (existing.includes(spell.id)) return;
+        addWmSpellChip($sel, { id: spell.id, name: spell.name, uses: 1, usesLeft: 1, recovery: 'Repos long' });
+        document.getElementById('em-spell-search').value = '';
+        document.getElementById('em-spell-results').innerHTML = '';
+      });
+      $r.appendChild(item);
+    });
+  }
+
+  function renderEmSpellSelected(spells) {
+    const $sel = document.getElementById('em-spell-selected');
+    $sel.innerHTML = '';
+    spells.forEach(sp => addWmSpellChip($sel, sp));
+  }
+
+  document.getElementById('em-slot-type').addEventListener('change', updateEmConditionalSections);
+  document.getElementById('em-armor-cat').addEventListener('change', () => updateEmArmorTypes(''));
+  document.getElementById('em-armor-type').addEventListener('change', updateEmArmorInfo);
+  document.getElementById('em-spell-search').addEventListener('input', (e) => renderEmSpellResults(e.target.value));
+
+  document.getElementById('btn-em-add-stat').addEventListener('click', () => {
+    const $c = document.getElementById('em-stat-rows');
+    const rows = $c._rows || [];
+    rows.push({ stat: 'strength', amount: '' });
+    renderEmStatRows(rows);
+  });
+
+  document.getElementById('btn-em-add-skill').addEventListener('click', () => {
+    const $c = document.getElementById('em-skill-rows');
+    const rows = $c._rows || [];
+    rows.push({ skill: SKILLS[0].name, bonus: '' });
+    renderEmSkillRows(rows);
+  });
+
+  document.getElementById('btn-em-confirm').addEventListener('click', () => {
+    const name = document.getElementById('em-name').value.trim();
+    if (!name) { document.getElementById('em-name').focus(); return; }
+
+    const slotType = document.getElementById('em-slot-type').value;
+    const desc = document.getElementById('em-desc').value.trim();
+
+    let armorCat = '', armorType = '', baseCA = 0, dex = '';
+    if (slotType === 'chest') {
+      armorCat  = document.getElementById('em-armor-cat').value;
+      armorType = document.getElementById('em-armor-type').value;
+      const armor = (ARMOR_CATEGORIES[armorCat] || []).find(a => a.name === armorType);
+      if (armor) { baseCA = armor.baseCA; dex = armor.dex; }
+    }
+
+    let shieldBonus = 0;
+    if (slotType === 'shield') {
+      shieldBonus = parseInt(document.getElementById('em-shield-bonus').value, 10) || 2;
+    }
+
+    const $statRows = document.getElementById('em-stat-rows');
+    const statBonuses = [...$statRows.querySelectorAll('.wm-dmg-row')].map(row => ({
+      stat:   row.querySelector('.em-stat-key').value,
+      amount: parseInt(row.querySelector('.em-stat-amount').value, 10) || 0,
+    })).filter(b => b.amount);
+
+    const $skillRows = document.getElementById('em-skill-rows');
+    const skillBonuses = [...$skillRows.querySelectorAll('.wm-dmg-row')].map(row => ({
+      skill: row.querySelector('.em-skill-key').value,
+      bonus: parseInt(row.querySelector('.em-skill-bonus').value, 10) || 0,
+    })).filter(b => b.bonus);
+
+    const spells = [...document.getElementById('em-spell-selected').querySelectorAll('.wm-spell-chip')].map(chip => ({
+      id:       chip.dataset.id,
+      name:     chip.querySelector('.wm-chip-name').textContent,
+      uses:     parseInt(chip.querySelector('.wm-chip-uses').value, 10) || 1,
+      usesLeft: parseInt(chip.querySelector('.wm-chip-uses').value, 10) || 1,
+      recovery: chip.querySelector('.wm-chip-recovery').value,
+    }));
+
+    const equipped = equipEditIndex !== null ? (character.inventoryEquipment[equipEditIndex].equipped || false) : false;
+    const newItem = { name, slotType, armorCat, armorType, baseCA, dex, shieldBonus, statBonuses, skillBonuses, spells, desc, equipped };
+
+    if (!character.inventoryEquipment) character.inventoryEquipment = [];
+    if (equipEditIndex !== null) {
+      newItem.spells = spells.map((s, si) => ({ ...s, usesLeft: character.inventoryEquipment[equipEditIndex].spells?.[si]?.usesLeft ?? s.uses }));
+      character.inventoryEquipment[equipEditIndex] = newItem;
+    } else {
+      character.inventoryEquipment.push(newItem);
+    }
+    saveCharacter();
+    renderInventaire();
+    document.getElementById('equip-inv-modal').classList.add('hidden');
+  });
+
+  document.getElementById('btn-em-cancel').addEventListener('click', () => {
+    document.getElementById('equip-inv-modal').classList.add('hidden');
+  });
+
+  function openEquipDetail(i) {
+    const item = character.inventoryEquipment[i];
+    const slotDef = EQUIPMENT_SLOT_TYPES.find(s => s.key === item.slotType) || { icon: '🎒', label: '—' };
+
+    document.getElementById('ed-name').textContent = item.name;
+
+    let meta = '<span class="weapon-inv-type">' + slotDef.icon + ' ' + slotDef.label + '</span>';
+    if (item.slotType === 'chest' && item.armorType) {
+      meta += ' <span class="weapon-inv-type">' + item.armorType + ' (CA ' + item.baseCA + ')</span>';
+    }
+    if (item.slotType === 'shield' && item.shieldBonus) {
+      meta += ' <span class="weapon-inv-bonus">+' + item.shieldBonus + ' CA</span>';
+    }
+    document.getElementById('ed-meta').innerHTML = meta;
+
+    let bonusHtml = '';
+    if (item.statBonuses && item.statBonuses.length) {
+      bonusHtml += '<div class="wd-section-title">Bonus de caractéristiques</div>' +
+        item.statBonuses.map(b => '<span class="wd-dmg-tag">+' + b.amount + ' ' + (STATS[b.stat] || b.stat) + '</span>').join('');
+    }
+    if (item.skillBonuses && item.skillBonuses.length) {
+      bonusHtml += '<div class="wd-section-title">Bonus de compétences</div>' +
+        item.skillBonuses.map(b => '<span class="wd-dmg-tag">+' + b.bonus + ' ' + b.skill + '</span>').join('');
+    }
+    document.getElementById('ed-bonuses').innerHTML = bonusHtml;
+
+    let spellsHtml = '';
+    if (item.spells && item.spells.length) {
+      spellsHtml = '<div class="wd-section-title">Sorts associés</div>' +
+        item.spells.map((s, si) =>
+          '<div class="wd-spell-row">' +
+            '<span class="wd-spell-name">✨ ' + s.name + '</span>' +
+            '<div class="wd-spell-uses">' +
+              '<button class="btn-ed-spell-use" data-ei="' + i + '" data-si="' + si + '" data-d="-1">−</button>' +
+              '<span class="wd-uses-left">' + (s.usesLeft ?? s.uses) + ' / ' + s.uses + '</span>' +
+              '<button class="btn-ed-spell-use" data-ei="' + i + '" data-si="' + si + '" data-d="1">+</button>' +
+              '<span class="wd-recovery">(' + s.recovery + ')</span>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+    }
+    document.getElementById('ed-spells').innerHTML = spellsHtml;
+    document.getElementById('ed-spells').querySelectorAll('.btn-ed-spell-use').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const ei = parseInt(btn.dataset.ei, 10);
+        const si = parseInt(btn.dataset.si, 10);
+        const sp = character.inventoryEquipment[ei].spells[si];
+        sp.usesLeft = Math.max(0, Math.min(sp.uses, (sp.usesLeft ?? sp.uses) + parseInt(btn.dataset.d, 10)));
+        saveCharacter();
+        openEquipDetail(ei);
+      });
+    });
+
+    document.getElementById('ed-desc').textContent = item.desc || '';
+    document.getElementById('btn-ed-edit').onclick = () => {
+      document.getElementById('equip-inv-detail-modal').classList.add('hidden');
+      openEquipModal(i);
+    };
+    document.getElementById('btn-ed-delete').onclick = () => {
+      character.inventoryEquipment.splice(i, 1);
+      saveCharacter();
+      renderInventaire();
+      document.getElementById('equip-inv-detail-modal').classList.add('hidden');
+    };
+    document.getElementById('equip-inv-detail-modal').classList.remove('hidden');
+  }
 
   document.getElementById('consommables-header').addEventListener('click', () => {
     consumablesCollapsed = !consumablesCollapsed;
