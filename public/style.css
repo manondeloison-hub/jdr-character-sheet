@@ -2385,6 +2385,79 @@ main {
   margin-bottom: 1rem;
 }
 
+/* --- Conflict modal --- */
+.modal-conflict {
+  max-width: 360px;
+}
+
+.conflict-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.conflict-swap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+.conflict-old { color: var(--text-dim); }
+.conflict-arrow { color: var(--gold); font-weight: 700; }
+.conflict-new { color: var(--gold); font-weight: 600; }
+
+.conflict-choice-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.conflict-slot-label {
+  color: var(--text-dim);
+  min-width: 5.5rem;
+  font-size: 0.8rem;
+}
+
+.conflict-slot-name {
+  flex: 1;
+  color: var(--text);
+}
+
+.conflict-choice-row .btn-primary {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.conflict-2h-item {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  font-size: 0.85rem;
+}
+
+.btn-conflict-confirm {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.conflict-cancel-row {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

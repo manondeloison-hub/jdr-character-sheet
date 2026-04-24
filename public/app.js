@@ -1047,7 +1047,7 @@
       character.inventoryWeapons.forEach((w, i) => {
         const wt     = WEAPON_TYPES.find(t => t.name === w.type) || {};
         const icon   = wt.icon || '⚔️';
-        const equipped = !!w.equipped;
+        const equipped = !!(character.handSlots && (character.handSlots.left === w.name || character.handSlots.right === w.name));
 
         // Tags dégâts : base + bonus
         let dmgTags = '';
@@ -1081,9 +1081,7 @@
 
         row.querySelector('.btn-weapon-equip').addEventListener('click', (e) => {
           e.stopPropagation();
-          character.inventoryWeapons[i].equipped = !character.inventoryWeapons[i].equipped;
-          saveCharacter();
-          renderInventaire();
+          quickEquipWeapon(w);
         });
         row.addEventListener('click', () => openWeaponDetail(i));
         $wlist.appendChild(row);
@@ -1100,7 +1098,7 @@
     if (!equipCollapsed) {
       character.inventoryEquipment.forEach((item, i) => {
         const slotDef = EQUIPMENT_SLOT_TYPES.find(s => s.key === item.slotType) || { icon: '🎒', label: '' };
-        const equipped = !!item.equipped;
+        const equipped = Object.values(character.equipmentSlots || {}).some(v => v === item.name);
 
         let tags = '';
         if (item.slotType === 'chest' && item.baseCA) tags += '<span class="wtag wtag-bonus">CA ' + (item.baseCA + (item.armorBonus || 0)) + (item.armorBonus ? ' (+' + item.armorBonus + ')' : '') + '</span>';
@@ -1130,9 +1128,7 @@
 
         row.querySelector('.btn-weapon-equip').addEventListener('click', (e) => {
           e.stopPropagation();
-          character.inventoryEquipment[i].equipped = !character.inventoryEquipment[i].equipped;
-          saveCharacter();
-          renderInventaire();
+          quickEquipEquipItem(item);
         });
         row.addEventListener('click', () => openEquipDetail(i));
         $einvlist.appendChild(row);
@@ -2119,6 +2115,176 @@
       document.getElementById('equip-inv-detail-modal').classList.add('hidden');
     };
     document.getElementById('equip-inv-detail-modal').classList.remove('hidden');
+  }
+
+  // --- Équipement rapide depuis l'inventaire ---
+
+  function getSlotsForType(slotType) {
+    if (slotType === 'wrist')  return ['wristRight', 'wristLeft'];
+    if (slotType === 'finger') return ['fingerRight', 'fingerLeft'];
+    return [slotType];
+  }
+
+  function slotLabel(s) {
+    if (s === 'right') return 'Main D';
+    if (s === 'left')  return 'Main G';
+    const all = [
+      ...EQUIP_SLOTS_LEFT,
+      ...EQUIP_SLOTS_RIGHT.flatMap(sl => sl.pairKey
+        ? [{ key: sl.key, label: sl.label }, { key: sl.pairKey, label: sl.pairLabel }]
+        : [sl]
+      )
+    ];
+    const found = all.find(sl => sl.key === s);
+    return found ? found.label : s;
+  }
+
+  function openEquipConflict(config) {
+    const modal = document.getElementById('equip-conflict-modal');
+    const content = document.getElementById('conflict-content');
+    content.innerHTML = '';
+
+    if (config.type === 'single') {
+      content.innerHTML =
+        '<p class="conflict-desc">L\'emplacement <strong>' + slotLabel(config.slot) + '</strong> est déjà occupé :</p>' +
+        '<div class="conflict-swap">' +
+          '<span class="conflict-old">' + config.currentItems[0].name + '</span>' +
+          '<span class="conflict-arrow">→</span>' +
+          '<span class="conflict-new">' + config.incoming + '</span>' +
+        '</div>';
+      const btn = document.createElement('button');
+      btn.className = 'btn-primary btn-conflict-confirm';
+      btn.textContent = 'Remplacer';
+      btn.onclick = () => { config.onReplace(config.slot); modal.classList.add('hidden'); };
+      content.appendChild(btn);
+    } else if (config.type === 'paired' || config.type === 'paired-hand') {
+      const p = document.createElement('p');
+      p.className = 'conflict-desc';
+      p.innerHTML = 'Choisir l\'emplacement à remplacer pour <strong>' + config.incoming + '</strong> :';
+      content.appendChild(p);
+      config.currentItems.forEach(ci => {
+        const row = document.createElement('div');
+        row.className = 'conflict-choice-row';
+        row.innerHTML =
+          '<span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>' +
+          '<span class="conflict-slot-name">' + ci.name + '</span>';
+        const btn = document.createElement('button');
+        btn.className = 'btn-primary btn-conflict-confirm';
+        btn.textContent = 'Remplacer';
+        btn.onclick = () => { config.onReplace(ci.slot); modal.classList.add('hidden'); };
+        row.appendChild(btn);
+        content.appendChild(row);
+      });
+    } else if (config.type === '2h') {
+      const occupied = config.currentItems.filter(ci => ci.name);
+      content.innerHTML =
+        '<p class="conflict-desc">Équiper <strong>' + config.incoming + '</strong> (2 mains) remplacera :</p>' +
+        occupied.map(ci =>
+          '<div class="conflict-2h-item"><span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>&nbsp;: <span class="conflict-slot-name">' + ci.name + '</span></div>'
+        ).join('');
+      const btn = document.createElement('button');
+      btn.className = 'btn-primary btn-conflict-confirm';
+      btn.textContent = 'Confirmer';
+      btn.onclick = () => { config.onReplace(); modal.classList.add('hidden'); };
+      content.appendChild(btn);
+    }
+
+    document.getElementById('btn-conflict-cancel').onclick = () => modal.classList.add('hidden');
+    modal.classList.remove('hidden');
+  }
+
+  function quickEquipEquipItem(item) {
+    if (!character.equipmentSlots) character.equipmentSlots = {};
+    const slots = getSlotsForType(item.slotType);
+
+    const occupied = slots.find(s => character.equipmentSlots[s] === item.name);
+    if (occupied) {
+      character.equipmentSlots[occupied] = '';
+      saveCharacter(); renderInventaire();
+      return;
+    }
+
+    if (slots.length === 1) {
+      const slot = slots[0];
+      const cur = character.equipmentSlots[slot];
+      if (!cur) {
+        character.equipmentSlots[slot] = item.name;
+        saveCharacter(); renderInventaire();
+      } else {
+        openEquipConflict({
+          type: 'single', slot, incoming: item.name,
+          currentItems: [{ slot, name: cur }],
+          onReplace: s => { character.equipmentSlots[s] = item.name; saveCharacter(); renderInventaire(); }
+        });
+      }
+    } else {
+      const [slotA, slotB] = slots;
+      const curA = character.equipmentSlots[slotA];
+      const curB = character.equipmentSlots[slotB];
+      if (!curA) {
+        character.equipmentSlots[slotA] = item.name;
+        saveCharacter(); renderInventaire();
+      } else if (!curB) {
+        character.equipmentSlots[slotB] = item.name;
+        saveCharacter(); renderInventaire();
+      } else {
+        openEquipConflict({
+          type: 'paired', incoming: item.name,
+          currentItems: [{ slot: slotA, name: curA }, { slot: slotB, name: curB }],
+          onReplace: s => { character.equipmentSlots[s] = item.name; saveCharacter(); renderInventaire(); }
+        });
+      }
+    }
+  }
+
+  function quickEquipWeapon(w) {
+    if (!character.handSlots) character.handSlots = { left: '', right: '' };
+
+    const inRight = character.handSlots.right === w.name;
+    const inLeft  = character.handSlots.left  === w.name;
+    if (inRight || inLeft) {
+      if (inRight) character.handSlots.right = '';
+      if (inLeft)  character.handSlots.left  = '';
+      saveCharacter(); renderInventaire();
+      return;
+    }
+
+    if (w.hands === 2) {
+      const curR = character.handSlots.right;
+      const curL = character.handSlots.left;
+      if (!curR && !curL) {
+        character.handSlots.right = w.name;
+        character.handSlots.left  = w.name;
+        saveCharacter(); renderInventaire();
+      } else {
+        openEquipConflict({
+          type: '2h', incoming: w.name,
+          currentItems: [{ slot: 'right', name: curR }, { slot: 'left', name: curL }],
+          onReplace: () => {
+            character.handSlots.right = w.name;
+            character.handSlots.left  = w.name;
+            saveCharacter(); renderInventaire();
+          }
+        });
+      }
+      return;
+    }
+
+    const curR = character.handSlots.right;
+    const curL = character.handSlots.left;
+    if (!curR) {
+      character.handSlots.right = w.name;
+      saveCharacter(); renderInventaire();
+    } else if (!curL) {
+      character.handSlots.left = w.name;
+      saveCharacter(); renderInventaire();
+    } else {
+      openEquipConflict({
+        type: 'paired-hand', incoming: w.name,
+        currentItems: [{ slot: 'right', name: curR }, { slot: 'left', name: curL }],
+        onReplace: s => { character.handSlots[s] = w.name; saveCharacter(); renderInventaire(); }
+      });
+    }
   }
 
   document.getElementById('consommables-header').addEventListener('click', () => {
