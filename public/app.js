@@ -892,11 +892,14 @@
   }
 
   function countClassSpells() {
-    const known   = character.knownSpells || [];
-    const sources = character.spellSources || {};
-    const pool    = [...(spellsCache || []), ...(allSpellsCache || [])];
+    const known    = character.knownSpells || [];
+    const sources  = character.spellSources || {};
+    const pool     = [...(spellsCache || []), ...(allSpellsCache || [])];
+    const itemMap  = buildItemSpellMap();
+    const scrollIds = new Set((character.spellScrolls || []).map(s => s.id));
     let cantrips = 0, spells = 0;
     for (const id of known) {
+      if (itemMap[id] || scrollIds.has(id)) continue;   // sort d'objet ou parchemin → hors limite de classe
       if ((sources[id] || 'class') !== 'class') continue;
       const spell = pool.find(s => s.id === id);
       if (!spell) continue;
@@ -967,18 +970,21 @@
     const scrollIds   = new Set((character.spellScrolls || []).map(s => s.id));
     const itemSpellMap = buildItemSpellMap();
 
-    // Build the full spell pool: class spells + item spells not already present
-    const itemSpellIds = Object.keys(itemSpellMap);
-    const missingItemSpells = itemSpellIds.filter(id => !spellsCache.find(s => s.id === id));
-    if (missingItemSpells.length > 0 && !allSpellsCache) {
+    // Build the full spell pool: class spells + item spells + scroll spells not already present
+    const extraIds = new Set([
+      ...Object.keys(itemSpellMap),
+      ...[...scrollIds],
+    ]);
+    const missingSpells = [...extraIds].filter(id => !spellsCache.find(s => s.id === id));
+    if (missingSpells.length > 0 && !allSpellsCache) {
       fetchAllSpells().then(() => renderSpellsList());
       return;
     }
     let spellPool = [...spellsCache];
     if (allSpellsCache) {
-      missingItemSpells.forEach(id => {
+      missingSpells.forEach(id => {
         const spell = allSpellsCache.find(s => s.id === id);
-        if (spell) spellPool.push(spell);
+        if (spell && !spellPool.find(s => s.id === id)) spellPool.push(spell);
       });
     }
 
