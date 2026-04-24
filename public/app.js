@@ -2139,37 +2139,70 @@
     return found ? found.label : s;
   }
 
+  function itemSummaryHtml(name, itemType) {
+    if (!name) return '';
+    const parts = [];
+    if (itemType === 'weapon') {
+      const w = (character.inventoryWeapons || []).find(x => x.name === name);
+      if (!w) return '';
+      const wt = WEAPON_TYPES.find(t => t.name === w.type) || {};
+      if (wt.baseDmg) parts.push(wt.baseDmg);
+      (w.damageBonus || []).forEach(d => { if (d.type && d.amount) parts.push(d.amount + ' ' + d.type); });
+      if (w.atkBonus) parts.push('Atk ' + w.atkBonus);
+      if (w.hands === 2)   parts.push('2 mains');
+      if (w.hands === 'V') parts.push('Polyvalente');
+    } else {
+      const item = (character.inventoryEquipment || []).find(x => x.name === name);
+      if (!item) return '';
+      if (item.slotType === 'chest' && item.baseCA)    parts.push('CA ' + (item.baseCA + (item.armorBonus || 0)));
+      if (item.slotType === 'shield' && item.shieldBonus) parts.push('+' + item.shieldBonus + ' CA');
+      (item.statBonuses  || []).forEach(b => { if (b.stat  && b.amount) parts.push('+' + b.amount + ' ' + (STATS[b.stat] || b.stat)); });
+      (item.skillBonuses || []).forEach(b => { if (b.skill && b.bonus)  parts.push('+' + b.bonus  + ' ' + b.skill); });
+    }
+    return parts.length ? '<span class="conflict-item-bonus">' + parts.join(' · ') + '</span>' : '';
+  }
+
+  function conflictItemCard(name, itemType) {
+    return '<div class="conflict-item-card">' +
+      '<span class="conflict-item-name">' + (name || '—') + '</span>' +
+      itemSummaryHtml(name, itemType) +
+    '</div>';
+  }
+
   function openEquipConflict(config) {
     const modal = document.getElementById('equip-conflict-modal');
     const content = document.getElementById('conflict-content');
     content.innerHTML = '';
 
+    const incomingCard = conflictItemCard(config.incoming, config.itemType);
+
     if (config.type === 'single') {
       content.innerHTML =
-        '<p class="conflict-desc">L\'emplacement <strong>' + slotLabel(config.slot) + '</strong> est déjà occupé :</p>' +
-        '<div class="conflict-swap">' +
-          '<span class="conflict-old">' + config.currentItems[0].name + '</span>' +
-          '<span class="conflict-arrow">→</span>' +
-          '<span class="conflict-new">' + config.incoming + '</span>' +
-        '</div>';
+        '<p class="conflict-desc">L\'emplacement <strong>' + slotLabel(config.slot) + '</strong> est déjà occupé.</p>' +
+        '<div class="conflict-row-label">Équiper</div>' +
+        incomingCard +
+        '<div class="conflict-row-label conflict-row-label-replace">Remplacera</div>' +
+        conflictItemCard(config.currentItems[0].name, config.itemType);
       const btn = document.createElement('button');
       btn.className = 'btn-primary btn-conflict-confirm';
       btn.textContent = 'Remplacer';
       btn.onclick = () => { config.onReplace(config.slot); modal.classList.add('hidden'); };
       content.appendChild(btn);
     } else if (config.type === 'paired' || config.type === 'paired-hand') {
-      const p = document.createElement('p');
-      p.className = 'conflict-desc';
-      p.innerHTML = 'Choisir l\'emplacement à remplacer pour <strong>' + config.incoming + '</strong> :';
-      content.appendChild(p);
+      content.innerHTML =
+        '<div class="conflict-row-label">Équiper</div>' +
+        incomingCard +
+        '<p class="conflict-desc conflict-desc-choose">Choisir l\'emplacement à remplacer :</p>';
       config.currentItems.forEach(ci => {
         const row = document.createElement('div');
         row.className = 'conflict-choice-row';
         row.innerHTML =
-          '<span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>' +
-          '<span class="conflict-slot-name">' + ci.name + '</span>';
+          '<div class="conflict-choice-left">' +
+            '<span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>' +
+            conflictItemCard(ci.name, config.itemType) +
+          '</div>';
         const btn = document.createElement('button');
-        btn.className = 'btn-primary btn-conflict-confirm';
+        btn.className = 'btn-primary btn-conflict-pick';
         btn.textContent = 'Remplacer';
         btn.onclick = () => { config.onReplace(ci.slot); modal.classList.add('hidden'); };
         row.appendChild(btn);
@@ -2178,9 +2211,14 @@
     } else if (config.type === '2h') {
       const occupied = config.currentItems.filter(ci => ci.name);
       content.innerHTML =
-        '<p class="conflict-desc">Équiper <strong>' + config.incoming + '</strong> (2 mains) remplacera :</p>' +
+        '<div class="conflict-row-label">Équiper (2 mains)</div>' +
+        incomingCard +
+        '<p class="conflict-desc conflict-desc-choose">Remplacera :</p>' +
         occupied.map(ci =>
-          '<div class="conflict-2h-item"><span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>&nbsp;: <span class="conflict-slot-name">' + ci.name + '</span></div>'
+          '<div class="conflict-2h-item">' +
+            '<span class="conflict-slot-label">' + slotLabel(ci.slot) + '</span>' +
+            conflictItemCard(ci.name, config.itemType) +
+          '</div>'
         ).join('');
       const btn = document.createElement('button');
       btn.className = 'btn-primary btn-conflict-confirm';
@@ -2212,7 +2250,7 @@
         saveCharacter(); renderInventaire();
       } else {
         openEquipConflict({
-          type: 'single', slot, incoming: item.name,
+          type: 'single', slot, incoming: item.name, itemType: 'equipment',
           currentItems: [{ slot, name: cur }],
           onReplace: s => { character.equipmentSlots[s] = item.name; saveCharacter(); renderInventaire(); }
         });
@@ -2229,7 +2267,7 @@
         saveCharacter(); renderInventaire();
       } else {
         openEquipConflict({
-          type: 'paired', incoming: item.name,
+          type: 'paired', incoming: item.name, itemType: 'equipment',
           currentItems: [{ slot: slotA, name: curA }, { slot: slotB, name: curB }],
           onReplace: s => { character.equipmentSlots[s] = item.name; saveCharacter(); renderInventaire(); }
         });
@@ -2258,7 +2296,7 @@
         saveCharacter(); renderInventaire();
       } else {
         openEquipConflict({
-          type: '2h', incoming: w.name,
+          type: '2h', incoming: w.name, itemType: 'weapon',
           currentItems: [{ slot: 'right', name: curR }, { slot: 'left', name: curL }],
           onReplace: () => {
             character.handSlots.right = w.name;
@@ -2280,7 +2318,7 @@
       saveCharacter(); renderInventaire();
     } else {
       openEquipConflict({
-        type: 'paired-hand', incoming: w.name,
+        type: 'paired-hand', incoming: w.name, itemType: 'weapon',
         currentItems: [{ slot: 'right', name: curR }, { slot: 'left', name: curL }],
         onReplace: s => { character.handSlots[s] = w.name; saveCharacter(); renderInventaire(); }
       });

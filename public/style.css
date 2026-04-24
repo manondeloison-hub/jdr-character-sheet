@@ -2387,64 +2387,108 @@ main {
 
 /* --- Conflict modal --- */
 .modal-conflict {
-  max-width: 360px;
+  max-width: 420px;
 }
 
 .conflict-desc {
-  margin: 0 0 0.75rem;
-  font-size: 0.9rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.875rem;
   color: var(--text);
   line-height: 1.5;
 }
 
-.conflict-swap {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-  padding: 0.6rem 0.75rem;
-  background: var(--bg-input);
-  border-radius: var(--radius);
-  font-size: 0.85rem;
+.conflict-desc-choose {
+  margin-top: 0.75rem;
+  color: var(--text-dim);
+  font-size: 0.8rem;
 }
 
-.conflict-old { color: var(--text-dim); }
-.conflict-arrow { color: var(--gold); font-weight: 700; }
-.conflict-new { color: var(--gold); font-weight: 600; }
+.conflict-row-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+}
+
+.conflict-row-label-replace {
+  margin-top: 0.6rem;
+}
+
+.conflict-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  margin-bottom: 0.25rem;
+}
+
+.conflict-item-name {
+  font-size: 0.875rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.conflict-item-bonus {
+  font-size: 0.75rem;
+  color: var(--gold-dim);
+}
 
 .conflict-choice-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.75rem;
   background: var(--bg-input);
   border-radius: var(--radius);
   margin-bottom: 0.5rem;
-  font-size: 0.85rem;
+}
+
+.conflict-choice-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .conflict-slot-label {
+  font-size: 0.72rem;
   color: var(--text-dim);
-  min-width: 5.5rem;
-  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.conflict-slot-name {
-  flex: 1;
-  color: var(--text);
+.conflict-choice-row .conflict-item-card {
+  background: transparent;
+  padding: 0;
+  margin: 0;
 }
 
-.conflict-choice-row .btn-primary {
-  padding: 0.3rem 0.7rem;
+.btn-conflict-pick {
+  padding: 0.3rem 0.65rem;
   font-size: 0.8rem;
   flex-shrink: 0;
 }
 
 .conflict-2h-item {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0;
-  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.conflict-2h-item .conflict-slot-label {
+  min-width: 4.5rem;
+}
+
+.conflict-2h-item .conflict-item-card {
+  flex: 1;
+  background: var(--bg-input);
+  padding: 0.35rem 0.6rem;
+  margin: 0;
 }
 
 .btn-conflict-confirm {
