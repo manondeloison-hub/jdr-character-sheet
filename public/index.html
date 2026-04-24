@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">13</span></span>
+        <span class="header-build">v<span id="build-number">14</span></span>
       </div>
     </header>
 
@@ -324,106 +324,31 @@
           <div class="proficiencies-grid">
 
             <div class="prof-block">
-              <h3 class="prof-title">⚔️ Armes</h3>
+              <div class="prof-header">
+                <h3 class="prof-title">⚔️ Armes</h3>
+                <button id="btn-add-prof-weapons" class="btn-prof-add" title="Modifier">+</button>
+              </div>
               <div id="prof-weapons-list" class="tag-list"></div>
-              <div class="add-row">
-                <input type="text" id="prof-weapons-input" placeholder="Ex : Armes simples…" list="dl-weapons" autocomplete="off">
-                <button id="btn-add-prof-weapons" class="btn-add">+</button>
-              </div>
             </div>
 
             <div class="prof-block">
-              <h3 class="prof-title">🛡️ Armures</h3>
+              <div class="prof-header">
+                <h3 class="prof-title">🛡️ Armures</h3>
+                <button id="btn-add-prof-armor" class="btn-prof-add" title="Modifier">+</button>
+              </div>
               <div id="prof-armor-list" class="tag-list"></div>
-              <div class="add-row">
-                <input type="text" id="prof-armor-input" placeholder="Ex : Armures légères…" list="dl-armor" autocomplete="off">
-                <button id="btn-add-prof-armor" class="btn-add">+</button>
-              </div>
             </div>
 
             <div class="prof-block">
-              <h3 class="prof-title">🔧 Outils</h3>
+              <div class="prof-header">
+                <h3 class="prof-title">🔧 Outils</h3>
+                <button id="btn-add-prof-tools" class="btn-prof-add" title="Modifier">+</button>
+              </div>
               <div id="prof-tools-list" class="tag-list"></div>
-              <div class="add-row">
-                <input type="text" id="prof-tools-input" placeholder="Ex : Outils de voleur…" list="dl-tools" autocomplete="off">
-                <button id="btn-add-prof-tools" class="btn-add">+</button>
-              </div>
-            </div>
-
-            <div class="prof-block">
-              <h3 class="prof-title">🗣️ Langues</h3>
-              <div id="prof-languages-list" class="tag-list"></div>
-              <div class="add-row">
-                <input type="text" id="prof-languages-input" placeholder="Ex : Commun…" list="dl-languages" autocomplete="off">
-                <button id="btn-add-prof-languages" class="btn-add">+</button>
-              </div>
             </div>
 
           </div>
         </div>
-
-        <!-- Suggestions (datalists) -->
-        <datalist id="dl-weapons">
-          <option value="Armes simples">
-          <option value="Armes de guerre">
-          <option value="Armes simples de corps à corps">
-          <option value="Armes simples à distance">
-          <option value="Armes de guerre de corps à corps">
-          <option value="Armes de guerre à distance">
-          <option value="Arbalètes (toutes)">
-          <option value="Épée longue">
-          <option value="Épée courte">
-          <option value="Rapière">
-          <option value="Hache de guerre">
-          <option value="Arc long">
-          <option value="Arc court">
-          <option value="Bâton">
-          <option value="Dague">
-        </datalist>
-        <datalist id="dl-armor">
-          <option value="Armures légères">
-          <option value="Armures intermédiaires">
-          <option value="Armures lourdes">
-          <option value="Boucliers">
-          <option value="Toutes les armures">
-        </datalist>
-        <datalist id="dl-tools">
-          <option value="Outils de voleur">
-          <option value="Outils d'herboriste">
-          <option value="Outils de forgeron">
-          <option value="Outils de charpentier">
-          <option value="Outils de cordonnier">
-          <option value="Outils de potier">
-          <option value="Outils de tisserand">
-          <option value="Véhicules terrestres">
-          <option value="Véhicules aquatiques">
-          <option value="Luth">
-          <option value="Flûte">
-          <option value="Tambour">
-          <option value="Viole">
-          <option value="Cor">
-          <option value="Cithare">
-          <option value="Jeu de dés">
-          <option value="Jeu de cartes">
-        </datalist>
-        <datalist id="dl-languages">
-          <option value="Commun">
-          <option value="Elfique">
-          <option value="Nain">
-          <option value="Gnome">
-          <option value="Halfelin">
-          <option value="Orc">
-          <option value="Draconique">
-          <option value="Infernal">
-          <option value="Céleste">
-          <option value="Abyssal">
-          <option value="Profond">
-          <option value="Sylvestre">
-          <option value="Géant">
-          <option value="Gobelin">
-          <option value="Primordial">
-          <option value="Langue des signes">
-        </datalist>
 
         <div class="section-group">
           <h2>Traits raciaux</h2>

@@ -171,6 +171,54 @@
 
   const WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
 
+  function makeLeaves(cat) { return WEAPON_TYPES.filter(w => w.cat === cat).map(w => ({ label: w.name })); }
+  const PROF_TREES = {
+    weapons: [
+      { label: 'Armes courantes', children: [
+        { label: 'Corps à corps courante', children: makeLeaves('Corps à corps courante') },
+        { label: 'Distance courante',      children: makeLeaves('Distance courante') },
+      ]},
+      { label: 'Armes de guerre', children: [
+        { label: 'Corps à corps de guerre', children: makeLeaves('Corps à corps de guerre') },
+        { label: 'Distance de guerre',      children: makeLeaves('Distance de guerre') },
+      ]},
+    ],
+    armor: [
+      { label: 'Armures légères', children: [
+        { label: 'Armure matelassée' }, { label: 'Armure de cuir' }, { label: 'Armure de cuir clouté' },
+      ]},
+      { label: 'Armures intermédiaires', children: [
+        { label: 'Armure de peau' }, { label: 'Armure de chaînes' }, { label: 'Cuirasse' }, { label: 'Demi-plate' },
+      ]},
+      { label: 'Armures lourdes', children: [
+        { label: 'Broigne' }, { label: 'Cotte de mailles' }, { label: "Armure d'écailles" }, { label: 'Armure de plates' },
+      ]},
+      { label: 'Bouclier' },
+    ],
+    tools: [
+      { label: "Outils d'artisan", children: [
+        { label: 'Outils de brasseur' }, { label: 'Outils de calligraphe' }, { label: 'Outils de charpentier' },
+        { label: 'Outils de cordonnier' }, { label: 'Outils de forgeron' }, { label: 'Outils de joaillier' },
+        { label: 'Outils de maçon' }, { label: 'Outils de menuisier' }, { label: 'Outils de peintre' },
+        { label: 'Outils de potier' }, { label: 'Outils de sellier' }, { label: 'Outils de tanneur' }, { label: 'Outils de tisserand' },
+      ]},
+      { label: 'Instruments de musique', children: [
+        { label: 'Chalumeau' }, { label: 'Cithare' }, { label: 'Cor' }, { label: 'Cornemuse' },
+        { label: 'Flûte' }, { label: 'Luth' }, { label: 'Lyre' }, { label: 'Tambour' }, { label: 'Tympanon' }, { label: 'Viole' },
+      ]},
+      { label: 'Trousses et équipements', children: [
+        { label: 'Matériel de déguisement' }, { label: "Matériel d'empoisonneur" },
+        { label: 'Outils de navigation' }, { label: 'Outils de voleur' }, { label: "Trousse d'herboriste" },
+      ]},
+      { label: 'Jeux', children: [
+        { label: 'Jeu de dés' }, { label: 'Jeu de cartes à jouer' }, { label: 'Trictrac' }, { label: "Jeu d'échecs draconiques" },
+      ]},
+      { label: 'Véhicules', children: [
+        { label: 'Véhicules terrestres' }, { label: 'Véhicules aquatiques' },
+      ]},
+    ],
+  };
+
   const EQUIPMENT_SLOT_TYPES = [
     { key: 'head1',  label: 'Tête',             icon: '🪖' },
     { key: 'head2',  label: 'Tête (accessoire)', icon: '👓' },
@@ -1342,29 +1390,191 @@
   initSpellFilters();
 
   // --- Capacites ---
-  const PROF_TYPES = [
-    { key: 'weapons',   listId: 'prof-weapons-list',   inputId: 'prof-weapons-input',   btnId: 'btn-add-prof-weapons' },
-    { key: 'armor',     listId: 'prof-armor-list',     inputId: 'prof-armor-input',     btnId: 'btn-add-prof-armor' },
-    { key: 'tools',     listId: 'prof-tools-list',     inputId: 'prof-tools-input',     btnId: 'btn-add-prof-tools' },
-    { key: 'languages', listId: 'prof-languages-list', inputId: 'prof-languages-input', btnId: 'btn-add-prof-languages' },
-  ];
+  // ---- Proficiency picker ----
+
+  let profPickerOutsideHandler = null;
+
+  function getProfLeaves(node) {
+    if (!node.children) return [node.label];
+    return node.children.flatMap(getProfLeaves);
+  }
+
+  function expandProfValues(tree, stored) {
+    const storedSet = new Set(stored);
+    const checked = new Set();
+    function walk(node) {
+      if (storedSet.has(node.label)) { getProfLeaves(node).forEach(l => checked.add(l)); }
+      else if (node.children) { node.children.forEach(walk); }
+    }
+    tree.forEach(walk);
+    return checked;
+  }
+
+  function compactProfValues(tree, checkedLeaves) {
+    const result = [];
+    function walk(node) {
+      const leaves = getProfLeaves(node);
+      if (leaves.length > 0 && leaves.every(l => checkedLeaves.has(l))) {
+        result.push(node.label);
+      } else if (node.children) {
+        node.children.forEach(walk);
+      }
+    }
+    tree.forEach(walk);
+    return result;
+  }
+
+  function closeProfPicker() {
+    const p = document.getElementById('prof-picker');
+    if (p) p.remove();
+    if (profPickerOutsideHandler) {
+      document.removeEventListener('click', profPickerOutsideHandler);
+      profPickerOutsideHandler = null;
+    }
+  }
+
+  function openProfPicker(type, anchorEl) {
+    if (document.getElementById('prof-picker')) { closeProfPicker(); return; }
+    const tree = PROF_TREES[type];
+    const stored = ((character.proficiencies || {})[type] || []);
+    const checkedLeaves = expandProfValues(tree, stored);
+    const allCbs = {};
+
+    const picker = document.createElement('div');
+    picker.id = 'prof-picker';
+    picker.className = 'prof-picker';
+
+    const scroll = document.createElement('div');
+    scroll.className = 'prof-picker-scroll';
+
+    function renderNode(node, parentLabel, level, container) {
+      const group = document.createElement('div');
+      group.className = 'pck-group pck-row-' + level;
+
+      const row = document.createElement('label');
+      row.className = 'pck-row';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.dataset.label = node.label;
+      cb.dataset.parent = parentLabel;
+      cb.dataset.isLeaf = node.children ? '0' : '1';
+      cb.checked = !node.children && checkedLeaves.has(node.label);
+      allCbs[node.label] = cb;
+
+      row.appendChild(cb);
+      const span = document.createElement('span');
+      span.textContent = node.label;
+      row.appendChild(span);
+      group.appendChild(row);
+
+      if (node.children) {
+        const childDiv = document.createElement('div');
+        childDiv.className = 'pck-children';
+        node.children.forEach(child => renderNode(child, node.label, level + 1, childDiv));
+        group.appendChild(childDiv);
+      }
+      container.appendChild(group);
+    }
+
+    tree.forEach(node => renderNode(node, '', 0, scroll));
+
+    function updateParentState(parentCb) {
+      const children = Object.values(allCbs).filter(c => c.dataset.parent === parentCb.dataset.label);
+      if (!children.length) return;
+      const checked = children.filter(c => c.checked && !c.indeterminate).length;
+      const indet   = children.filter(c => c.indeterminate).length;
+      if (checked === children.length) { parentCb.checked = true; parentCb.indeterminate = false; }
+      else if (checked === 0 && indet === 0) { parentCb.checked = false; parentCb.indeterminate = false; }
+      else { parentCb.checked = false; parentCb.indeterminate = true; }
+    }
+
+    function cascadeDown(label, state) {
+      Object.values(allCbs).forEach(c => {
+        if (c.dataset.parent === label) { c.checked = state; c.indeterminate = false; cascadeDown(c.dataset.label, state); }
+      });
+    }
+
+    function propagateUp(label) {
+      const cb = allCbs[label];
+      if (!cb || !cb.dataset.parent) return;
+      const parentCb = allCbs[cb.dataset.parent];
+      if (!parentCb) return;
+      updateParentState(parentCb);
+      propagateUp(cb.dataset.parent);
+    }
+
+    // Init parent states bottom-up
+    const levels = {};
+    Object.values(allCbs).forEach(cb => {
+      const lvl = parseInt(cb.closest('.pck-group')?.className.match(/pck-row-(\d)/)?.[1] || '0');
+      if (!levels[lvl]) levels[lvl] = [];
+      levels[lvl].push(cb);
+    });
+    Object.keys(levels).sort((a, b) => b - a).forEach(lvl => {
+      levels[lvl].forEach(cb => { if (cb.dataset.isLeaf === '0') updateParentState(cb); });
+    });
+
+    scroll.addEventListener('change', e => {
+      const cb = e.target;
+      if (!cb.matches('input[type="checkbox"]')) return;
+      if (cb.dataset.isLeaf === '0') { cascadeDown(cb.dataset.label, cb.checked); cb.indeterminate = false; }
+      propagateUp(cb.dataset.label);
+    });
+
+    picker.appendChild(scroll);
+
+    const footer = document.createElement('div');
+    footer.className = 'prof-picker-footer';
+    const valBtn = document.createElement('button');
+    valBtn.className = 'btn-primary';
+    valBtn.textContent = 'Valider';
+    valBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const leaves = new Set(Object.values(allCbs).filter(c => c.dataset.isLeaf === '1' && c.checked).map(c => c.dataset.label));
+      if (!character.proficiencies) character.proficiencies = {};
+      character.proficiencies[type] = compactProfValues(tree, leaves);
+      saveCharacter();
+      closeProfPicker();
+      renderCapacites();
+    });
+    const canBtn = document.createElement('button');
+    canBtn.className = 'btn-secondary';
+    canBtn.textContent = 'Annuler';
+    canBtn.addEventListener('click', e => { e.stopPropagation(); closeProfPicker(); });
+    footer.appendChild(valBtn);
+    footer.appendChild(canBtn);
+    picker.appendChild(footer);
+    document.body.appendChild(picker);
+
+    const rect = anchorEl.getBoundingClientRect();
+    const top = rect.bottom + window.scrollY + 4;
+    let left = rect.left + window.scrollX;
+    if (left + 300 > window.innerWidth) left = Math.max(8, window.innerWidth - 308);
+    picker.style.top = top + 'px';
+    picker.style.left = left + 'px';
+
+    setTimeout(() => {
+      profPickerOutsideHandler = e => {
+        if (!picker.contains(e.target) && !anchorEl.contains(e.target)) closeProfPicker();
+      };
+      document.addEventListener('click', profPickerOutsideHandler);
+    }, 50);
+  }
+
+  // ---- Render Capacités ----
 
   function renderCapacites() {
     if (!character.proficiencies) character.proficiencies = {};
 
-    PROF_TYPES.forEach(({ key, listId, inputId, btnId }) => {
+    [
+      { key: 'weapons', listId: 'prof-weapons-list', btnId: 'btn-add-prof-weapons' },
+      { key: 'armor',   listId: 'prof-armor-list',   btnId: 'btn-add-prof-armor' },
+      { key: 'tools',   listId: 'prof-tools-list',   btnId: 'btn-add-prof-tools' },
+    ].forEach(({ key, listId, btnId }) => {
       renderTagList(listId, character.proficiencies[key] || [], 'proficiencies.' + key);
-      const input = document.getElementById(inputId);
-      document.getElementById(btnId).onclick = () => {
-        const val = input.value.trim();
-        if (!val) return;
-        if (!character.proficiencies[key]) character.proficiencies[key] = [];
-        if (!character.proficiencies[key].includes(val)) character.proficiencies[key].push(val);
-        input.value = '';
-        saveCharacter();
-        renderCapacites();
-      };
-      input.onkeydown = (e) => { if (e.key === 'Enter') document.getElementById(btnId).click(); };
+      const btn = document.getElementById(btnId);
+      btn.onclick = e => { e.stopPropagation(); openProfPicker(key, btn); };
     });
 
     renderTagList('traits-list', character.traits || [], 'traits');
