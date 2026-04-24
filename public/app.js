@@ -321,10 +321,29 @@
       return;
     }
     character = await res.json();
+    await syncSpellSlots();
     initStatsBase();
     $login.classList.add('hidden');
     $app.classList.remove('hidden');
     renderAll();
+  }
+
+  async function syncSpellSlots() {
+    const cls = (character.class || '').toLowerCase();
+    const lvl = character.level || 1;
+    if (!cls) return;
+    const res = await apiFetch('/api/progression/' + encodeURIComponent(cls) + '/' + lvl);
+    if (!res.ok) return;
+    const prog = await res.json();
+    if (!prog.spellSlots || Object.keys(prog.spellSlots).length === 0) return;
+    const current  = JSON.stringify(character.spellSlots || {});
+    const expected = JSON.stringify(prog.spellSlots);
+    if (current === expected) return;
+    character.spellSlots    = prog.spellSlots;
+    character.spellSlotsUsed = {};
+    saveCharacter();
+    renderSpellSlots();
+    if (spellsCache) renderSpellsList();
   }
 
   // --- Save ---
@@ -529,6 +548,9 @@
           recalcStats();
           renderProfil();
           renderCombat();
+        }
+        if (field === 'class') {
+          syncSpellSlots();
         }
         saveCharacter();
         renderHeader();
