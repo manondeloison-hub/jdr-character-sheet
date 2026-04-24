@@ -898,13 +898,11 @@
     const itemMap  = buildItemSpellMap();
     const scrollIds = new Set((character.spellScrolls || []).map(s => s.id));
     let cantrips = 0, spells = 0;
-    console.log('[DEBUG countClassSpells] knownSpells:', JSON.stringify(known));
     for (const id of known) {
       if (itemMap[id] || scrollIds.has(id)) continue;
       if ((sources[id] || 'class') !== 'class') continue;
       const spell = pool.find(s => s.id === id);
-      if (!spell) { console.log('[DEBUG] id introuvable dans pool:', id); continue; }
-      console.log('[DEBUG] compté:', id, spell.name, 'niveau', spell.level, 'source:', sources[id] || 'class(défaut)');
+      if (!spell) continue;
       spell.level === 0 ? cantrips++ : spells++;
     }
     return { cantrips, spells };
