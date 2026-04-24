@@ -150,5 +150,31 @@
         "spellsKnown": 44
       }
     }
+  },
+  "occultiste": {
+    "hitDie": 8,
+    "savingThrows": ["wisdom", "charisma"],
+    "levels": {
+      "1":  { "proficiencyBonus": 2, "features": ["Patron occulte","Magie du pacte"], "spellSlots": { "1": 1 }, "cantripsKnown": 2, "spellsKnown": 2 },
+      "2":  { "proficiencyBonus": 2, "features": ["Invocations occultes"], "spellSlots": { "1": 2 }, "cantripsKnown": 2, "spellsKnown": 3 },
+      "3":  { "proficiencyBonus": 2, "features": ["Don du pacte"], "spellSlots": { "2": 2 }, "cantripsKnown": 2, "spellsKnown": 4 },
+      "4":  { "proficiencyBonus": 2, "features": ["Amélioration de caractéristique"], "spellSlots": { "2": 2 }, "cantripsKnown": 3, "spellsKnown": 5 },
+      "5":  { "proficiencyBonus": 3, "features": [], "spellSlots": { "3": 2 }, "cantripsKnown": 3, "spellsKnown": 6 },
+      "6":  { "proficiencyBonus": 3, "features": ["Capacité de patron (niv. 6)"], "spellSlots": { "3": 2 }, "cantripsKnown": 3, "spellsKnown": 7 },
+      "7":  { "proficiencyBonus": 3, "features": [], "spellSlots": { "4": 2 }, "cantripsKnown": 3, "spellsKnown": 8 },
+      "8":  { "proficiencyBonus": 3, "features": ["Amélioration de caractéristique"], "spellSlots": { "4": 2 }, "cantripsKnown": 3, "spellsKnown": 9 },
+      "9":  { "proficiencyBonus": 4, "features": [], "spellSlots": { "5": 2 }, "cantripsKnown": 3, "spellsKnown": 10 },
+      "10": { "proficiencyBonus": 4, "features": ["Capacité de patron (niv. 10)"], "spellSlots": { "5": 2 }, "cantripsKnown": 4, "spellsKnown": 10 },
+      "11": { "proficiencyBonus": 4, "features": ["Arcane mystérieux (niv. 6)"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 11 },
+      "12": { "proficiencyBonus": 4, "features": ["Amélioration de caractéristique"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 11 },
+      "13": { "proficiencyBonus": 5, "features": ["Arcane mystérieux (niv. 7)"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 12 },
+      "14": { "proficiencyBonus": 5, "features": ["Capacité de patron (niv. 14)"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 12 },
+      "15": { "proficiencyBonus": 5, "features": ["Arcane mystérieux (niv. 8)"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 13 },
+      "16": { "proficiencyBonus": 5, "features": ["Amélioration de caractéristique"], "spellSlots": { "5": 3 }, "cantripsKnown": 4, "spellsKnown": 13 },
+      "17": { "proficiencyBonus": 6, "features": ["Arcane mystérieux (niv. 9)"], "spellSlots": { "5": 4 }, "cantripsKnown": 4, "spellsKnown": 14 },
+      "18": { "proficiencyBonus": 6, "features": [], "spellSlots": { "5": 4 }, "cantripsKnown": 4, "spellsKnown": 14 },
+      "19": { "proficiencyBonus": 6, "features": ["Amélioration de caractéristique"], "spellSlots": { "5": 4 }, "cantripsKnown": 4, "spellsKnown": 15 },
+      "20": { "proficiencyBonus": 6, "features": ["Maître du destin"], "spellSlots": { "5": 4 }, "cantripsKnown": 4, "spellsKnown": 15 }
+    }
   }
 }

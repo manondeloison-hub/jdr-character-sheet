@@ -101,6 +101,32 @@
     85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
   ];
 
+  // Limites de sorts connus par classe et niveau (sorts de classe uniquement)
+  const SPELL_LEARN_LIMITS = {
+    occultiste: {
+      1:  { cantrips: 2, spells: 2 },
+      2:  { cantrips: 2, spells: 3 },
+      3:  { cantrips: 2, spells: 4 },
+      4:  { cantrips: 3, spells: 5 },
+      5:  { cantrips: 3, spells: 6 },
+      6:  { cantrips: 3, spells: 7 },
+      7:  { cantrips: 3, spells: 8 },
+      8:  { cantrips: 3, spells: 9 },
+      9:  { cantrips: 3, spells: 10 },
+      10: { cantrips: 4, spells: 10 },
+      11: { cantrips: 4, spells: 11 },
+      12: { cantrips: 4, spells: 11 },
+      13: { cantrips: 4, spells: 12 },
+      14: { cantrips: 4, spells: 12 },
+      15: { cantrips: 4, spells: 13 },
+      16: { cantrips: 4, spells: 13 },
+      17: { cantrips: 4, spells: 14 },
+      18: { cantrips: 4, spells: 14 },
+      19: { cantrips: 4, spells: 15 },
+      20: { cantrips: 4, spells: 15 },
+    },
+  };
+
   // hands: 1 = une main, 2 = deux mains, 'V' = polyvalente
   // icon: emoji affiché sur la ligne d'inventaire
   // baseDmg: type de dégâts de base
@@ -857,26 +883,69 @@
     renderSpellsList();
   }
 
+  function getSpellLearnLimits() {
+    const cls = (character.class || '').toLowerCase();
+    const lvl = character.level || 1;
+    const classData = SPELL_LEARN_LIMITS[cls];
+    if (!classData) return null;
+    return classData[lvl] || null;
+  }
+
+  function countClassSpells() {
+    const known   = character.knownSpells || [];
+    const sources = character.spellSources || {};
+    const pool    = [...(spellsCache || []), ...(allSpellsCache || [])];
+    let cantrips = 0, spells = 0;
+    for (const id of known) {
+      if ((sources[id] || 'class') !== 'class') continue;
+      const spell = pool.find(s => s.id === id);
+      if (!spell) continue;
+      spell.level === 0 ? cantrips++ : spells++;
+    }
+    return { cantrips, spells };
+  }
+
   function openSpellOriginPicker(spell, anchorBtn) {
     document.querySelectorAll('.spell-origin-picker').forEach(p => p.remove());
     const picker = document.createElement('div');
     picker.className = 'spell-origin-picker';
+
+    // Check class limits for this spell
+    const limits = getSpellLearnLimits();
+    const counts = countClassSpells();
+    let classBlocked = false;
+    let classBlockMsg = '';
+    if (limits) {
+      if (spell.level === 0 && counts.cantrips >= limits.cantrips) {
+        classBlocked = true;
+        classBlockMsg = counts.cantrips + '/' + limits.cantrips + ' sorts mineurs';
+      } else if (spell.level > 0 && counts.spells >= limits.spells) {
+        classBlocked = true;
+        classBlockMsg = counts.spells + '/' + limits.spells + ' sorts';
+      }
+    }
+
     [
       { val: 'class',      label: '🏛 Classe' },
       { val: 'race',       label: '🧬 Race' },
       { val: 'competence', label: '⭐ Compétence' },
       { val: 'item',       label: '💍 Objet' },
     ].forEach(o => {
+      const isBlocked = o.val === 'class' && classBlocked;
       const btn = document.createElement('button');
-      btn.className = 'spell-origin-opt';
-      btn.textContent = o.label;
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        addKnownSpell(spell.id, o.val);
-        picker.remove();
-      });
+      btn.className = 'spell-origin-opt' + (isBlocked ? ' spo-blocked' : '');
+      btn.textContent = o.label + (isBlocked ? ' — limite atteinte (' + classBlockMsg + ')' : '');
+      btn.disabled = isBlocked;
+      if (!isBlocked) {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          addKnownSpell(spell.id, o.val);
+          picker.remove();
+        });
+      }
       picker.appendChild(btn);
     });
+
     anchorBtn.closest('.spell-item').after(picker);
     setTimeout(() => document.addEventListener('click', () => picker.remove(), { once: true }), 0);
   }
@@ -929,6 +998,27 @@
       return true;
     });
 
+    // Barre de limites de sorts de classe
+    const limits = getSpellLearnLimits();
+    if (limits) {
+      const counts = countClassSpells();
+      const cantripFull = counts.cantrips >= limits.cantrips;
+      const spellFull   = counts.spells   >= limits.spells;
+      const bar = document.createElement('div');
+      bar.className = 'spell-limits-bar';
+      bar.innerHTML =
+        '<span class="slb-item' + (cantripFull ? ' slb-full' : '') + '">' +
+          'Sorts mineurs&nbsp;: <strong>' + counts.cantrips + '</strong>&nbsp;/&nbsp;' + limits.cantrips +
+          (cantripFull ? ' — <em>limite atteinte</em>' : '') +
+        '</span>' +
+        '<span class="slb-sep">·</span>' +
+        '<span class="slb-item' + (spellFull ? ' slb-full' : '') + '">' +
+          'Sorts (niv.&nbsp;1+)&nbsp;: <strong>' + counts.spells + '</strong>&nbsp;/&nbsp;' + limits.spells +
+          (spellFull ? ' — <em>limite atteinte</em>' : '') +
+        '</span>';
+      $list.appendChild(bar);
+    }
+
     const groups = {};
     for (const spell of filtered) {
       if (!groups[spell.level]) groups[spell.level] = [];
@@ -937,7 +1027,7 @@
 
     const levels = Object.keys(groups).sort((a, b) => +a - +b);
     if (levels.length === 0) {
-      $list.innerHTML = '<p class="sf-empty">Aucun sort ne correspond aux filtres.</p>';
+      $list.innerHTML += '<p class="sf-empty">Aucun sort ne correspond aux filtres.</p>';
       return;
     }
 

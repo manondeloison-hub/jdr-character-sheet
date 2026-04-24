@@ -1171,6 +1171,35 @@ main {
 
 .spell-origin-opt:hover { border-color: var(--gold-dim); color: var(--gold); }
 
+.spo-blocked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+/* Limits bar */
+.spell-limits-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0.65rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.slb-sep { color: var(--border); }
+
+.slb-item strong { color: var(--text); }
+
+.slb-full { color: var(--gold-dim); }
+.slb-full strong { color: var(--gold); }
+.slb-full em { font-style: normal; color: var(--gold); }
+
 .sf-empty {
   color: var(--text-dim);
   font-size: 0.85rem;
