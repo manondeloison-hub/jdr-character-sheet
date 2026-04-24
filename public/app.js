@@ -1098,7 +1098,9 @@
     if (!equipCollapsed) {
       character.inventoryEquipment.forEach((item, i) => {
         const slotDef = EQUIPMENT_SLOT_TYPES.find(s => s.key === item.slotType) || { icon: '🎒', label: '' };
-        const equipped = Object.values(character.equipmentSlots || {}).some(v => v === item.name);
+        const equipped = item.slotType === 'shield'
+          ? !!(character.handSlots && (character.handSlots.left === item.name || character.handSlots.right === item.name))
+          : Object.values(character.equipmentSlots || {}).some(v => v === item.name);
 
         let tags = '';
         if (item.slotType === 'chest' && item.baseCA) tags += '<span class="wtag wtag-bonus">CA ' + (item.baseCA + (item.armorBonus || 0)) + (item.armorBonus ? ' (+' + item.armorBonus + ')' : '') + '</span>';
@@ -2232,6 +2234,35 @@
   }
 
   function quickEquipEquipItem(item) {
+    // Le bouclier s'équipe dans un emplacement de main (comme une arme 1M)
+    if (item.slotType === 'shield') {
+      if (!character.handSlots) character.handSlots = { left: '', right: '' };
+      const inRight = character.handSlots.right === item.name;
+      const inLeft  = character.handSlots.left  === item.name;
+      if (inRight || inLeft) {
+        if (inRight) character.handSlots.right = '';
+        if (inLeft)  character.handSlots.left  = '';
+        saveCharacter(); renderInventaire();
+        return;
+      }
+      const curR = character.handSlots.right;
+      const curL = character.handSlots.left;
+      if (!curR) {
+        character.handSlots.right = item.name;
+        saveCharacter(); renderInventaire();
+      } else if (!curL) {
+        character.handSlots.left = item.name;
+        saveCharacter(); renderInventaire();
+      } else {
+        openEquipConflict({
+          type: 'paired-hand', incoming: item.name, itemType: 'equipment',
+          currentItems: [{ slot: 'right', name: curR }, { slot: 'left', name: curL }],
+          onReplace: s => { character.handSlots[s] = item.name; saveCharacter(); renderInventaire(); }
+        });
+      }
+      return;
+    }
+
     if (!character.equipmentSlots) character.equipmentSlots = {};
     const slots = getSlotsForType(item.slotType);
 
