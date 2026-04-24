@@ -418,6 +418,7 @@
     renderCapacites();
     renderInventaire();
     renderSpellSlots();
+    renderActiveSpells();
     if (spellsCache) renderSpellsList();
   }
 
@@ -825,18 +826,23 @@
 
     document.getElementById('btn-short-rest').onclick = () => {
       character.spellSlotsUsed = {};
+      rechargeItemSpells(['Repos court', 'Chaque aube', 'À volonté']);
       saveCharacter();
       renderSpellSlots();
+      renderActiveSpells();
       if (spellsCache) renderSpellsList();
     };
 
     document.getElementById('btn-long-rest').onclick = () => {
       character.spellSlotsUsed = {};
       character.hp.current = character.hp.max;
+      rechargeItemSpells(['Repos long', 'Repos court', 'Chaque aube', 'À volonté']);
+      character.activeSpells = [];
       saveCharacter();
       renderSpellSlots();
       renderCombat();
       renderHeader();
+      renderActiveSpells();
       if (spellsCache) renderSpellsList();
     };
   }
@@ -864,7 +870,7 @@
       const equipped = !!(character.handSlots && (character.handSlots.left === w.name || character.handSlots.right === w.name));
       (w.spells || []).forEach(s => {
         if (!map[s.id]) map[s.id] = [];
-        map[s.id].push({ source: w.name, equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1) });
+        map[s.id].push({ source: w.name, equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1), uses: s.uses || 1, recovery: s.recovery || 'Repos long' });
       });
     });
     (character.inventoryEquipment || []).forEach(item => {
@@ -873,7 +879,7 @@
         : Object.values(character.equipmentSlots || {}).some(v => v === item.name);
       (item.spells || []).forEach(s => {
         if (!map[s.id]) map[s.id] = [];
-        map[s.id].push({ source: item.name, equipped: !!equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1) });
+        map[s.id].push({ source: item.name, equipped: !!equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1), uses: s.uses || 1, recovery: s.recovery || 'Repos long' });
       });
     });
     return map;
@@ -928,6 +934,109 @@
       spell.level === 0 ? cantrips++ : spells++;
     }
     return { cantrips, spells };
+  }
+
+  function isConcentration(spell) {
+    return (spell.duration || '').toLowerCase().startsWith('concentration');
+  }
+
+  function rechargeItemSpells(recoveryTypes) {
+    (character.inventoryWeapons || []).forEach(w => {
+      (w.spells || []).forEach(sp => {
+        if (recoveryTypes.includes(sp.recovery || 'Repos long')) sp.usesLeft = sp.uses || 1;
+      });
+    });
+    (character.inventoryEquipment || []).forEach(item => {
+      (item.spells || []).forEach(sp => {
+        if (recoveryTypes.includes(sp.recovery || 'Repos long')) sp.usesLeft = sp.uses || 1;
+      });
+    });
+  }
+
+  function renderActiveSpells() {
+    const bar = document.getElementById('active-spells-bar');
+    const active = character.activeSpells || [];
+    bar.classList.toggle('hidden', active.length === 0);
+    if (active.length === 0) return;
+    bar.innerHTML = '<span class="asb-label">En cours :</span>';
+    active.forEach((sp, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'active-spell-chip' + (sp.concentration ? ' conc' : '');
+      chip.innerHTML =
+        (ORIGIN_ICONS[sp.origin] || '✨') + ' <strong>' + sp.name + '</strong>' +
+        (sp.concentration ? ' <span class="conc-badge">Conc.</span>' : '') +
+        ' <span class="asp-duration">' + (sp.duration || '') + '</span>' +
+        ' <button class="btn-stop-spell" title="Désactiver">⏹</button>';
+      chip.querySelector('.btn-stop-spell').addEventListener('click', e => {
+        e.stopPropagation();
+        character.activeSpells.splice(idx, 1);
+        saveCharacter();
+        renderActiveSpells();
+        if (spellsCache) renderSpellsList();
+      });
+      bar.appendChild(chip);
+    });
+  }
+
+  function performCast(spell, origin, itemEntries) {
+    const conc = isConcentration(spell);
+    const instant = (spell.duration || '').toLowerCase().trim() === 'instantanée';
+
+    if (!character.activeSpells) character.activeSpells = [];
+    if (conc) character.activeSpells = character.activeSpells.filter(s => !s.concentration);
+    if (!instant) {
+      character.activeSpells.push({ id: spell.id, name: spell.name, origin, concentration: conc, duration: spell.duration });
+    }
+
+    if (origin === 'class') {
+      const slots = character.spellSlots || {};
+      const used  = character.spellSlotsUsed || {};
+      for (let lvl = spell.level; lvl <= 9; lvl++) {
+        const key = String(lvl);
+        if ((slots[key] || 0) > (used[key] || 0)) {
+          if (!character.spellSlotsUsed) character.spellSlotsUsed = {};
+          character.spellSlotsUsed[key] = (used[key] || 0) + 1;
+          break;
+        }
+      }
+    } else if (origin === 'scroll') {
+      const idx = (character.spellScrolls || []).findIndex(s => s.id === spell.id);
+      if (idx >= 0) {
+        if ((character.spellScrolls[idx].qty || 1) <= 1) character.spellScrolls.splice(idx, 1);
+        else character.spellScrolls[idx].qty--;
+      }
+    } else if (origin === 'item') {
+      const entry = (itemEntries || []).find(e => e.usesLeft > 0 && e.recovery !== 'À volonté');
+      if (entry) {
+        const weapon = (character.inventoryWeapons || []).find(w => w.name === entry.source);
+        if (weapon) { const sp = (weapon.spells || []).find(s => s.id === spell.id); if (sp) sp.usesLeft = Math.max(0, (sp.usesLeft ?? sp.uses) - 1); }
+        const equip = (character.inventoryEquipment || []).find(i => i.name === entry.source);
+        if (equip) { const sp = (equip.spells || []).find(s => s.id === spell.id); if (sp) sp.usesLeft = Math.max(0, (sp.usesLeft ?? sp.uses) - 1); }
+      }
+    }
+
+    saveCharacter();
+    renderSpellSlots();
+    renderActiveSpells();
+    if (spellsCache) renderSpellsList();
+  }
+
+  function castSpell(spell, origin, itemEntries) {
+    const conc = isConcentration(spell);
+    const activeConc = (character.activeSpells || []).find(s => s.concentration);
+    if (conc && activeConc) {
+      const modal = document.getElementById('conc-conflict-modal');
+      document.getElementById('conc-current-name').textContent = activeConc.name;
+      document.getElementById('conc-new-name').textContent = spell.name;
+      document.getElementById('btn-conc-cancel').onclick = () => modal.classList.add('hidden');
+      document.getElementById('btn-conc-replace').onclick = () => {
+        modal.classList.add('hidden');
+        performCast(spell, origin, itemEntries);
+      };
+      modal.classList.remove('hidden');
+      return;
+    }
+    performCast(spell, origin, itemEntries);
   }
 
   function openSpellOriginPicker(spell, anchorBtn) {
@@ -1116,6 +1225,19 @@
           learnBtn.textContent = '+ Apprendre';
           learnBtn.addEventListener('click', e => { e.stopPropagation(); openSpellOriginPicker(spell, learnBtn); });
           item.appendChild(learnBtn);
+        }
+
+        if (spell.level > 0 && sfKnown === 'known' && (isKnown || isScroll || isItemSpell)) {
+          const castBtn = document.createElement('button');
+          castBtn.className = 'btn-cast-spell';
+          castBtn.title = avail ? 'Lancer ce sort' : 'Sort indisponible';
+          castBtn.textContent = '⚡';
+          castBtn.disabled = !avail;
+          castBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            castSpell(spell, origin, isItemSpell ? itemSpellMap[spell.id] : null);
+          });
+          item.appendChild(castBtn);
         }
 
         item.addEventListener('click', () => showSpellModal(spell));

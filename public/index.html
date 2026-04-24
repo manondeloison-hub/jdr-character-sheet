@@ -48,9 +48,12 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">11</span></span>
+        <span class="header-build">v<span id="build-number">12</span></span>
       </div>
     </header>
+
+    <!-- ACTIVE SPELLS BAR -->
+    <div id="active-spells-bar" class="hidden"></div>
 
     <!-- TABS NAV -->
     <nav id="tabs">
@@ -687,6 +690,19 @@
         <div id="conflict-content"></div>
         <div class="conflict-cancel-row">
           <button id="btn-conflict-cancel" class="btn-secondary">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCENTRATION CONFLICT MODAL -->
+    <div id="conc-conflict-modal" class="modal hidden">
+      <div class="modal-content modal-conflict">
+        <h2>⚡ Conflit de concentration</h2>
+        <p>Tu concentres déjà <strong id="conc-current-name"></strong>.</p>
+        <p>Lancer <strong id="conc-new-name"></strong> mettra fin à ce sort.</p>
+        <div class="conflict-choices">
+          <button id="btn-conc-replace" class="btn-primary">Remplacer</button>
+          <button id="btn-conc-cancel" class="btn-secondary">Annuler</button>
         </div>
       </div>
     </div>

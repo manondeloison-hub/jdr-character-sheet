@@ -1146,6 +1146,86 @@ main {
 
 .btn-spell-learn:hover { background: rgba(212,175,55,0.12); }
 
+/* Cast button */
+.btn-cast-spell {
+  padding: 0.2rem 0.5rem;
+  background: rgba(100,160,255,0.1);
+  border: 1px solid rgba(100,160,255,0.35);
+  border-radius: var(--radius);
+  color: #7ab3ff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.btn-cast-spell:hover:not(:disabled) { background: rgba(100,160,255,0.22); border-color: #7ab3ff; }
+.btn-cast-spell:disabled { opacity: 0.35; cursor: default; border-color: transparent; background: none; color: var(--text-dim); }
+
+/* Active spells bar */
+#active-spells-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(180,120,255,0.08);
+  border-bottom: 1px solid rgba(180,120,255,0.2);
+  font-size: 0.8rem;
+}
+.asb-label {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  margin-right: 0.2rem;
+}
+.active-spell-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 99px;
+  color: var(--text);
+  font-size: 0.78rem;
+}
+.active-spell-chip.conc {
+  border-color: rgba(180,120,255,0.5);
+  background: rgba(180,120,255,0.1);
+}
+.conc-badge {
+  font-size: 0.65rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 99px;
+  background: rgba(180,120,255,0.3);
+  color: #c89fff;
+  white-space: nowrap;
+}
+.asp-duration {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+}
+.btn-stop-spell {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0 0.15rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.btn-stop-spell:hover { color: var(--danger); }
+
+/* Concentration conflict modal */
+.conflict-choices {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
 /* Origin picker (inline popover) */
 .spell-origin-picker {
   display: flex;
