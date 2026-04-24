@@ -899,61 +899,277 @@ main {
 
 .btn-secondary:hover { background: var(--border); }
 
-/* --- Spell filters --- */
-.spell-filters {
+/* --- Pact slots header --- */
+.pact-header {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 
-.spell-filters input, .spell-filters select {
-  padding: 0.5rem 0.6rem;
+.pact-header h2 { margin: 0; }
+
+.pact-rest-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* --- Spell filter bar --- */
+.sf-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
   background: var(--bg-input);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.sf-bar input[type="text"] {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text);
   font-size: 0.85rem;
+  box-sizing: border-box;
 }
 
-.spell-filters input { flex: 1; }
+.sf-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 
-/* --- Spell list --- */
-.spell-level-group h3 {
-  font-size: 0.85rem;
+.sf-row-wrap { gap: 0.75rem; }
+
+.sf-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sf-label {
+  font-size: 0.72rem;
   color: var(--text-dim);
-  margin: 0.75rem 0 0.35rem;
+  white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.spell-item {
+/* Chips (multi-select) */
+.sf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.sf-chip {
+  padding: 0.2rem 0.55rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sf-chip:hover { border-color: var(--gold-dim); color: var(--text); }
+.sf-chip.sf-on { background: rgba(212,175,55,0.15); border-color: var(--gold-dim); color: var(--gold); }
+
+/* Toggles (radio) */
+.sf-toggles {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.sf-toggle {
+  padding: 0.2rem 0.55rem;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.sf-toggle + .sf-toggle { border-left: 1px solid var(--border); }
+.sf-toggle:hover { background: var(--bg); color: var(--text); }
+.sf-toggle.sf-on { background: rgba(212,175,55,0.15); color: var(--gold); }
+
+.sf-disabled { opacity: 0.4; pointer-events: none; }
+
+/* --- Spell level groups --- */
+.spell-level-group { margin-bottom: 0.5rem; }
+
+.slg-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  margin: 0.75rem 0 0.4rem;
+}
+
+.slg-header h3 {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.slg-count {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: var(--bg-input);
+  border-radius: 10px;
+  padding: 0.05rem 0.45rem;
+}
+
+/* --- Spell items --- */
+.spell-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
   background: var(--bg-input);
   border-radius: var(--radius);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
   cursor: pointer;
-  transition: background 0.2s;
-  font-size: 0.85rem;
+  transition: background 0.15s;
 }
 
 .spell-item:hover { background: var(--border); }
 
-.spell-item .spell-name { flex: 1; }
+.spell-unavailable { opacity: 0.45; }
 
-.spell-item .spell-prepared {
-  width: 10px;
-  height: 10px;
+.spell-lvl-dot {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: var(--success);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.spell-item .spell-prepared.not-prepared {
+.dot-cantrip {
+  border-color: rgba(171,71,188,0.5);
+  color: #ce93d8;
+}
+
+.spell-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.spell-info .spell-name {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.spell-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.spell-tag-school {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: capitalize;
+}
+
+.spell-tag-origin {
+  font-size: 0.68rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 10px;
+  background: rgba(212,175,55,0.1);
+  color: var(--gold-dim);
+}
+
+.spo-race       { background: rgba(100,200,120,0.1); color: #81c784; }
+.spo-competence { background: rgba(100,150,240,0.1); color: #90caf9; }
+.spo-item       { background: rgba(180,100,240,0.1); color: #ce93d8; }
+.spo-scroll     { background: rgba(240,180,80,0.1);  color: #ffcc80; }
+
+.spell-tag-damage {
+  font-size: 0.7rem;
+}
+
+.btn-spell-forget {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.spell-item:hover .btn-spell-forget { opacity: 1; }
+.btn-spell-forget:hover { color: var(--danger); }
+
+.btn-spell-learn {
+  padding: 0.2rem 0.6rem;
   background: transparent;
-  border: 1px solid var(--text-dim);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.btn-spell-learn:hover { background: rgba(212,175,55,0.12); }
+
+/* Origin picker (inline popover) */
+.spell-origin-picker {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  margin-bottom: 0.3rem;
+}
+
+.spell-origin-opt {
+  padding: 0.25rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.spell-origin-opt:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+.sf-empty {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
 }
 
 /* --- Tag list --- */
@@ -1464,7 +1680,7 @@ main {
     justify-content: space-between;
   }
 
-  .spell-filters { flex-direction: column; }
+  .sf-row-wrap { flex-direction: column; align-items: flex-start; }
 }
 
 @media (max-width: 480px) {

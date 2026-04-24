@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">3</span></span>
+        <span class="header-build">v<span id="build-number">4</span></span>
       </div>
     </header>
 
@@ -237,30 +237,77 @@
 
       <!-- SORTS -->
       <section id="tab-sorts" class="tab-content hidden">
+
+        <!-- Emplacements du pacte -->
         <div class="section-group">
-          <h2>Emplacements de sorts</h2>
+          <div class="pact-header">
+            <h2>Emplacements du pacte</h2>
+            <div class="pact-rest-btns">
+              <button id="btn-short-rest" class="btn-secondary">Repos court</button>
+              <button id="btn-long-rest" class="btn-secondary">Repos long</button>
+            </div>
+          </div>
           <div id="spell-slots"></div>
-          <button id="btn-long-rest" class="btn-secondary">Repos long</button>
         </div>
 
+        <!-- Sorts -->
         <div class="section-group">
-          <h2>Sorts connus</h2>
-          <div class="spell-filters">
-            <input type="text" id="spell-search" placeholder="Rechercher un sort...">
-            <select id="spell-level-filter">
-              <option value="">Tous niveaux</option>
-              <option value="0">Cantrips</option>
-              <option value="1">Niveau 1</option>
-              <option value="2">Niveau 2</option>
-              <option value="3">Niveau 3</option>
-              <option value="4">Niveau 4</option>
-              <option value="5">Niveau 5</option>
-              <option value="6">Niveau 6</option>
-              <option value="7">Niveau 7</option>
-              <option value="8">Niveau 8</option>
-              <option value="9">Niveau 9</option>
-            </select>
+          <h2>Sorts</h2>
+
+          <div class="sf-bar">
+            <input type="text" id="spell-search" placeholder="Rechercher un sort…">
+
+            <div class="sf-row">
+              <span class="sf-label">Niveau</span>
+              <div id="sf-levels" class="sf-chips">
+                <button class="sf-chip sf-on" data-val="all">Tous</button>
+                <button class="sf-chip" data-val="0">Mineur</button>
+                <button class="sf-chip" data-val="1">1</button>
+                <button class="sf-chip" data-val="2">2</button>
+                <button class="sf-chip" data-val="3">3</button>
+                <button class="sf-chip" data-val="4">4</button>
+                <button class="sf-chip" data-val="5">5</button>
+              </div>
+            </div>
+
+            <div class="sf-row sf-row-wrap">
+              <div class="sf-group">
+                <span class="sf-label">Connaissance</span>
+                <div class="sf-toggles" id="sf-known">
+                  <button class="sf-toggle sf-on" data-val="known">Connus</button>
+                  <button class="sf-toggle" data-val="all">Tous</button>
+                </div>
+              </div>
+              <div class="sf-group" id="sf-avail-group">
+                <span class="sf-label">Disponibilité</span>
+                <div class="sf-toggles" id="sf-avail">
+                  <button class="sf-toggle sf-on" data-val="available">Disponibles</button>
+                  <button class="sf-toggle" data-val="all">Tous</button>
+                </div>
+              </div>
+              <div class="sf-group">
+                <span class="sf-label">Type</span>
+                <div class="sf-toggles" id="sf-damage">
+                  <button class="sf-toggle sf-on" data-val="all">Tous</button>
+                  <button class="sf-toggle" data-val="yes">Dégâts</button>
+                  <button class="sf-toggle" data-val="no">Utilitaire</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sf-row" id="sf-origin-row">
+              <span class="sf-label">Origine</span>
+              <div id="sf-origin" class="sf-chips">
+                <button class="sf-chip sf-on" data-val="all">Tous</button>
+                <button class="sf-chip" data-val="class">Classe</button>
+                <button class="sf-chip" data-val="race">Race</button>
+                <button class="sf-chip" data-val="competence">Compétence</button>
+                <button class="sf-chip" data-val="item">Objet</button>
+                <button class="sf-chip" data-val="scroll">Parchemin</button>
+              </div>
+            </div>
           </div>
+
           <div id="spells-list"></div>
         </div>
       </section>

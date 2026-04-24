@@ -233,6 +233,12 @@
   let weaponEditIndex = null;
   let equipCollapsed = true;
   let equipEditIndex = null;
+  // Spell filter state
+  let sfLevels  = new Set();     // empty = tous niveaux
+  let sfKnown   = 'known';       // 'known' | 'all'
+  let sfAvail   = 'available';   // 'available' | 'all'
+  let sfOrigin  = new Set();     // empty = toutes origines
+  let sfDamage  = 'all';         // 'all' | 'yes' | 'no'
 
   // --- DOM refs ---
   const $login = document.getElementById('login');
@@ -718,8 +724,7 @@
 
   // --- Sorts ---
   async function loadSpells() {
-    const maxLevel = maxSpellLevel();
-    const res = await apiFetch('/api/spells?class=' + encodeURIComponent(character.class || '') + '&maxLevel=' + maxLevel);
+    const res = await apiFetch('/api/spells?class=' + encodeURIComponent(character.class || ''));
     if (res.ok) {
       spellsCache = await res.json();
       renderSpellsList();
@@ -768,6 +773,13 @@
       $slots.appendChild(group);
     }
 
+    document.getElementById('btn-short-rest').onclick = () => {
+      character.spellSlotsUsed = {};
+      saveCharacter();
+      renderSpellSlots();
+      if (spellsCache) renderSpellsList();
+    };
+
     document.getElementById('btn-long-rest').onclick = () => {
       character.spellSlotsUsed = {};
       character.hp.current = character.hp.max;
@@ -775,74 +787,176 @@
       renderSpellSlots();
       renderCombat();
       renderHeader();
+      if (spellsCache) renderSpellsList();
     };
   }
 
+  function isSpellAvailable(spell, scrollIds) {
+    if (spell.level === 0) return true;
+    if (scrollIds && scrollIds.has(spell.id)) {
+      const sc = (character.spellScrolls || []).find(s => s.id === spell.id);
+      return sc && (sc.qty || 1) > 0;
+    }
+    const slots = character.spellSlots || {};
+    const used  = character.spellSlotsUsed || {};
+    for (const lvl of Object.keys(slots)) {
+      if (parseInt(lvl, 10) >= spell.level && (slots[lvl] - (used[lvl] || 0)) > 0) return true;
+    }
+    return false;
+  }
+
+  function spellHasDamage(spell) {
+    return ((spell.description || '') + ' ' + (spell.higherLevels || '')).toLowerCase().includes('dégâts');
+  }
+
+  function getSpellOrigin(spellId) {
+    return (character.spellSources || {})[spellId] || 'class';
+  }
+
+  function addKnownSpell(id, origin) {
+    if (!character.knownSpells)  character.knownSpells  = [];
+    if (!character.spellSources) character.spellSources = {};
+    if (!character.knownSpells.includes(id)) character.knownSpells.push(id);
+    character.spellSources[id] = origin;
+    saveCharacter();
+    renderSpellsList();
+  }
+
+  function removeKnownSpell(id) {
+    if (!character.knownSpells) return;
+    const idx = character.knownSpells.indexOf(id);
+    if (idx >= 0) character.knownSpells.splice(idx, 1);
+    if (character.spellSources) delete character.spellSources[id];
+    saveCharacter();
+    renderSpellsList();
+  }
+
+  function openSpellOriginPicker(spell, anchorBtn) {
+    document.querySelectorAll('.spell-origin-picker').forEach(p => p.remove());
+    const picker = document.createElement('div');
+    picker.className = 'spell-origin-picker';
+    [
+      { val: 'class',      label: '🏛 Classe' },
+      { val: 'race',       label: '🧬 Race' },
+      { val: 'competence', label: '⭐ Compétence' },
+      { val: 'item',       label: '💍 Objet' },
+    ].forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'spell-origin-opt';
+      btn.textContent = o.label;
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        addKnownSpell(spell.id, o.val);
+        picker.remove();
+      });
+      picker.appendChild(btn);
+    });
+    anchorBtn.closest('.spell-item').after(picker);
+    setTimeout(() => document.addEventListener('click', () => picker.remove(), { once: true }), 0);
+  }
+
+  const ORIGIN_LABELS = { class: 'Classe', race: 'Race', competence: 'Compétence', item: 'Objet', scroll: 'Parchemin' };
+  const ORIGIN_ICONS  = { class: '🏛',    race: '🧬',   competence: '⭐',          item: '💍',   scroll: '📜' };
+
   function renderSpellsList() {
     const $list = document.getElementById('spells-list');
-    const search = (document.getElementById('spell-search').value || '').toLowerCase();
-    const levelFilter = document.getElementById('spell-level-filter').value;
     $list.innerHTML = '';
 
     if (!spellsCache || spellsCache.length === 0) {
-      $list.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;">Aucun sort chargé. Ajoutez des sorts dans data/spells.json</p>';
+      $list.innerHTML = '<p class="sf-empty">Aucun sort chargé. Ajoutez des sorts dans data/spells.json</p>';
       return;
     }
 
-    let filtered = spellsCache;
-    if (search) filtered = filtered.filter((s) => s.name.toLowerCase().includes(search));
-    if (levelFilter !== '') filtered = filtered.filter((s) => s.level === parseInt(levelFilter, 10));
+    const search    = (document.getElementById('spell-search').value || '').toLowerCase().trim();
+    const known     = character.knownSpells || [];
+    const scrollIds = new Set((character.spellScrolls || []).map(s => s.id));
 
-    // Group by level
+    let filtered = spellsCache.filter(spell => {
+      if (search && !spell.name.toLowerCase().includes(search) && !(spell.nameVO || '').toLowerCase().includes(search)) return false;
+      if (sfLevels.size > 0 && !sfLevels.has(spell.level)) return false;
+      const isKnown = known.includes(spell.id) || scrollIds.has(spell.id);
+      if (sfKnown === 'known' && !isKnown) return false;
+      if (sfKnown === 'known' && sfAvail === 'available' && !isSpellAvailable(spell, scrollIds)) return false;
+      if (sfDamage === 'yes' && !spellHasDamage(spell)) return false;
+      if (sfDamage === 'no'  &&  spellHasDamage(spell)) return false;
+      if (sfKnown === 'known' && sfOrigin.size > 0) {
+        const origin = scrollIds.has(spell.id) ? 'scroll' : getSpellOrigin(spell.id);
+        if (!sfOrigin.has(origin)) return false;
+      }
+      return true;
+    });
+
     const groups = {};
     for (const spell of filtered) {
-      const lvl = spell.level;
-      if (!groups[lvl]) groups[lvl] = [];
-      groups[lvl].push(spell);
+      if (!groups[spell.level]) groups[spell.level] = [];
+      groups[spell.level].push(spell);
     }
 
-    for (const lvl of Object.keys(groups).sort((a, b) => a - b)) {
-      const div = document.createElement('div');
-      div.className = 'spell-level-group';
-      div.innerHTML = '<h3>' + (lvl === '0' ? 'Cantrips' : 'Niveau ' + lvl) + '</h3>';
+    const levels = Object.keys(groups).sort((a, b) => +a - +b);
+    if (levels.length === 0) {
+      $list.innerHTML = '<p class="sf-empty">Aucun sort ne correspond aux filtres.</p>';
+      return;
+    }
+
+    for (const lvl of levels) {
+      const lvlNum = parseInt(lvl, 10);
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'spell-level-group';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'slg-header';
+      hdr.innerHTML =
+        '<h3>' + (lvlNum === 0 ? 'Sorts mineurs' : 'Niveau ' + lvl) + '</h3>' +
+        '<span class="slg-count">' + groups[lvl].length + '</span>';
+      groupDiv.appendChild(hdr);
 
       for (const spell of groups[lvl]) {
-        const known = (character.knownSpells || []).includes(spell.id);
-        if (!known) continue;
-        const prepared = (character.preparedSpells || []).includes(spell.id);
+        const isKnown  = known.includes(spell.id);
+        const isScroll = scrollIds.has(spell.id);
+        const avail    = isSpellAvailable(spell, scrollIds);
+        const origin   = isScroll ? 'scroll' : getSpellOrigin(spell.id);
+
         const item = document.createElement('div');
-        item.className = 'spell-item';
-        item.innerHTML =
-          '<span class="spell-name">' + spell.name + '</span>' +
-          '<div class="spell-prepared ' + (prepared ? '' : 'not-prepared') + '" title="' + (prepared ? 'Préparé' : 'Non préparé') + '"></div>';
+        const dimmed = !avail && sfAvail === 'all' && sfKnown === 'known';
+        item.className = 'spell-item' + (dimmed ? ' spell-unavailable' : '');
 
-        item.addEventListener('click', (e) => {
-          if (e.target.classList.contains('spell-prepared') || e.target.closest('.spell-prepared')) {
-            togglePrepared(spell.id);
-            return;
-          }
-          showSpellModal(spell);
-        });
+        const dot = document.createElement('div');
+        dot.className = 'spell-lvl-dot' + (lvlNum === 0 ? ' dot-cantrip' : '');
+        dot.textContent = lvlNum === 0 ? '✦' : lvl;
 
-        div.appendChild(item);
+        const info = document.createElement('div');
+        info.className = 'spell-info';
+        let tagsHtml = '<span class="spell-tag-school">' + (spell.school || '') + '</span>';
+        if ((isKnown || isScroll) && sfKnown === 'known') {
+          tagsHtml += '<span class="spell-tag-origin spo-' + origin + '">' + (ORIGIN_ICONS[origin] || '') + ' ' + (ORIGIN_LABELS[origin] || origin) + '</span>';
+        }
+        if (spellHasDamage(spell)) tagsHtml += '<span class="spell-tag-damage">⚔️</span>';
+        info.innerHTML = '<span class="spell-name">' + spell.name + '</span><div class="spell-tags">' + tagsHtml + '</div>';
+
+        item.appendChild(dot);
+        item.appendChild(info);
+
+        if ((isKnown || isScroll) && !isScroll) {
+          const forgetBtn = document.createElement('button');
+          forgetBtn.className = 'btn-spell-forget';
+          forgetBtn.title = 'Oublier ce sort';
+          forgetBtn.textContent = '✕';
+          forgetBtn.addEventListener('click', e => { e.stopPropagation(); removeKnownSpell(spell.id); });
+          item.appendChild(forgetBtn);
+        } else if (!isKnown && !isScroll && sfKnown === 'all') {
+          const learnBtn = document.createElement('button');
+          learnBtn.className = 'btn-spell-learn';
+          learnBtn.textContent = '+ Apprendre';
+          learnBtn.addEventListener('click', e => { e.stopPropagation(); openSpellOriginPicker(spell, learnBtn); });
+          item.appendChild(learnBtn);
+        }
+
+        item.addEventListener('click', () => showSpellModal(spell));
+        groupDiv.appendChild(item);
       }
 
-      if (div.querySelectorAll('.spell-item').length > 0) {
-        $list.appendChild(div);
-      }
+      $list.appendChild(groupDiv);
     }
-  }
-
-  function togglePrepared(spellId) {
-    if (!character.preparedSpells) character.preparedSpells = [];
-    const idx = character.preparedSpells.indexOf(spellId);
-    if (idx >= 0) {
-      character.preparedSpells.splice(idx, 1);
-    } else {
-      character.preparedSpells.push(spellId);
-    }
-    saveCharacter();
-    renderSpellsList();
   }
 
   function showSpellModal(spell) {
@@ -864,8 +978,79 @@
   }
 
   // Spell filters
-  document.getElementById('spell-search').addEventListener('input', renderSpellsList);
-  document.getElementById('spell-level-filter').addEventListener('change', renderSpellsList);
+  function initSpellFilters() {
+    document.getElementById('spell-search').addEventListener('input', renderSpellsList);
+
+    document.getElementById('sf-levels').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-chip');
+      if (!btn) return;
+      const val = btn.dataset.val;
+      if (val === 'all') {
+        sfLevels.clear();
+      } else {
+        const n = parseInt(val, 10);
+        sfLevels.has(n) ? sfLevels.delete(n) : sfLevels.add(n);
+      }
+      document.querySelectorAll('#sf-levels .sf-chip').forEach(b => {
+        b.classList.toggle('sf-on', b.dataset.val === 'all' ? sfLevels.size === 0 : sfLevels.has(parseInt(b.dataset.val, 10)));
+      });
+      renderSpellsList();
+    });
+
+    document.getElementById('sf-known').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-toggle');
+      if (!btn) return;
+      sfKnown = btn.dataset.val;
+      document.querySelectorAll('#sf-known .sf-toggle').forEach(b => b.classList.toggle('sf-on', b.dataset.val === sfKnown));
+      const originRow  = document.getElementById('sf-origin-row');
+      const availGroup = document.getElementById('sf-avail-group');
+      if (sfKnown === 'all') {
+        originRow.classList.add('hidden');
+        availGroup.classList.add('sf-disabled');
+        sfAvail = 'all';
+        document.querySelectorAll('#sf-avail .sf-toggle').forEach(b => b.classList.toggle('sf-on', b.dataset.val === 'all'));
+      } else {
+        originRow.classList.remove('hidden');
+        availGroup.classList.remove('sf-disabled');
+        sfAvail = 'available';
+        document.querySelectorAll('#sf-avail .sf-toggle').forEach(b => b.classList.toggle('sf-on', b.dataset.val === 'available'));
+      }
+      renderSpellsList();
+    });
+
+    document.getElementById('sf-avail').addEventListener('click', e => {
+      if (sfKnown === 'all') return;
+      const btn = e.target.closest('.sf-toggle');
+      if (!btn) return;
+      sfAvail = btn.dataset.val;
+      document.querySelectorAll('#sf-avail .sf-toggle').forEach(b => b.classList.toggle('sf-on', b.dataset.val === sfAvail));
+      renderSpellsList();
+    });
+
+    document.getElementById('sf-damage').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-toggle');
+      if (!btn) return;
+      sfDamage = btn.dataset.val;
+      document.querySelectorAll('#sf-damage .sf-toggle').forEach(b => b.classList.toggle('sf-on', b.dataset.val === sfDamage));
+      renderSpellsList();
+    });
+
+    document.getElementById('sf-origin').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-chip');
+      if (!btn) return;
+      const val = btn.dataset.val;
+      if (val === 'all') {
+        sfOrigin.clear();
+      } else {
+        sfOrigin.has(val) ? sfOrigin.delete(val) : sfOrigin.add(val);
+      }
+      document.querySelectorAll('#sf-origin .sf-chip').forEach(b => {
+        b.classList.toggle('sf-on', b.dataset.val === 'all' ? sfOrigin.size === 0 : sfOrigin.has(b.dataset.val));
+      });
+      renderSpellsList();
+    });
+  }
+  initSpellFilters();
 
   // --- Capacites ---
   function renderCapacites() {
