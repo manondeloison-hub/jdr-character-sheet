@@ -1342,7 +1342,31 @@
   initSpellFilters();
 
   // --- Capacites ---
+  const PROF_TYPES = [
+    { key: 'weapons',   listId: 'prof-weapons-list',   inputId: 'prof-weapons-input',   btnId: 'btn-add-prof-weapons' },
+    { key: 'armor',     listId: 'prof-armor-list',     inputId: 'prof-armor-input',     btnId: 'btn-add-prof-armor' },
+    { key: 'tools',     listId: 'prof-tools-list',     inputId: 'prof-tools-input',     btnId: 'btn-add-prof-tools' },
+    { key: 'languages', listId: 'prof-languages-list', inputId: 'prof-languages-input', btnId: 'btn-add-prof-languages' },
+  ];
+
   function renderCapacites() {
+    if (!character.proficiencies) character.proficiencies = {};
+
+    PROF_TYPES.forEach(({ key, listId, inputId, btnId }) => {
+      renderTagList(listId, character.proficiencies[key] || [], 'proficiencies.' + key);
+      const input = document.getElementById(inputId);
+      document.getElementById(btnId).onclick = () => {
+        const val = input.value.trim();
+        if (!val) return;
+        if (!character.proficiencies[key]) character.proficiencies[key] = [];
+        if (!character.proficiencies[key].includes(val)) character.proficiencies[key].push(val);
+        input.value = '';
+        saveCharacter();
+        renderCapacites();
+      };
+      input.onkeydown = (e) => { if (e.key === 'Enter') document.getElementById(btnId).click(); };
+    });
+
     renderTagList('traits-list', character.traits || [], 'traits');
     renderTagList('features-list', character.classFeatures || [], 'classFeatures');
 
@@ -1357,6 +1381,14 @@
     document.getElementById('btn-add-feature').onclick = () => addTag('feature-input', 'classFeatures');
   }
 
+  function resolveField(field) {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.');
+      return character[parent][child];
+    }
+    return character[field];
+  }
+
   function renderTagList(containerId, items, field) {
     const $container = document.getElementById(containerId);
     $container.innerHTML = '';
@@ -1365,7 +1397,7 @@
       tag.className = 'tag';
       tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
       tag.querySelector('.btn-remove').addEventListener('click', () => {
-        character[field].splice(i, 1);
+        resolveField(field).splice(i, 1);
         saveCharacter();
         renderCapacites();
       });
