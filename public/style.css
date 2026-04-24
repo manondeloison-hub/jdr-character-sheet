@@ -1106,6 +1106,12 @@ main {
 .spo-item       { background: rgba(180,100,240,0.1); color: #ce93d8; }
 .spo-scroll     { background: rgba(240,180,80,0.1);  color: #ffcc80; }
 
+.spell-tag-source {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
 .spell-tag-damage {
   font-size: 0.7rem;
 }

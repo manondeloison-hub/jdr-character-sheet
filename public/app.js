@@ -791,8 +791,11 @@
     };
   }
 
-  function isSpellAvailable(spell, scrollIds) {
+  function isSpellAvailable(spell, scrollIds, itemSpellMap) {
     if (spell.level === 0) return true;
+    if (itemSpellMap && itemSpellMap[spell.id]) {
+      return itemSpellMap[spell.id].some(e => e.equipped && e.usesLeft > 0);
+    }
     if (scrollIds && scrollIds.has(spell.id)) {
       const sc = (character.spellScrolls || []).find(s => s.id === spell.id);
       return sc && (sc.qty || 1) > 0;
@@ -803,6 +806,27 @@
       if (parseInt(lvl, 10) >= spell.level && (slots[lvl] - (used[lvl] || 0)) > 0) return true;
     }
     return false;
+  }
+
+  function buildItemSpellMap() {
+    const map = {};
+    (character.inventoryWeapons || []).forEach(w => {
+      const equipped = !!(character.handSlots && (character.handSlots.left === w.name || character.handSlots.right === w.name));
+      (w.spells || []).forEach(s => {
+        if (!map[s.id]) map[s.id] = [];
+        map[s.id].push({ source: w.name, equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1) });
+      });
+    });
+    (character.inventoryEquipment || []).forEach(item => {
+      const equipped = item.slotType === 'shield'
+        ? !!(character.handSlots && (character.handSlots.left === item.name || character.handSlots.right === item.name))
+        : Object.values(character.equipmentSlots || {}).some(v => v === item.name);
+      (item.spells || []).forEach(s => {
+        if (!map[s.id]) map[s.id] = [];
+        map[s.id].push({ source: item.name, equipped: !!equipped, usesLeft: s.usesLeft !== undefined ? s.usesLeft : (s.uses || 1) });
+      });
+    });
+    return map;
   }
 
   function spellHasDamage(spell) {
@@ -867,20 +891,37 @@
       return;
     }
 
-    const search    = (document.getElementById('spell-search').value || '').toLowerCase().trim();
-    const known     = character.knownSpells || [];
-    const scrollIds = new Set((character.spellScrolls || []).map(s => s.id));
+    const search      = (document.getElementById('spell-search').value || '').toLowerCase().trim();
+    const known       = character.knownSpells || [];
+    const scrollIds   = new Set((character.spellScrolls || []).map(s => s.id));
+    const itemSpellMap = buildItemSpellMap();
 
-    let filtered = spellsCache.filter(spell => {
+    // Build the full spell pool: class spells + item spells not already present
+    const itemSpellIds = Object.keys(itemSpellMap);
+    const missingItemSpells = itemSpellIds.filter(id => !spellsCache.find(s => s.id === id));
+    if (missingItemSpells.length > 0 && !allSpellsCache) {
+      fetchAllSpells().then(() => renderSpellsList());
+      return;
+    }
+    let spellPool = [...spellsCache];
+    if (allSpellsCache) {
+      missingItemSpells.forEach(id => {
+        const spell = allSpellsCache.find(s => s.id === id);
+        if (spell) spellPool.push(spell);
+      });
+    }
+
+    let filtered = spellPool.filter(spell => {
       if (search && !spell.name.toLowerCase().includes(search) && !(spell.nameVO || '').toLowerCase().includes(search)) return false;
       if (sfLevels.size > 0 && !sfLevels.has(spell.level)) return false;
-      const isKnown = known.includes(spell.id) || scrollIds.has(spell.id);
+      const isItemSpell = !!itemSpellMap[spell.id];
+      const isKnown = known.includes(spell.id) || scrollIds.has(spell.id) || isItemSpell;
       if (sfKnown === 'known' && !isKnown) return false;
-      if (sfKnown === 'known' && sfAvail === 'available' && !isSpellAvailable(spell, scrollIds)) return false;
+      if (sfKnown === 'known' && sfAvail === 'available' && !isSpellAvailable(spell, scrollIds, itemSpellMap)) return false;
       if (sfDamage === 'yes' && !spellHasDamage(spell)) return false;
       if (sfDamage === 'no'  &&  spellHasDamage(spell)) return false;
       if (sfKnown === 'known' && sfOrigin.size > 0) {
-        const origin = scrollIds.has(spell.id) ? 'scroll' : getSpellOrigin(spell.id);
+        const origin = scrollIds.has(spell.id) ? 'scroll' : isItemSpell ? 'item' : getSpellOrigin(spell.id);
         if (!sfOrigin.has(origin)) return false;
       }
       return true;
@@ -911,10 +952,11 @@
       groupDiv.appendChild(hdr);
 
       for (const spell of groups[lvl]) {
-        const isKnown  = known.includes(spell.id);
-        const isScroll = scrollIds.has(spell.id);
-        const avail    = isSpellAvailable(spell, scrollIds);
-        const origin   = isScroll ? 'scroll' : getSpellOrigin(spell.id);
+        const isKnown    = known.includes(spell.id);
+        const isScroll   = scrollIds.has(spell.id);
+        const isItemSpell = !!itemSpellMap[spell.id];
+        const avail      = isSpellAvailable(spell, scrollIds, itemSpellMap);
+        const origin     = isScroll ? 'scroll' : isItemSpell ? 'item' : getSpellOrigin(spell.id);
 
         const item = document.createElement('div');
         const dimmed = !avail && sfAvail === 'all' && sfKnown === 'known';
@@ -927,8 +969,12 @@
         const info = document.createElement('div');
         info.className = 'spell-info';
         let tagsHtml = '<span class="spell-tag-school">' + (spell.school || '') + '</span>';
-        if ((isKnown || isScroll) && sfKnown === 'known') {
+        if ((isKnown || isScroll || isItemSpell) && sfKnown === 'known') {
           tagsHtml += '<span class="spell-tag-origin spo-' + origin + '">' + (ORIGIN_ICONS[origin] || '') + ' ' + (ORIGIN_LABELS[origin] || origin) + '</span>';
+        }
+        if (isItemSpell && sfKnown === 'known') {
+          const sources = itemSpellMap[spell.id].map(e => e.source).join(', ');
+          tagsHtml += '<span class="spell-tag-source">' + sources + '</span>';
         }
         if (spellHasDamage(spell)) tagsHtml += '<span class="spell-tag-damage">⚔️</span>';
         info.innerHTML = '<span class="spell-name">' + spell.name + '</span><div class="spell-tags">' + tagsHtml + '</div>';
@@ -936,14 +982,14 @@
         item.appendChild(dot);
         item.appendChild(info);
 
-        if ((isKnown || isScroll) && !isScroll) {
+        if (isKnown && !isScroll && !isItemSpell) {
           const forgetBtn = document.createElement('button');
           forgetBtn.className = 'btn-spell-forget';
           forgetBtn.title = 'Oublier ce sort';
           forgetBtn.textContent = '✕';
           forgetBtn.addEventListener('click', e => { e.stopPropagation(); removeKnownSpell(spell.id); });
           item.appendChild(forgetBtn);
-        } else if (!isKnown && !isScroll && sfKnown === 'all') {
+        } else if (!isKnown && !isScroll && !isItemSpell && sfKnown === 'all') {
           const learnBtn = document.createElement('button');
           learnBtn.className = 'btn-spell-learn';
           learnBtn.textContent = '+ Apprendre';
@@ -1917,7 +1963,12 @@
       openWeaponModal(i);
     };
     document.getElementById('btn-wd-delete').onclick = () => {
+      const wname = character.inventoryWeapons[i].name;
       character.inventoryWeapons.splice(i, 1);
+      if (character.handSlots) {
+        if (character.handSlots.left  === wname) character.handSlots.left  = '';
+        if (character.handSlots.right === wname) character.handSlots.right = '';
+      }
       saveCharacter();
       renderInventaire();
       document.getElementById('weapon-inv-detail-modal').classList.add('hidden');
@@ -2296,7 +2347,18 @@
       openEquipModal(i);
     };
     document.getElementById('btn-ed-delete').onclick = () => {
+      const edItem = character.inventoryEquipment[i];
       character.inventoryEquipment.splice(i, 1);
+      if (edItem.slotType === 'shield') {
+        if (character.handSlots) {
+          if (character.handSlots.left  === edItem.name) character.handSlots.left  = '';
+          if (character.handSlots.right === edItem.name) character.handSlots.right = '';
+        }
+      } else if (character.equipmentSlots) {
+        Object.keys(character.equipmentSlots).forEach(k => {
+          if (character.equipmentSlots[k] === edItem.name) character.equipmentSlots[k] = '';
+        });
+      }
       saveCharacter();
       renderInventaire();
       document.getElementById('equip-inv-detail-modal').classList.add('hidden');
