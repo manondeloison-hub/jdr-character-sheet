@@ -972,10 +972,11 @@
     const scrollIds   = new Set((character.spellScrolls || []).map(s => s.id));
     const itemSpellMap = buildItemSpellMap();
 
-    // Build the full spell pool: class spells + item spells + scroll spells not already present
+    // Build the full spell pool: class spells + item spells + scroll spells + known spells not already present
     const extraIds = new Set([
       ...Object.keys(itemSpellMap),
       ...[...scrollIds],
+      ...(known),
     ]);
     const missingSpells = [...extraIds].filter(id => !spellsCache.find(s => s.id === id));
     if (missingSpells.length > 0 && !allSpellsCache) {
