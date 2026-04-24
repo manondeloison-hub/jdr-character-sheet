@@ -330,7 +330,9 @@
       $tabContents.forEach((tc) => {
         tc.classList.toggle('hidden', tc.id !== 'tab-' + target);
       });
-      if (target === 'sorts' && !spellsCache) loadSpells();
+      if (target === 'sorts') {
+        if (!spellsCache) loadSpells(); else renderSpellsList();
+      }
     });
   });
 
@@ -1899,13 +1901,19 @@
 
     if (!character.inventoryWeapons) character.inventoryWeapons = [];
     if (weaponEditIndex !== null) {
+      const oldWName = character.inventoryWeapons[weaponEditIndex].name;
       weapon.spells = spells.map((s, si) => ({ ...s, usesLeft: character.inventoryWeapons[weaponEditIndex].spells?.[si]?.usesLeft ?? s.uses }));
       character.inventoryWeapons[weaponEditIndex] = weapon;
+      if (oldWName !== name && character.handSlots) {
+        if (character.handSlots.left  === oldWName) character.handSlots.left  = name;
+        if (character.handSlots.right === oldWName) character.handSlots.right = name;
+      }
     } else {
       character.inventoryWeapons.push(weapon);
     }
     saveCharacter();
     renderInventaire();
+    if (spellsCache) renderSpellsList();
     document.getElementById('weapon-inv-modal').classList.add('hidden');
   });
 
@@ -2272,13 +2280,27 @@
 
     if (!character.inventoryEquipment) character.inventoryEquipment = [];
     if (equipEditIndex !== null) {
+      const oldName = character.inventoryEquipment[equipEditIndex].name;
       newItem.spells = spells.map((s, si) => ({ ...s, usesLeft: character.inventoryEquipment[equipEditIndex].spells?.[si]?.usesLeft ?? s.uses }));
       character.inventoryEquipment[equipEditIndex] = newItem;
+      if (oldName !== name) {
+        if (newItem.slotType === 'shield') {
+          if (character.handSlots) {
+            if (character.handSlots.left  === oldName) character.handSlots.left  = name;
+            if (character.handSlots.right === oldName) character.handSlots.right = name;
+          }
+        } else if (character.equipmentSlots) {
+          Object.keys(character.equipmentSlots).forEach(k => {
+            if (character.equipmentSlots[k] === oldName) character.equipmentSlots[k] = name;
+          });
+        }
+      }
     } else {
       character.inventoryEquipment.push(newItem);
     }
     saveCharacter();
     renderInventaire();
+    if (spellsCache) renderSpellsList();
     document.getElementById('equip-inv-modal').classList.add('hidden');
   });
 
