@@ -219,6 +219,105 @@
     ],
   };
 
+  const BACKGROUNDS_DATA = [
+    {
+      name: 'Acolyte',
+      skills: ['Perspicacité', 'Religion'],
+      tools: ['Matériel de calligraphe'],
+      equipment: 'Matériel de calligraphe, livre de prières, symbole sacré, parchemin, robe, 8 po',
+    },
+    {
+      name: 'Artisan',
+      skills: ['Investigation', 'Persuasion'],
+      tools: ["Outils d'artisan (au choix)"],
+      equipment: "Outils d'artisan, 2 bourses, vêtements de voyageur, 32 po",
+    },
+    {
+      name: 'Artiste',
+      skills: ['Acrobaties', 'Représentation'],
+      tools: ['Instrument de musique (au choix)'],
+      equipment: 'Instrument de musique, 2 costumes, miroir, parfum, vêtements de voyageur, 11 po',
+    },
+    {
+      name: 'Charlatan',
+      skills: ['Escamotage', 'Tromperie'],
+      tools: ['Kit de faussaire'],
+      equipment: 'Kit de faussaire, costume, beaux vêtements, 15 po',
+    },
+    {
+      name: 'Criminel',
+      skills: ['Discrétion', 'Escamotage'],
+      tools: ['Outils de voleur'],
+      equipment: '2 dagues, outils de voleur, pied-de-biche, 2 bourses, vêtements de voyageur, 16 po',
+    },
+    {
+      name: 'Ermite',
+      skills: ['Médecine', 'Religion'],
+      tools: ["Trousse d'herboriste"],
+      equipment: "Bâton, trousse d'herboriste, rouleau de couchage, livre de philosophie, lampe, 3 flacons d'huile, vêtements de voyageur, 16 po",
+    },
+    {
+      name: 'Fermier',
+      skills: ['Dressage', 'Nature'],
+      tools: ['Outils de charpentier'],
+      equipment: 'Faucille, outils de charpentier, kit de guérisseur, marmite en fer, pelle, vêtements de voyageur, 30 po',
+    },
+    {
+      name: 'Garde',
+      skills: ['Athlétisme', 'Perception'],
+      tools: ['Jeu (au choix)'],
+      equipment: 'Lance, arbalète légère, 20 carreaux, jeu, lanterne, menottes, carquois, vêtements de voyageur, 12 po',
+    },
+    {
+      name: 'Guide',
+      skills: ['Discrétion', 'Survie'],
+      tools: ['Outils de cartographe'],
+      equipment: 'Arc court, 20 flèches, outils de cartographe, rouleau de couchage, carquois, tente, vêtements de voyageur, 3 po',
+    },
+    {
+      name: 'Marchand',
+      skills: ['Dressage', 'Persuasion'],
+      tools: ['Instruments de navigation'],
+      equipment: 'Instruments de navigation, 2 bourses, vêtements de voyageur, 22 po',
+    },
+    {
+      name: 'Marin',
+      skills: ['Acrobaties', 'Perception'],
+      tools: ['Instruments de navigation'],
+      equipment: 'Dague, instruments de navigation, corde, vêtements de voyageur, 20 po',
+    },
+    {
+      name: 'Noble',
+      skills: ['Histoire', 'Persuasion'],
+      tools: ['Jeu (au choix)'],
+      equipment: 'Jeu, beaux vêtements, parfum, 29 po',
+    },
+    {
+      name: 'Sage',
+      skills: ['Arcanes', 'Histoire'],
+      tools: ['Matériel de calligraphe'],
+      equipment: "Bâton, matériel de calligraphe, livre d'histoire, 8 parchemins, robe, 8 po",
+    },
+    {
+      name: 'Scribe',
+      skills: ['Investigation', 'Perception'],
+      tools: ['Matériel de calligraphe'],
+      equipment: "Matériel de calligraphe, beaux vêtements, lampe, 3 flacons d'huile, 12 parchemins, 23 po",
+    },
+    {
+      name: 'Soldat',
+      skills: ['Athlétisme', 'Intimidation'],
+      tools: ['Jeu (au choix)'],
+      equipment: 'Lance, arc court, 20 flèches, jeu, kit de guérisseur, carquois, vêtements de voyageur, 14 po',
+    },
+    {
+      name: 'Voyageur',
+      skills: ['Discrétion', 'Perspicacité'],
+      tools: ['Outils de voleur'],
+      equipment: '2 dagues, outils de voleur, jeu, rouleau de couchage, 2 bourses, vêtements de voyageur, 16 po',
+    },
+  ];
+
   const LANGUAGES_DATA = [
     { name: 'Commun',                  script: 'Commun',     races: 'Humains',                        exotic: false },
     { name: 'Elfique',                 script: 'Elfique',    races: 'Elfes',                          exotic: false },
@@ -388,6 +487,10 @@
       return;
     }
     character = await res.json();
+    if (character.background && !character.backgroundSkills) {
+      const _bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
+      character.backgroundSkills = _bg ? _bg.skills : [];
+    }
     await syncSpellSlots();
     initStatsBase();
     $login.classList.add('hidden');
@@ -611,6 +714,10 @@
       el.value = character[field] || '';
       el.disabled = !editMode;
       el.onchange = () => {
+        if (field === 'background') {
+          applyBackground(el.value);
+          return;
+        }
         character[field] = el.value;
         if (field === 'race') {
           recalcStats();
@@ -707,29 +814,56 @@
     // Skills
     const $skills = document.getElementById('skills-list');
     $skills.innerHTML = '';
+    const bgSkills = character.backgroundSkills || [];
     for (const skill of SKILLS) {
-      const proficient = character.skills && character.skills[skill.name];
+      const fromBg = bgSkills.includes(skill.name);
+      const proficient = fromBg || (character.skills && character.skills[skill.name]);
       const bonus = mod(character.stats[skill.ability]) + (proficient ? character.proficiencyBonus : 0);
       const row = document.createElement('div');
       row.className = 'skill-row';
+      const badge = fromBg ? '<span class="skill-bg-badge">(Historique)</span>' : '';
       row.innerHTML =
-        '<input type="checkbox"' + (proficient ? ' checked' : '') + (editMode ? '' : ' disabled') + '>' +
-        '<span>' + skill.name + '</span>' +
+        '<input type="checkbox"' + (proficient ? ' checked' : '') + ((editMode && !fromBg) ? '' : ' disabled') + '>' +
+        '<span class="skill-name">' + skill.name + badge + '</span>' +
         '<span class="bonus">' + (bonus >= 0 ? '+' : '') + bonus + '</span>';
-      row.querySelector('input').addEventListener('change', (e) => {
-        if (!character.skills) character.skills = {};
-        character.skills[skill.name] = e.target.checked;
-        saveCharacter();
-        renderProfil();
-      });
+      if (!fromBg) {
+        row.querySelector('input').addEventListener('change', (e) => {
+          if (!character.skills) character.skills = {};
+          character.skills[skill.name] = e.target.checked;
+          saveCharacter();
+          renderProfil();
+        });
+      }
       $skills.appendChild(row);
     }
+
+    renderBackgroundBonuses();
 
     // Perception passive : 10 + mod(Sagesse) + maîtrise éventuelle
     const perceptionProficient = character.skills && character.skills['Perception'];
     const passivePerception = 10 + mod(character.stats.wisdom) + (perceptionProficient ? character.proficiencyBonus : 0);
     document.getElementById('passive-perception').textContent = passivePerception;
 
+  }
+
+  function applyBackground(name) {
+    character.background = name;
+    const bg = BACKGROUNDS_DATA.find(b => b.name === name);
+    character.backgroundSkills = bg ? bg.skills : [];
+    saveCharacter();
+    renderProfil();
+  }
+
+  function renderBackgroundBonuses() {
+    const el = document.getElementById('background-bonuses');
+    if (!el) return;
+    const bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
+    if (!bg) { el.innerHTML = ''; el.classList.add('hidden'); return; }
+    el.classList.remove('hidden');
+    el.innerHTML =
+      '<div class="bg-bonus-row"><span class="bg-bonus-label">Compétences</span><span class="bg-bonus-val">' + bg.skills.join(', ') + '</span></div>' +
+      '<div class="bg-bonus-row"><span class="bg-bonus-label">Outil</span><span class="bg-bonus-val">' + bg.tools.join(', ') + '</span></div>' +
+      '<div class="bg-bonus-row"><span class="bg-bonus-label">Équipement</span><span class="bg-bonus-val bg-bonus-equip">' + bg.equipment + '</span></div>';
   }
 
   document.getElementById('btn-edit-mode').addEventListener('click', () => {

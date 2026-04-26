@@ -554,6 +554,44 @@ main {
   font-size: 0.9rem;
 }
 
+/* --- Background bonuses panel --- */
+.background-bonuses {
+  margin-top: 0.6rem;
+  background: rgba(200,160,60,0.06);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.background-bonuses.hidden { display: none; }
+.bg-bonus-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  align-items: baseline;
+}
+.bg-bonus-label {
+  color: var(--gold-dim);
+  font-size: 0.68rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  min-width: 6rem;
+  flex-shrink: 0;
+}
+.bg-bonus-val { color: var(--text); }
+.bg-bonus-equip { color: var(--text-dim); font-style: italic; font-size: 0.75rem; }
+
+/* --- Skill background badge --- */
+.skill-bg-badge {
+  font-size: 0.62rem;
+  color: var(--gold-dim);
+  margin-left: 0.35rem;
+  font-style: italic;
+  vertical-align: middle;
+}
+
 /* --- Stats grid --- */
 .stats-grid {
   display: grid;
