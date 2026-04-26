@@ -1388,6 +1388,49 @@ main {
   font-weight: 600;
   letter-spacing: 0.02em;
 }
+/* Tools pending choice */
+.prof-block.tools-pending {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+}
+.tools-pending-hint {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  margin-top: 0.4rem;
+  padding-top: 0.3rem;
+  border-top: 1px dashed rgba(245, 158, 11, 0.3);
+}
+
+/* Background tool picker */
+.bg-tool-picker {
+  position: fixed;
+  z-index: 1100;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  width: 210px;
+  overflow: hidden;
+}
+.bg-tool-picker-title {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  background: rgba(200,160,60,0.08);
+}
+.bg-tool-picker-scroll { overflow-y: auto; max-height: 220px; }
+.bg-tool-row {
+  padding: 0.38rem 0.65rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.bg-tool-row:hover { background: rgba(200,160,60,0.15); color: var(--text); }
+
 .tool-group { margin-bottom: 0.5rem; }
 .tool-group:last-child { margin-bottom: 0; }
 .tool-group-header {

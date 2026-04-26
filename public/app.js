@@ -207,8 +207,8 @@
         { label: 'Flûte' }, { label: 'Luth' }, { label: 'Lyre' }, { label: 'Tambour' }, { label: 'Tympanon' }, { label: 'Viole' },
       ]},
       { label: 'Trousses et équipements', children: [
-        { label: 'Matériel de déguisement' }, { label: "Matériel d'empoisonneur" },
-        { label: 'Outils de navigation' }, { label: 'Outils de voleur' }, { label: "Trousse d'herboriste" },
+        { label: 'Kit de faussaire' }, { label: 'Matériel de déguisement' }, { label: "Matériel d'empoisonneur" },
+        { label: 'Outils de cartographe' }, { label: 'Outils de navigation' }, { label: 'Outils de voleur' }, { label: "Trousse d'herboriste" },
       ]},
       { label: 'Jeux', children: [
         { label: 'Jeu de dés' }, { label: 'Jeu de cartes à jouer' }, { label: 'Trictrac' }, { label: "Jeu d'échecs draconiques" },
@@ -220,102 +220,22 @@
   };
 
   const BACKGROUNDS_DATA = [
-    {
-      name: 'Acolyte',
-      skills: ['Perspicacité', 'Religion'],
-      tools: ['Matériel de calligraphe'],
-      equipment: 'Matériel de calligraphe, livre de prières, symbole sacré, parchemin, robe, 8 po',
-    },
-    {
-      name: 'Artisan',
-      skills: ['Investigation', 'Persuasion'],
-      tools: ["Outils d'artisan (au choix)"],
-      equipment: "Outils d'artisan, 2 bourses, vêtements de voyageur, 32 po",
-    },
-    {
-      name: 'Artiste',
-      skills: ['Acrobaties', 'Représentation'],
-      tools: ['Instrument de musique (au choix)'],
-      equipment: 'Instrument de musique, 2 costumes, miroir, parfum, vêtements de voyageur, 11 po',
-    },
-    {
-      name: 'Charlatan',
-      skills: ['Escamotage', 'Tromperie'],
-      tools: ['Kit de faussaire'],
-      equipment: 'Kit de faussaire, costume, beaux vêtements, 15 po',
-    },
-    {
-      name: 'Criminel',
-      skills: ['Discrétion', 'Escamotage'],
-      tools: ['Outils de voleur'],
-      equipment: '2 dagues, outils de voleur, pied-de-biche, 2 bourses, vêtements de voyageur, 16 po',
-    },
-    {
-      name: 'Ermite',
-      skills: ['Médecine', 'Religion'],
-      tools: ["Trousse d'herboriste"],
-      equipment: "Bâton, trousse d'herboriste, rouleau de couchage, livre de philosophie, lampe, 3 flacons d'huile, vêtements de voyageur, 16 po",
-    },
-    {
-      name: 'Fermier',
-      skills: ['Dressage', 'Nature'],
-      tools: ['Outils de charpentier'],
-      equipment: 'Faucille, outils de charpentier, kit de guérisseur, marmite en fer, pelle, vêtements de voyageur, 30 po',
-    },
-    {
-      name: 'Garde',
-      skills: ['Athlétisme', 'Perception'],
-      tools: ['Jeu (au choix)'],
-      equipment: 'Lance, arbalète légère, 20 carreaux, jeu, lanterne, menottes, carquois, vêtements de voyageur, 12 po',
-    },
-    {
-      name: 'Guide',
-      skills: ['Discrétion', 'Survie'],
-      tools: ['Outils de cartographe'],
-      equipment: 'Arc court, 20 flèches, outils de cartographe, rouleau de couchage, carquois, tente, vêtements de voyageur, 3 po',
-    },
-    {
-      name: 'Marchand',
-      skills: ['Dressage', 'Persuasion'],
-      tools: ['Instruments de navigation'],
-      equipment: 'Instruments de navigation, 2 bourses, vêtements de voyageur, 22 po',
-    },
-    {
-      name: 'Marin',
-      skills: ['Acrobaties', 'Perception'],
-      tools: ['Instruments de navigation'],
-      equipment: 'Dague, instruments de navigation, corde, vêtements de voyageur, 20 po',
-    },
-    {
-      name: 'Noble',
-      skills: ['Histoire', 'Persuasion'],
-      tools: ['Jeu (au choix)'],
-      equipment: 'Jeu, beaux vêtements, parfum, 29 po',
-    },
-    {
-      name: 'Sage',
-      skills: ['Arcanes', 'Histoire'],
-      tools: ['Matériel de calligraphe'],
-      equipment: "Bâton, matériel de calligraphe, livre d'histoire, 8 parchemins, robe, 8 po",
-    },
-    {
-      name: 'Scribe',
-      skills: ['Investigation', 'Perception'],
-      tools: ['Matériel de calligraphe'],
-      equipment: "Matériel de calligraphe, beaux vêtements, lampe, 3 flacons d'huile, 12 parchemins, 23 po",
-    },
-    {
-      name: 'Soldat',
-      skills: ['Athlétisme', 'Intimidation'],
-      tools: ['Jeu (au choix)'],
-      equipment: 'Lance, arc court, 20 flèches, jeu, kit de guérisseur, carquois, vêtements de voyageur, 14 po',
-    },
-    {
-      name: 'Voyageur',
-      skills: ['Discrétion', 'Perspicacité'],
-      tools: ['Outils de voleur'],
-      equipment: '2 dagues, outils de voleur, jeu, rouleau de couchage, 2 bourses, vêtements de voyageur, 16 po',
-    },
+    { name: 'Acolyte',   skills: ['Perspicacité', 'Religion'],      tools: ['Outils de calligraphe'],  toolChoice: null,                  equipment: 'Outils de calligraphe, livre de prières, symbole sacré, parchemin, robe, 8 po' },
+    { name: 'Artisan',   skills: ['Investigation', 'Persuasion'],   tools: [],                          toolChoice: "Outils d'artisan",    equipment: "Outils d'artisan (au choix), 2 bourses, vêtements de voyageur, 32 po" },
+    { name: 'Artiste',   skills: ['Acrobaties', 'Représentation'],  tools: [],                          toolChoice: 'Instruments de musique', equipment: 'Instrument de musique (au choix), 2 costumes, miroir, parfum, vêtements de voyageur, 11 po' },
+    { name: 'Charlatan', skills: ['Escamotage', 'Tromperie'],       tools: ['Kit de faussaire'],        toolChoice: null,                  equipment: 'Kit de faussaire, costume, beaux vêtements, 15 po' },
+    { name: 'Criminel',  skills: ['Discrétion', 'Escamotage'],      tools: ['Outils de voleur'],        toolChoice: null,                  equipment: '2 dagues, outils de voleur, pied-de-biche, 2 bourses, vêtements de voyageur, 16 po' },
+    { name: 'Ermite',    skills: ['Médecine', 'Religion'],          tools: ["Trousse d'herboriste"],    toolChoice: null,                  equipment: "Bâton, trousse d'herboriste, rouleau de couchage, livre de philosophie, lampe, 3 flacons d'huile, vêtements de voyageur, 16 po" },
+    { name: 'Fermier',   skills: ['Dressage', 'Nature'],            tools: ['Outils de charpentier'],  toolChoice: null,                  equipment: 'Faucille, outils de charpentier, kit de guérisseur, marmite en fer, pelle, vêtements de voyageur, 30 po' },
+    { name: 'Garde',     skills: ['Athlétisme', 'Perception'],      tools: [],                          toolChoice: 'Jeux',                equipment: 'Lance, arbalète légère, 20 carreaux, jeu (au choix), lanterne, menottes, carquois, vêtements de voyageur, 12 po' },
+    { name: 'Guide',     skills: ['Discrétion', 'Survie'],          tools: ['Outils de cartographe'],  toolChoice: null,                  equipment: 'Arc court, 20 flèches, outils de cartographe, rouleau de couchage, carquois, tente, vêtements de voyageur, 3 po' },
+    { name: 'Marchand',  skills: ['Dressage', 'Persuasion'],        tools: ['Outils de navigation'],   toolChoice: null,                  equipment: 'Outils de navigation, 2 bourses, vêtements de voyageur, 22 po' },
+    { name: 'Marin',     skills: ['Acrobaties', 'Perception'],      tools: ['Outils de navigation'],   toolChoice: null,                  equipment: 'Dague, outils de navigation, corde, vêtements de voyageur, 20 po' },
+    { name: 'Noble',     skills: ['Histoire', 'Persuasion'],        tools: [],                          toolChoice: 'Jeux',                equipment: 'Jeu (au choix), beaux vêtements, parfum, 29 po' },
+    { name: 'Sage',      skills: ['Arcanes', 'Histoire'],           tools: ['Outils de calligraphe'],  toolChoice: null,                  equipment: "Bâton, outils de calligraphe, livre d'histoire, 8 parchemins, robe, 8 po" },
+    { name: 'Scribe',    skills: ['Investigation', 'Perception'],   tools: ['Outils de calligraphe'],  toolChoice: null,                  equipment: "Outils de calligraphe, beaux vêtements, lampe, 3 flacons d'huile, 12 parchemins, 23 po" },
+    { name: 'Soldat',    skills: ['Athlétisme', 'Intimidation'],    tools: [],                          toolChoice: 'Jeux',                equipment: 'Lance, arc court, 20 flèches, jeu (au choix), kit de guérisseur, carquois, vêtements de voyageur, 14 po' },
+    { name: 'Voyageur',  skills: ['Discrétion', 'Perspicacité'],   tools: ['Outils de voleur'],        toolChoice: null,                  equipment: '2 dagues, outils de voleur, jeu, rouleau de couchage, 2 bourses, vêtements de voyageur, 16 po' },
   ];
 
   const LANGUAGES_DATA = [
@@ -490,6 +410,15 @@
     if (character.background && !character.backgroundSkills) {
       const _bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
       character.backgroundSkills = _bg ? _bg.skills : [];
+      character.backgroundTools = _bg ? (_bg.tools || []) : [];
+      character.backgroundToolChoice = _bg ? (_bg.toolChoice || null) : null;
+      if (_bg && character.backgroundTools.length > 0) {
+        if (!character.proficiencies) character.proficiencies = {};
+        if (!character.proficiencies.tools) character.proficiencies.tools = [];
+        for (const t of character.backgroundTools) {
+          if (!character.proficiencies.tools.includes(t)) character.proficiencies.tools.push(t);
+        }
+      }
     }
     await syncSpellSlots();
     initStatsBase();
@@ -850,9 +779,40 @@
   function applyBackground(name) {
     character.background = name;
     const bg = BACKGROUNDS_DATA.find(b => b.name === name);
+
+    // Remove previous background tools from proficiencies
+    const prevBgTools = character.backgroundTools || [];
+    if (prevBgTools.length > 0 && character.proficiencies && character.proficiencies.tools) {
+      character.proficiencies.tools = character.proficiencies.tools.filter(t => !prevBgTools.includes(t));
+    }
+
     character.backgroundSkills = bg ? bg.skills : [];
+    character.backgroundTools = bg ? (bg.tools || []) : [];
+    character.backgroundToolChoice = bg ? (bg.toolChoice || null) : null;
+
+    // Auto-add specific background tools to proficiencies
+    if (character.backgroundTools.length > 0) {
+      if (!character.proficiencies) character.proficiencies = {};
+      if (!character.proficiencies.tools) character.proficiencies.tools = [];
+      for (const t of character.backgroundTools) {
+        if (!character.proficiencies.tools.includes(t)) character.proficiencies.tools.push(t);
+      }
+    }
+
     saveCharacter();
     renderProfil();
+    renderCapacites();
+  }
+
+  function applyBackgroundToolChoice(toolName) {
+    if (!character.proficiencies) character.proficiencies = {};
+    if (!character.proficiencies.tools) character.proficiencies.tools = [];
+    if (!character.backgroundTools) character.backgroundTools = [];
+    if (!character.proficiencies.tools.includes(toolName)) character.proficiencies.tools.push(toolName);
+    if (!character.backgroundTools.includes(toolName)) character.backgroundTools.push(toolName);
+    character.backgroundToolChoice = null;
+    saveCharacter();
+    renderCapacites();
   }
 
   function renderBackgroundBonuses() {
@@ -861,9 +821,12 @@
     const bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
     if (!bg || !editMode) { el.innerHTML = ''; el.classList.add('hidden'); return; }
     el.classList.remove('hidden');
+    const toolDisplay = bg.tools.length > 0
+      ? bg.tools.join(', ')
+      : (bg.toolChoice ? bg.toolChoice + ' <em>(au choix)</em>' : '—');
     el.innerHTML =
       '<div class="bg-bonus-row"><span class="bg-bonus-label">Compétences</span><span class="bg-bonus-val">' + bg.skills.join(', ') + '</span></div>' +
-      '<div class="bg-bonus-row"><span class="bg-bonus-label">Outil</span><span class="bg-bonus-val">' + bg.tools.join(', ') + '</span></div>' +
+      '<div class="bg-bonus-row"><span class="bg-bonus-label">Outil</span><span class="bg-bonus-val">' + toolDisplay + '</span></div>' +
       '<div class="bg-bonus-row"><span class="bg-bonus-label">Équipement</span><span class="bg-bonus-val bg-bonus-equip">' + bg.equipment + '</span></div>';
   }
 
@@ -1588,6 +1551,55 @@
     }
   }
 
+  function openBackgroundToolPicker(category, anchorEl) {
+    const existing = document.querySelector('.bg-tool-picker');
+    if (existing) { existing.remove(); return; }
+    closeProfPicker();
+
+    const catNode = PROF_TREES.tools.find(c => c.label === category);
+    if (!catNode || !catNode.children) return;
+
+    const picker = document.createElement('div');
+    picker.className = 'bg-tool-picker';
+
+    const title = document.createElement('div');
+    title.className = 'bg-tool-picker-title';
+    title.textContent = category;
+    picker.appendChild(title);
+
+    const scroll = document.createElement('div');
+    scroll.className = 'bg-tool-picker-scroll';
+    catNode.children.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'bg-tool-row';
+      row.textContent = item.label;
+      row.onclick = e => {
+        e.stopPropagation();
+        picker.remove();
+        applyBackgroundToolChoice(item.label);
+      };
+      scroll.appendChild(row);
+    });
+    picker.appendChild(scroll);
+    document.body.appendChild(picker);
+
+    const rect = anchorEl.getBoundingClientRect();
+    let left = rect.left + window.scrollX;
+    if (left + 220 > window.innerWidth) left = Math.max(8, window.innerWidth - 228);
+    picker.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    picker.style.left = left + 'px';
+
+    setTimeout(() => {
+      const outside = e => {
+        if (!picker.contains(e.target) && !anchorEl.contains(e.target)) {
+          picker.remove();
+          document.removeEventListener('click', outside);
+        }
+      };
+      document.addEventListener('click', outside);
+    }, 50);
+  }
+
   function openProfPicker(type, anchorEl) {
     if (document.getElementById('prof-picker')) { closeProfPicker(); return; }
     const tree = PROF_TREES[type];
@@ -1735,6 +1747,7 @@
     const container = document.getElementById('prof-tools-list');
     container.innerHTML = '';
     const tools = character.proficiencies.tools || [];
+    const bgTools = character.backgroundTools || [];
     if (tools.length === 0) return;
 
     const groups = {};
@@ -1762,15 +1775,19 @@
       const list = document.createElement('div');
       list.className = 'tag-list';
       items.forEach((item) => {
+        const fromBg = bgTools.includes(item);
         const tag = document.createElement('span');
         tag.className = 'tag';
-        tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
-        tag.querySelector('.btn-remove').addEventListener('click', () => {
-          const idx = character.proficiencies.tools.indexOf(item);
-          if (idx >= 0) character.proficiencies.tools.splice(idx, 1);
-          saveCharacter();
-          renderCapacites();
-        });
+        const badge = fromBg ? '<span class="skill-bg-badge">(Historique)</span>' : '';
+        tag.innerHTML = item + badge + (fromBg ? '' : ' <button class="btn-remove">&times;</button>');
+        if (!fromBg) {
+          tag.querySelector('.btn-remove').addEventListener('click', () => {
+            const idx = character.proficiencies.tools.indexOf(item);
+            if (idx >= 0) character.proficiencies.tools.splice(idx, 1);
+            saveCharacter();
+            renderCapacites();
+          });
+        }
         list.appendChild(tag);
       });
       group.appendChild(list);
@@ -1874,9 +1891,21 @@
     });
 
     renderGroupedTools();
-    document.getElementById('btn-add-prof-tools').onclick = e => {
+    const $toolsBlock = document.getElementById('prof-block-tools');
+    const pending = character.backgroundToolChoice || null;
+    $toolsBlock.classList.toggle('tools-pending', !!pending);
+    let $hint = $toolsBlock.querySelector('.tools-pending-hint');
+    if (pending) {
+      if (!$hint) { $hint = document.createElement('div'); $hint.className = 'tools-pending-hint'; $toolsBlock.appendChild($hint); }
+      $hint.textContent = '⚠ Maîtrise à choisir : ' + pending;
+    } else if ($hint) {
+      $hint.remove();
+    }
+    const $btnTools = document.getElementById('btn-add-prof-tools');
+    $btnTools.onclick = e => {
       e.stopPropagation();
-      openProfPicker('tools', document.getElementById('btn-add-prof-tools'));
+      if (pending) openBackgroundToolPicker(pending, $btnTools);
+      else openProfPicker('tools', $btnTools);
     };
 
     renderLanguageTable();
