@@ -219,6 +219,25 @@
     ],
   };
 
+  const LANGUAGES_DATA = [
+    { name: 'Commun',                  script: 'Commun',     races: 'Humains',                        exotic: false },
+    { name: 'Elfique',                 script: 'Elfique',    races: 'Elfes',                          exotic: false },
+    { name: 'Géant',                   script: 'Nain',       races: 'Ogres, géants',                  exotic: false },
+    { name: 'Gnome',                   script: 'Nain',       races: 'Gnomes',                         exotic: false },
+    { name: 'Gobelin',                 script: 'Nain',       races: 'Gobelinoïdes',                   exotic: false },
+    { name: 'Halfelin',                script: 'Commun',     races: 'Halfelins',                      exotic: false },
+    { name: 'Nain',                    script: 'Nain',       races: 'Nains',                          exotic: false },
+    { name: 'Orc',                     script: 'Nain',       races: 'Orcs',                           exotic: false },
+    { name: 'Abyssal',                 script: 'Infernal',   races: 'Démons',                         exotic: true  },
+    { name: 'Céleste',                 script: 'Céleste',    races: 'Célestes',                       exotic: true  },
+    { name: 'Commun des profondeurs',  script: 'Elfique',    races: "Créatures de l'Outreterre",      exotic: true  },
+    { name: 'Draconique',              script: 'Draconique', races: 'Dragons, drakéides',             exotic: true  },
+    { name: 'Infernal',                script: 'Infernal',   races: 'Diables',                        exotic: true  },
+    { name: 'Primordial',              script: 'Nain',       races: 'Élémentaires',                   exotic: true  },
+    { name: 'Profond',                 script: '—',          races: 'Beholders, flagelleurs mentaux', exotic: true  },
+    { name: 'Sylvestre',               script: 'Elfique',    races: 'Créatures féeriques',            exotic: true  },
+  ];
+
   const EQUIPMENT_SLOT_TYPES = [
     { key: 'head1',  label: 'Tête',             icon: '🪖' },
     { key: 'head2',  label: 'Tête (accessoire)', icon: '👓' },
@@ -1393,6 +1412,7 @@
   // ---- Proficiency picker ----
 
   let profPickerOutsideHandler = null;
+  let langEditMode = false;
 
   function getProfLeaves(node) {
     if (!node.children) return [node.label];
@@ -1564,6 +1584,88 @@
 
   // ---- Render Capacités ----
 
+  function renderLanguageTable() {
+    if (!character.languages) character.languages = { spoken: [], scripts: [] };
+    const spoken = character.languages.spoken || [];
+    const scripts = character.languages.scripts || [];
+
+    const container = document.getElementById('language-table-container');
+    container.innerHTML = '';
+
+    const table = document.createElement('table');
+    table.className = 'lang-table' + (langEditMode ? ' lang-edit-mode' : '');
+
+    const thead = table.createTHead();
+    const hRow = thead.insertRow();
+    ['Langue', 'Écriture', 'Races typiques'].forEach(text => {
+      const th = document.createElement('th');
+      th.textContent = text;
+      hRow.appendChild(th);
+    });
+
+    const tbody = table.createTBody();
+
+    function addSectionRow(label) {
+      const row = tbody.insertRow();
+      row.className = 'lang-section-row';
+      const cell = row.insertCell();
+      cell.colSpan = 3;
+      cell.textContent = label;
+    }
+
+    function addLangRow(lang) {
+      const row = tbody.insertRow();
+      const isSpoken = spoken.includes(lang.name);
+      const isScript = lang.script !== '—' && scripts.includes(lang.script);
+      row.className = 'lang-row' + (isSpoken || isScript ? ' lang-known' : '');
+
+      const tdLang = row.insertCell();
+      tdLang.textContent = lang.name;
+      tdLang.className = 'lang-cell' + (isSpoken ? ' lang-spoken' : '');
+      if (langEditMode) {
+        tdLang.classList.add('lang-clickable');
+        tdLang.onclick = () => {
+          if (!character.languages.spoken) character.languages.spoken = [];
+          const idx = character.languages.spoken.indexOf(lang.name);
+          if (idx >= 0) character.languages.spoken.splice(idx, 1);
+          else character.languages.spoken.push(lang.name);
+          saveCharacter();
+          renderLanguageTable();
+        };
+      }
+
+      const tdScript = row.insertCell();
+      tdScript.textContent = lang.script;
+      tdScript.className = 'lang-cell' + (isScript ? ' lang-script-known' : '');
+      if (langEditMode && lang.script !== '—') {
+        tdScript.classList.add('lang-clickable');
+        tdScript.onclick = () => {
+          if (!character.languages.scripts) character.languages.scripts = [];
+          const idx = character.languages.scripts.indexOf(lang.script);
+          if (idx >= 0) character.languages.scripts.splice(idx, 1);
+          else character.languages.scripts.push(lang.script);
+          saveCharacter();
+          renderLanguageTable();
+        };
+      }
+
+      const tdRaces = row.insertCell();
+      tdRaces.textContent = lang.races;
+      tdRaces.className = 'lang-cell lang-races';
+    }
+
+    addSectionRow('Langues standards');
+    LANGUAGES_DATA.filter(l => !l.exotic).forEach(addLangRow);
+    addSectionRow('Langues exotiques');
+    LANGUAGES_DATA.filter(l => l.exotic).forEach(addLangRow);
+
+    container.appendChild(table);
+
+    const btn = document.getElementById('btn-lang-edit');
+    btn.textContent = langEditMode ? 'Terminer' : 'Modifier';
+    btn.classList.toggle('active', langEditMode);
+  }
+
   function renderCapacites() {
     if (!character.proficiencies) character.proficiencies = {};
 
@@ -1576,6 +1678,12 @@
       const btn = document.getElementById(btnId);
       btn.onclick = e => { e.stopPropagation(); openProfPicker(key, btn); };
     });
+
+    renderLanguageTable();
+    document.getElementById('btn-lang-edit').onclick = () => {
+      langEditMode = !langEditMode;
+      renderLanguageTable();
+    };
 
     renderTagList('traits-list', character.traits || [], 'traits');
     renderTagList('features-list', character.classFeatures || [], 'classFeatures');

@@ -1406,6 +1406,87 @@ main {
 }
 
 /* ================================================
+   LANGUES
+   ================================================ */
+
+.lang-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.lang-header h2 { margin-bottom: 0; }
+
+.btn-lang-edit {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--text-dim);
+  border-radius: var(--radius);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-lang-edit:hover { border-color: var(--gold); color: var(--gold); }
+.btn-lang-edit.active { border-color: var(--gold); color: var(--gold); background: rgba(200,160,60,0.12); }
+
+.lang-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.lang-table th {
+  text-align: left;
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.lang-table td.lang-cell {
+  padding: 0.28rem 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-dim);
+}
+.lang-section-row td {
+  padding: 0.5rem 0.5rem 0.2rem;
+  color: var(--gold-dim);
+  font-size: 0.72rem;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.lang-races { color: rgba(200,190,170,0.4) !important; font-style: italic; }
+
+/* Known language highlighting */
+.lang-spoken {
+  color: var(--text) !important;
+  font-weight: 600;
+  position: relative;
+}
+.lang-spoken::after {
+  content: '';
+  position: absolute;
+  left: 0.2rem; right: 0.2rem; bottom: 0.1rem;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 1px;
+}
+.lang-script-known {
+  color: var(--gold) !important;
+  font-weight: 600;
+}
+.lang-row.lang-known td.lang-cell { background: rgba(200,160,60,0.05); }
+
+/* Edit mode */
+.lang-edit-mode td.lang-clickable {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.lang-edit-mode td.lang-clickable:hover { background: rgba(200,160,60,0.15); }
+
+/* ================================================
    ÉQUIPEMENT — style Fantasy D&D
    ================================================ */
 
