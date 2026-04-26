@@ -704,7 +704,8 @@
     // Bouton mode édition
     const $btn = document.getElementById('btn-edit-mode');
     if ($btn) {
-      $btn.textContent = editMode ? '🔒 Verrouiller' : '✏️ Modifier';
+      $btn.innerHTML = editMode ? '<span class="ic-confirm">✓</span>' : '<span class="ic-pencil">✏</span>';
+      $btn.title = editMode ? 'Verrouiller' : 'Modifier';
       $btn.classList.toggle('btn-edit-active', editMode);
     }
 
@@ -858,7 +859,7 @@
     const el = document.getElementById('background-bonuses');
     if (!el) return;
     const bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
-    if (!bg) { el.innerHTML = ''; el.classList.add('hidden'); return; }
+    if (!bg || !editMode) { el.innerHTML = ''; el.classList.add('hidden'); return; }
     el.classList.remove('hidden');
     el.innerHTML =
       '<div class="bg-bonus-row"><span class="bg-bonus-label">Compétences</span><span class="bg-bonus-val">' + bg.skills.join(', ') + '</span></div>' +
@@ -1718,6 +1719,65 @@
 
   // ---- Render Capacités ----
 
+  function getToolCategory(label) {
+    for (const cat of PROF_TREES.tools) {
+      if (cat.label === label) return cat.label;
+      if (cat.children) {
+        for (const child of cat.children) {
+          if (child.label === label) return cat.label;
+        }
+      }
+    }
+    return 'Autre';
+  }
+
+  function renderGroupedTools() {
+    const container = document.getElementById('prof-tools-list');
+    container.innerHTML = '';
+    const tools = character.proficiencies.tools || [];
+    if (tools.length === 0) return;
+
+    const groups = {};
+    const catOrder = PROF_TREES.tools.map(c => c.label);
+    catOrder.push('Autre');
+
+    for (const tool of tools) {
+      const cat = getToolCategory(tool);
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(tool);
+    }
+
+    for (const catLabel of catOrder) {
+      const items = groups[catLabel];
+      if (!items || items.length === 0) continue;
+
+      const group = document.createElement('div');
+      group.className = 'tool-group';
+
+      const header = document.createElement('div');
+      header.className = 'tool-group-header';
+      header.textContent = catLabel;
+      group.appendChild(header);
+
+      const list = document.createElement('div');
+      list.className = 'tag-list';
+      items.forEach((item) => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = item + ' <button class="btn-remove">&times;</button>';
+        tag.querySelector('.btn-remove').addEventListener('click', () => {
+          const idx = character.proficiencies.tools.indexOf(item);
+          if (idx >= 0) character.proficiencies.tools.splice(idx, 1);
+          saveCharacter();
+          renderCapacites();
+        });
+        list.appendChild(tag);
+      });
+      group.appendChild(list);
+      container.appendChild(group);
+    }
+  }
+
   function renderLanguageTable() {
     if (!character.languages) character.languages = { spoken: [], scripts: [] };
     const spoken = character.languages.spoken || [];
@@ -1796,7 +1856,8 @@
     container.appendChild(table);
 
     const btn = document.getElementById('btn-lang-edit');
-    btn.textContent = langEditMode ? 'Terminer' : 'Modifier';
+    btn.innerHTML = langEditMode ? '<span class="ic-confirm">✓</span>' : '<span class="ic-pencil">✏</span>';
+    btn.title = langEditMode ? 'Terminer' : 'Modifier';
     btn.classList.toggle('active', langEditMode);
   }
 
@@ -1806,12 +1867,17 @@
     [
       { key: 'weapons', listId: 'prof-weapons-list', btnId: 'btn-add-prof-weapons' },
       { key: 'armor',   listId: 'prof-armor-list',   btnId: 'btn-add-prof-armor' },
-      { key: 'tools',   listId: 'prof-tools-list',   btnId: 'btn-add-prof-tools' },
     ].forEach(({ key, listId, btnId }) => {
       renderTagList(listId, character.proficiencies[key] || [], 'proficiencies.' + key);
       const btn = document.getElementById(btnId);
       btn.onclick = e => { e.stopPropagation(); openProfPicker(key, btn); };
     });
+
+    renderGroupedTools();
+    document.getElementById('btn-add-prof-tools').onclick = e => {
+      e.stopPropagation();
+      openProfPicker('tools', document.getElementById('btn-add-prof-tools'));
+    };
 
     renderLanguageTable();
     document.getElementById('btn-lang-edit').onclick = () => {
