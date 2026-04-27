@@ -462,27 +462,15 @@
       { l:20, name:'Restauration sorcière',            t:'auto' },
     ],
     'occultiste': [
-      { l:1,  name:'Protecteur de l\'au-delà', id:'protecteur-au-dela', t:'choice',
-        opts:['Archifée','Céleste','Faucheuse non-morte','Génie','Grand Ancien','Immonde'] },
       { l:1,  name:'Magie du pacte',                   t:'auto' },
-      { l:2,  name:'Invocations occultes', id:'invocations', t:'multi', count:2,
-        opts:['Armure des ombres','Bonds du limier','Lance de Léthé','Marque du sentinelle','Parole répulsive','Répit du trompeur','Regard du sorcier','Souffle de la nuit','Vision du diable','Voix du maître des chaînes','Yeux de la rune gardienne'] },
-      { l:3,  name:'Pacte magique', id:'pacte-magique', t:'choice',
-        opts:['Pacte de la chaîne','Pacte de la lame','Pacte du grimoire'] },
       { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
-      { l:5,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:6,  name:'Capacité de protecteur',           t:'auto' },
-      { l:7,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
-      { l:9,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:10, name:'Capacité de protecteur',           t:'auto' },
       { l:11, name:'Invocation mystique',              t:'auto' },
       { l:12, name:'Amélioration de caractéristique',  t:'asi' },
-      { l:12, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:14, name:'Capacité de protecteur',           t:'auto' },
-      { l:15, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:16, name:'Amélioration de caractéristique',  t:'asi' },
-      { l:18, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
       { l:19, name:'Amélioration de caractéristique',  t:'asi' },
       { l:20, name:'Maître de l\'au-delà',             t:'auto' },
     ],
@@ -784,7 +772,236 @@
         if (have < need) count++;
       }
     }
+    const typedData = getTypedFeatures(cls);
+    if (typedData) count += getTypedPendingCount(typedData, level, choices);
     return count;
+  }
+
+  // ---- Capacités de classe : structure typée (par type/rubrique) ----
+  // Utilisée pour les classes dont les sous-classes confèrent des features nommées
+  // et des listes de sorts étendues.
+  // selectionType: 'single' (choisir 1) | 'multi' (choisir N)
+  // countByLevel: pour multi, nombre CUMULATIF de choix par niveau de personnage
+  // spells: [{l: niveau_perso_min, names:[...]}] — sorts étendus accessibles
+  const CLASS_FEATURES_TYPED = {
+    'occultiste': {
+      types: [
+        {
+          id: 'patron',
+          name: 'Patron d\'outretombe',
+          grantedAt: 1,
+          selectionType: 'single',
+          options: [
+            {
+              id: 'grand-ancien',
+              name: 'Grand Ancien',
+              desc: 'Entité cosmique dont l\'intelligence est totalement étrangère à toute logique mortelle.',
+              spells: [
+                { l:1, names:['Dissonance psychique', 'Rire hideux de Tasha'] },
+                { l:3, names:['Détection des pensées', 'Force fantasmagorique'] },
+                { l:5, names:['Clairvoyance', 'Envoi de message'] },
+                { l:7, names:['Domination de bête', 'Tentacules noirs d\'Evard'] },
+                { l:9, names:['Domination de personne', 'Vision suprême'] },
+              ],
+              features: [
+                { l:1, name:'Éveil de l\'esprit', desc:'Télépathie avec toute créature comprenant une langue dans un rayon de 9 m.' },
+                { l:6, name:'Protection entropique', desc:'Réaction : imposer le désavantage à une attaque vous ciblant. Si elle rate, capacité rechargée.' },
+                { l:10, name:'Bouclier de pensée', desc:'Résistance aux dégâts psychiques ; tout attaquant psychique subit autant de dégâts en retour.' },
+                { l:14, name:'Créer des esclaves', desc:'Touchez un humanoïde charmé : il devient votre esclave mental, sans limite de durée.' },
+              ],
+            },
+            {
+              id: 'archifee',
+              name: 'Archifée',
+              desc: 'Seigneur ou dame féerique d\'une puissance et d\'un mystère insurpassables du Féerond.',
+              spells: [
+                { l:1, names:['Lueurs féeriques', 'Sommeil'] },
+                { l:3, names:['Apaisement des émotions', 'Force fantasmagorique'] },
+                { l:5, names:['Clignotement', 'Croissance végétale'] },
+                { l:7, names:['Domination de bête', 'Invisibilité supérieure'] },
+                { l:9, names:['Domination de personne', 'Illusion de groupe'] },
+              ],
+              features: [
+                { l:1, name:'Présence féerique', desc:'Action : charmez ou effrayez les créatures dans un cube de 3 m jusqu\'à la fin de votre prochain tour.' },
+                { l:6, name:'Fuite brumeuse', desc:'Réaction lorsque vous subissez des dégâts : devenez invisible et téléportez-vous jusqu\'à 18 m.' },
+                { l:10, name:'Défenses de séduction', desc:'Immunité au charme ; toute tentative de charme se retourne contre son auteur.' },
+                { l:14, name:'Sombre délire', desc:'Plongez une créature dans une hallucination d\'un autre plan pendant 1 minute.' },
+              ],
+            },
+            {
+              id: 'immonde',
+              name: 'Immonde',
+              desc: 'Puissant être des plans inférieurs — démon, diable ou autre fiélon de haut rang.',
+              spells: [
+                { l:1, names:['Mains brûlantes', 'Commandement'] },
+                { l:3, names:['Cécité/Surdité', 'Rayon ardent'] },
+                { l:5, names:['Boule de feu', 'Nuage puant'] },
+                { l:7, names:['Bouclier de feu', 'Mur de feu'] },
+                { l:9, names:['Colonne de flamme', 'Sanctification'] },
+              ],
+              features: [
+                { l:1, name:'Bénédiction des ténèbres', desc:'Lorsque vous réduisez une créature à 0 PV, gagnez des PV temporaires (mod. Charisme + niveau).' },
+                { l:6, name:'Propre chance', desc:'Réaction : ajoutez 1d10 à votre jet de sauvegarde ou à un jet d\'attaque ennemi vous ciblant.' },
+                { l:10, name:'Résistance infernale', desc:'Résistance à un type de dégât élémentaire (feu, froid, foudre, poison ou acide).' },
+                { l:14, name:'Halo de terreur', desc:'Action : les créatures de votre choix à 9 m doivent réussir un jet de Sagesse ou être effrayées.' },
+              ],
+            },
+            {
+              id: 'celeste',
+              name: 'Céleste',
+              desc: 'Être des plans supérieurs : ange, dieu solaire ou gardien divin.',
+              spells: [
+                { l:1, names:['Soins', 'Flammes sacrées'] },
+                { l:3, names:['Soins de groupe', 'Lumière du jour'] },
+                { l:5, names:['Gardien de la foi', 'Protection contre l\'énergie'] },
+                { l:7, names:['Gardien de la foi', 'Guérison de groupe'] },
+                { l:9, names:['Flamme sainte', 'Flamme sainte'] },
+              ],
+              features: [
+                { l:1, name:'Lumière de guérison', desc:'Action bonus : dépensez des dés de guérison (d6) pour soigner un allié ou vous-même à 18 m.' },
+                { l:1, name:'Sort mineur supplémentaire', desc:'Vous connaissez les sorts mineurs Flammes sacrées et Lumière.' },
+                { l:6, name:'Radiance de l\'Aube', desc:'Dissipez les ténèbres magiques et infligez des dégâts radiants aux créatures proches.' },
+                { l:10, name:'Âme de guérison', desc:'Résistance aux dégâts radiants et nécrotiques.' },
+                { l:14, name:'Vengeance ardente', desc:'Au début d\'un combat où vous étiez à 0 PV, relevez-vous avec la moitié de vos PV max.' },
+              ],
+            },
+            {
+              id: 'faucheuse-non-morte',
+              name: 'Faucheuse non-morte',
+              desc: 'Entité liée à la mort et à l\'au-delà : liche, vampire ancestral ou dieu de la mort.',
+              spells: [
+                { l:1, names:['Rayon empoisonné', 'Fausse mort'] },
+                { l:3, names:['Cécité/Surdité', 'Souffle de vie'] },
+                { l:5, names:['Animation des morts', 'Parler aux morts'] },
+                { l:7, names:['Flétrissure', 'Protection contre la mort'] },
+                { l:9, names:['Contagion', 'Nuage mortel'] },
+              ],
+              features: [
+                { l:1, name:'Forme de la tombe', desc:'Action bonus : devenez mort-vivant pendant 1 minute (immunités, mais vulnérabilité aux radiants).' },
+                { l:6, name:'Résistance inébranlable', desc:'Résistance aux dégâts nécrotiques ; votre âge biologique cesse de progresser.' },
+                { l:10, name:'Regard du gardien', desc:'Réaction : imposez désavantage à un jet de sauvegarde contre la mort d\'une créature à 9 m.' },
+                { l:14, name:'Indestructible', desc:'Une fois par repos long, quand vous tombez à 0 PV, tombez à 1 PV à la place.' },
+              ],
+            },
+            {
+              id: 'genie',
+              name: 'Génie',
+              desc: 'Génie lié (dao, djinn, éfrit ou marid) dont le sous-type est choisi à la création.',
+              spells: [
+                { l:1, names:['Détection du mal et du bien', 'Serviteur invisible'] },
+                { l:3, names:['Phantasme', 'Peau d\'écorce'] },
+                { l:5, names:['Vol', 'Tempête de neige'] },
+                { l:7, names:['Porte dimensionnelle', 'Tentacules noirs d\'Evard'] },
+                { l:9, names:['Passe-muraille', 'Scrutation'] },
+              ],
+              features: [
+                { l:1, name:'Vase du génie', desc:'Vase portable servant d\'espace extradimensionnel et de focaliseur d\'incantation.' },
+                { l:1, name:'Héritage du génie', desc:'Sort mineur et résistance aux dégâts selon le type de génie choisi.' },
+                { l:6, name:'Exil du génie', desc:'Action : envoyez une créature dans la vase jusqu\'à 1 minute (jet de Charisme pour résister).' },
+                { l:10, name:'Sanctuaire de la vase', desc:'Téléportez-vous dans la vase en action bonus pour vous reposer jusqu\'à 4h.' },
+                { l:14, name:'Don du génie', desc:'Sorts supplémentaires et résistances liés au sous-type de génie choisi.' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'faveur-de-pacte',
+          name: 'Faveur de pacte',
+          grantedAt: 3,
+          selectionType: 'single',
+          options: [
+            {
+              id: 'chaine',
+              name: 'Pacte de la chaîne',
+              desc: 'Votre sort Trouver un familier est amélioré : familier spécial (pseudo-dragon, quasit, diablotin ou lutin).',
+              features: [],
+            },
+            {
+              id: 'lame',
+              name: 'Pacte de la lame',
+              desc: 'Action bonus : faites apparaître une arme de pacte magique dans votre main. Elle sert de focaliseur d\'incantation.',
+              features: [],
+            },
+            {
+              id: 'grimoire',
+              name: 'Pacte du grimoire',
+              desc: 'Grimoire des ombres contenant 3 sorts mineurs supplémentaires de n\'importe quelle classe.',
+              features: [],
+            },
+          ],
+        },
+        {
+          id: 'manifestations-occultes',
+          name: 'Manifestations occultes',
+          grantedAt: 2,
+          selectionType: 'multi',
+          countByLevel: { 2:2, 5:3, 7:4, 9:5, 12:6, 15:7, 18:8 },
+          options: [
+            { id: 'vision-du-diable',   name: 'Vision du diable',          desc: 'Voyez dans l\'obscurité totale (magique et non-magique) jusqu\'à 36 m.' },
+            { id: 'armure-des-ombres',  name: 'Armure des ombres',         desc: 'Lancez armure du mage sur vous-même à volonté, sans emplacement de sort.' },
+            { id: 'bonds-du-limier',    name: 'Bonds du limier',           desc: 'Lancez saut sur vous-même à volonté, sans emplacement.' },
+            { id: 'lance-de-lethe',     name: 'Lance de Léthé',            desc: 'Vos touches avec la lance du pacte ajoutent 1d6 dégâts psychiques.' },
+            { id: 'marque-sentinelle',  name: 'Marque du sentinelle',      desc: 'Avantage aux jets de Perception (Sagesse) et bonus +10 à la vitesse lors de traquages.' },
+            { id: 'parole-repulsive',   name: 'Parole répulsive',          desc: 'Lancez répulsion une fois par repos long, sans emplacement.' },
+            { id: 'repit-du-trompeur',  name: 'Répit du trompeur',         desc: 'Lancez invisibilité sur vous-même une fois par repos court, sans emplacement.' },
+            { id: 'regard-du-sorcier',  name: 'Regard du sorcier',         desc: 'Voyez dans le noir jusqu\'à 9 m (vos yeux deviennent entièrement noirs).' },
+            { id: 'souffle-nuit',       name: 'Souffle de la nuit',        desc: 'Lancez silence une fois par repos long, sans emplacement.' },
+            { id: 'voix-maitre-chaines',name: 'Voix du maître des chaînes',desc: 'Communiquez télépathiquement avec votre familier de pacte (dans les 30 m).' },
+            { id: 'yeux-rune',          name: 'Yeux de la rune gardienne', desc: 'Lancez identification à volonté, sans emplacement.' },
+            { id: 'malediction-agrippante', name: 'Malédiction agrippante',desc: 'Lancez malédiction sans emplacement une fois par repos court.' },
+            { id: 'murmures-tombeau',   name: 'Murmures du tombeau',       desc: 'Communiquez avec un cadavre comme avec Parler aux morts, à volonté.' },
+          ],
+        },
+      ],
+    },
+  };
+
+  function getTypedFeatures(cls) {
+    const key = getClassKey(cls);
+    return key ? (CLASS_FEATURES_TYPED[key] || null) : null;
+  }
+
+  function computeMultiCount(type, level) {
+    let count = 0;
+    for (const [lvl, cnt] of Object.entries(type.countByLevel || {})) {
+      if (parseInt(lvl) <= level) count = Math.max(count, cnt);
+    }
+    return count;
+  }
+
+  function getTypedPendingCount(typedData, level, choices) {
+    let count = 0;
+    for (const type of typedData.types) {
+      if (type.grantedAt > level) continue;
+      if (type.selectionType === 'single' && !choices[type.id]) count++;
+      if (type.selectionType === 'multi') {
+        const need = computeMultiCount(type, level);
+        const have = (choices[type.id] || []).length;
+        if (have < need) count++;
+      }
+    }
+    return count;
+  }
+
+  function getExtendedSpellsForLearn() {
+    const typedData = getTypedFeatures(character.class);
+    if (!typedData || !allSpellsCache) return [];
+    const choices = character.classFeatureChoices || {};
+    const level   = character.level || 1;
+    const names   = new Set();
+    for (const type of typedData.types) {
+      if (type.selectionType !== 'single') continue;
+      const chosenId = choices[type.id];
+      if (!chosenId) continue;
+      const opt = type.options.find(o => o.id === chosenId);
+      if (!opt || !opt.spells) continue;
+      for (const sg of opt.spells) {
+        if (sg.l <= level) sg.names.forEach(n => names.add(n.toLowerCase()));
+      }
+    }
+    if (names.size === 0) return [];
+    const classIds = new Set((spellsCache || []).map(s => s.id));
+    return allSpellsCache.filter(s => names.has(s.name.toLowerCase()) && !classIds.has(s.id));
   }
 
   const CURRENCIES = [
@@ -2938,6 +3155,38 @@
         $autoList.appendChild(row);
       }
 
+      // Typed features (patron, manifestations, faveur de pacte…)
+      const typedData = getTypedFeatures(cls);
+      if (typedData) {
+        const tChoices = character.classFeatureChoices || {};
+        for (const type of typedData.types) {
+          if (type.grantedAt > level) continue;
+          const row = document.createElement('div');
+          row.className = 'class-feature-item';
+          const lvlSpan = '<span class="cf-level">Niv.' + type.grantedAt + '</span>';
+          if (type.selectionType === 'single') {
+            const chosenId  = tChoices[type.id];
+            const chosenOpt = chosenId ? type.options.find(o => o.id === chosenId) : null;
+            if (chosenOpt) {
+              row.innerHTML = lvlSpan + '<span class="cf-name">' + type.name + ' : <strong>' + chosenOpt.name + '</strong></span>';
+            } else {
+              row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + type.name + ' — à choisir</span>';
+            }
+          } else if (type.selectionType === 'multi') {
+            const need = computeMultiCount(type, level);
+            const chosen = tChoices[type.id] || [];
+            if (chosen.length > 0) {
+              const extra = chosen.length < need ? ' <span class="cf-pending-small">(+' + (need - chosen.length) + ' à choisir)</span>' : '';
+              const names = chosen.map(id => { const o = type.options.find(x => x.id === id); return o ? o.name : id; });
+              row.innerHTML = lvlSpan + '<span class="cf-name">' + type.name + ' : <strong>' + names.join(', ') + '</strong>' + extra + '</span>';
+            } else {
+              row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + type.name + ' (' + need + ' à choisir)</span>';
+            }
+          }
+          $autoList.appendChild(row);
+        }
+      }
+
       if (!cls) {
         $autoList.innerHTML = '<span class="text-dim">Sélectionne une classe dans le profil.</span>';
       }
@@ -3735,7 +3984,138 @@
       body.appendChild(grp);
     }
 
-    if (levels.length === 0) {
+    // Typed features sections (patron, manifestations, faveur de pacte…)
+    const typedData = getTypedFeatures(cls);
+    if (typedData) {
+      for (const type of typedData.types) {
+        if (type.grantedAt > level) continue;
+
+        const grp = document.createElement('div');
+        grp.className = 'cf-level-group';
+        const hdr = document.createElement('div');
+        hdr.className = 'cf-level-header';
+        hdr.textContent = 'Niveau ' + type.grantedAt;
+        grp.appendChild(hdr);
+
+        const block = document.createElement('div');
+        block.className = 'cf-feature-choice';
+
+        if (type.selectionType === 'single') {
+          const currentId = cfTempChoices[type.id] || null;
+          const title = document.createElement('div');
+          title.className = 'cf-feature-name';
+          title.textContent = type.name;
+          block.appendChild(title);
+
+          const optDiv = document.createElement('div');
+          optDiv.className = 'cf-options';
+          type.options.forEach(opt => {
+            const lbl = document.createElement('label');
+            lbl.className = 'cf-option' + (opt.id === currentId ? ' cf-option-checked' : '');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'cf-typed-' + type.id;
+            radio.value = opt.id;
+            radio.checked = opt.id === currentId;
+            radio.addEventListener('change', () => {
+              cfTempChoices[type.id] = opt.id;
+              optDiv.querySelectorAll('.cf-option').forEach(l => l.classList.remove('cf-option-checked'));
+              lbl.classList.add('cf-option-checked');
+            });
+            lbl.appendChild(radio);
+            const wrap = document.createElement('span');
+            wrap.className = 'cf-opt-content';
+            const nameEl = document.createElement('span');
+            nameEl.className = 'cf-opt-name';
+            nameEl.textContent = opt.name;
+            wrap.appendChild(nameEl);
+            if (opt.desc) {
+              const descEl = document.createElement('span');
+              descEl.className = 'cf-opt-desc';
+              descEl.textContent = opt.desc;
+              wrap.appendChild(descEl);
+            }
+            if (opt.features && opt.features.length > 0) {
+              const visFeats = opt.features.filter(f => f.l <= level);
+              if (visFeats.length > 0) {
+                const featsEl = document.createElement('div');
+                featsEl.className = 'cf-opt-features';
+                visFeats.forEach(f => {
+                  const fDiv = document.createElement('div');
+                  fDiv.className = 'cf-opt-feature-item';
+                  fDiv.innerHTML = '<span class="cf-level">Niv.' + f.l + '</span> <strong>' + f.name + '</strong> — ' + f.desc;
+                  featsEl.appendChild(fDiv);
+                });
+                wrap.appendChild(featsEl);
+              }
+            }
+            lbl.appendChild(wrap);
+            optDiv.appendChild(lbl);
+          });
+          block.appendChild(optDiv);
+
+        } else if (type.selectionType === 'multi') {
+          const need = computeMultiCount(type, level);
+          if (!cfTempChoices[type.id]) cfTempChoices[type.id] = [];
+          const current = cfTempChoices[type.id];
+
+          const title = document.createElement('div');
+          title.className = 'cf-feature-name';
+          title.innerHTML = type.name + ' <span class="cf-count-hint">(choisir ' + need + ')</span>';
+          block.appendChild(title);
+
+          const counter = document.createElement('div');
+          counter.className = 'cf-selected-count';
+          counter.textContent = current.length + ' / ' + need + ' sélectionnés';
+          block.appendChild(counter);
+
+          const optDiv = document.createElement('div');
+          optDiv.className = 'cf-options';
+          type.options.forEach(opt => {
+            const lbl = document.createElement('label');
+            lbl.className = 'cf-option' + (current.includes(opt.id) ? ' cf-option-checked' : '');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = opt.id;
+            cb.checked = current.includes(opt.id);
+            cb.addEventListener('change', () => {
+              const arr = cfTempChoices[type.id];
+              if (cb.checked) {
+                if (arr.length >= need) { cb.checked = false; return; }
+                arr.push(opt.id);
+                lbl.classList.add('cf-option-checked');
+              } else {
+                const idx = arr.indexOf(opt.id);
+                if (idx >= 0) arr.splice(idx, 1);
+                lbl.classList.remove('cf-option-checked');
+              }
+              counter.textContent = arr.length + ' / ' + need + ' sélectionnés';
+            });
+            lbl.appendChild(cb);
+            const wrap = document.createElement('span');
+            wrap.className = 'cf-opt-content';
+            const nameEl = document.createElement('span');
+            nameEl.className = 'cf-opt-name';
+            nameEl.textContent = opt.name;
+            wrap.appendChild(nameEl);
+            if (opt.desc) {
+              const descEl = document.createElement('span');
+              descEl.className = 'cf-opt-desc';
+              descEl.textContent = opt.desc;
+              wrap.appendChild(descEl);
+            }
+            lbl.appendChild(wrap);
+            optDiv.appendChild(lbl);
+          });
+          block.appendChild(optDiv);
+        }
+
+        grp.appendChild(block);
+        body.appendChild(grp);
+      }
+    }
+
+    if (levels.length === 0 && !typedData) {
       body.innerHTML = '<span class="text-dim">Aucun choix disponible pour cette classe et ce niveau.</span>';
     }
 

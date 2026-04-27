@@ -689,6 +689,8 @@ main {
 }
 .cf-opt-name { font-size: 0.82rem; }
 .cf-opt-desc { font-size: 0.72rem; color: var(--text-dim); font-style: italic; line-height: 1.2; }
+.cf-opt-features { margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.cf-opt-feature-item { font-size: 0.7rem; color: var(--text-dim); line-height: 1.3; padding-left: 0.25rem; border-left: 2px solid var(--border); }
 
 .cf-modal-footer {
   display: flex;
