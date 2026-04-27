@@ -530,54 +530,10 @@ main {
   border-bottom: 1px solid var(--border);
 }
 
-.section-collapsible-header {
+.lang-edit-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.section-collapsible-header h2 {
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-  flex: 1;
-}
-
-.section-collapsible-header {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.35rem;
-  margin-bottom: 0.75rem;
-}
-
-.btn-section-toggle {
-  background: transparent;
-  border: none;
-  color: var(--gold-dim);
-  font-size: 0.7rem;
-  cursor: pointer;
-  padding: 0.2rem 0.4rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.btn-section-toggle:hover { color: var(--gold); }
-
-.section-body-hidden {
-  display: none;
-}
-
-.lang-header-inner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.lang-header-inner h2 {
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
+  justify-content: flex-end;
+  margin-bottom: 0.4rem;
 }
 
 /* Racial traits display */

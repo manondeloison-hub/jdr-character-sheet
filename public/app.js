@@ -1872,7 +1872,9 @@
 
   let profPickerOutsideHandler = null;
   let langEditMode = false;
-  let capacitesCollapsed = { proficiencies: true, languages: true };
+  let profCollapsed    = true;
+  let langCollapsed    = true;
+  let traitsCollapsed  = true;
 
   function getProfLeaves(node) {
     if (!node.children) return [node.label];
@@ -2271,39 +2273,23 @@
     };
 
     // Collapsible: Maîtrises
-    const $profSection = document.getElementById('section-proficiencies');
-    const $profToggle  = document.getElementById('btn-toggle-proficiencies');
-    const $profBody    = document.getElementById('proficiencies-body');
-    $profBody.classList.toggle('section-body-hidden', capacitesCollapsed.proficiencies);
-    $profToggle.textContent = capacitesCollapsed.proficiencies ? '▶' : '▼';
-    $profToggle.onclick = () => {
-      capacitesCollapsed.proficiencies = !capacitesCollapsed.proficiencies;
-      renderCapacites();
-    };
+    document.getElementById('prof-toggle').textContent = profCollapsed ? '▶' : '▼';
+    document.getElementById('proficiencies-body').classList.toggle('hidden', profCollapsed);
 
     // Collapsible: Langues
-    const $langToggle = document.getElementById('btn-toggle-languages');
-    const $langBody   = document.getElementById('languages-body');
-    $langBody.classList.toggle('section-body-hidden', capacitesCollapsed.languages);
-    $langToggle.textContent = capacitesCollapsed.languages ? '▶' : '▼';
-    $langToggle.onclick = () => {
-      capacitesCollapsed.languages = !capacitesCollapsed.languages;
-      renderCapacites();
-    };
-
-    document.getElementById('btn-lang-edit').onclick = () => {
-      if (capacitesCollapsed.languages) {
-        capacitesCollapsed.languages = false;
-        langEditMode = true;
-        renderCapacites();
-      } else {
+    document.getElementById('lang-toggle').textContent = langCollapsed ? '▶' : '▼';
+    document.getElementById('languages-body').classList.toggle('hidden', langCollapsed);
+    if (!langCollapsed) {
+      renderLanguageTable();
+      document.getElementById('btn-lang-edit').onclick = () => {
         langEditMode = !langEditMode;
         renderLanguageTable();
-      }
-    };
-    if (!capacitesCollapsed.languages) {
-      renderLanguageTable();
+      };
     }
+
+    // Collapsible: Traits raciaux
+    document.getElementById('traits-racial-toggle').textContent = traitsCollapsed ? '▶' : '▼';
+    document.getElementById('traits-racial-body').classList.toggle('hidden', traitsCollapsed);
 
     // Traits raciaux (auto depuis race)
     const $traitsList = document.getElementById('traits-list');
@@ -2907,6 +2893,21 @@
 
     return div;
   }
+
+  document.getElementById('prof-header').addEventListener('click', () => {
+    profCollapsed = !profCollapsed;
+    renderCapacites();
+  });
+
+  document.getElementById('lang-header').addEventListener('click', () => {
+    langCollapsed = !langCollapsed;
+    renderCapacites();
+  });
+
+  document.getElementById('traits-racial-header').addEventListener('click', () => {
+    traitsCollapsed = !traitsCollapsed;
+    renderCapacites();
+  });
 
   document.getElementById('weapons-inv-header').addEventListener('click', () => {
     weaponsInvCollapsed = !weaponsInvCollapsed;

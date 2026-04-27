@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">22</span></span>
+        <span class="header-build">v<span id="build-number">23</span></span>
       </div>
     </header>
 
@@ -342,12 +342,9 @@
       <section id="tab-capacites" class="tab-content hidden">
 
         <!-- Maîtrises (collapsible) -->
-        <div class="section-group" id="section-proficiencies">
-          <div class="section-collapsible-header">
-            <h2>Maîtrises</h2>
-            <button id="btn-toggle-proficiencies" class="btn-section-toggle">▶</button>
-          </div>
-          <div id="proficiencies-body" class="section-body-hidden">
+        <div class="section-group">
+          <h2 id="prof-header" class="section-collapsible">Maîtrises <span id="prof-toggle">▶</span></h2>
+          <div id="proficiencies-body" class="hidden">
             <div class="proficiencies-grid">
 
               <div class="prof-block">
@@ -380,21 +377,21 @@
 
         <!-- Langues (collapsible) -->
         <div class="section-group">
-          <div class="section-collapsible-header">
-            <div class="lang-header-inner">
-              <h2>Langues</h2>
+          <h2 id="lang-header" class="section-collapsible">Langues <span id="lang-toggle">▶</span></h2>
+          <div id="languages-body" class="hidden">
+            <div class="lang-edit-row">
               <button id="btn-lang-edit" class="btn-lang-edit" title="Modifier"><span class="ic-pencil">✏</span></button>
             </div>
-            <button id="btn-toggle-languages" class="btn-section-toggle">▶</button>
-          </div>
-          <div id="languages-body" class="section-body-hidden">
             <div id="language-table-container"></div>
           </div>
         </div>
 
+        <!-- Traits raciaux (collapsible) -->
         <div class="section-group">
-          <h2>Traits raciaux</h2>
-          <div id="traits-list"></div>
+          <h2 id="traits-racial-header" class="section-collapsible">Traits raciaux <span id="traits-racial-toggle">▶</span></h2>
+          <div id="traits-racial-body" class="hidden">
+            <div id="traits-list"></div>
+          </div>
         </div>
 
         <div class="section-group">
