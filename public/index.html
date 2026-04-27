@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">21</span></span>
+        <span class="header-build">v<span id="build-number">22</span></span>
       </div>
     </header>
 
@@ -341,54 +341,60 @@
       <!-- CAPACITES -->
       <section id="tab-capacites" class="tab-content hidden">
 
-        <!-- Maîtrises -->
-        <div class="section-group">
-          <h2>Maîtrises</h2>
-          <div class="proficiencies-grid">
+        <!-- Maîtrises (collapsible) -->
+        <div class="section-group" id="section-proficiencies">
+          <div class="section-collapsible-header">
+            <h2>Maîtrises</h2>
+            <button id="btn-toggle-proficiencies" class="btn-section-toggle">▶</button>
+          </div>
+          <div id="proficiencies-body" class="section-body-hidden">
+            <div class="proficiencies-grid">
 
-            <div class="prof-block">
-              <div class="prof-header">
-                <h3 class="prof-title">⚔️ Armes</h3>
-                <button id="btn-add-prof-weapons" class="btn-prof-add" title="Modifier">+</button>
+              <div class="prof-block">
+                <div class="prof-header">
+                  <h3 class="prof-title">⚔️ Armes</h3>
+                  <button id="btn-add-prof-weapons" class="btn-prof-add" title="Modifier">+</button>
+                </div>
+                <div id="prof-weapons-list" class="tag-list"></div>
               </div>
-              <div id="prof-weapons-list" class="tag-list"></div>
-            </div>
 
-            <div class="prof-block">
-              <div class="prof-header">
-                <h3 class="prof-title">🛡️ Armures</h3>
-                <button id="btn-add-prof-armor" class="btn-prof-add" title="Modifier">+</button>
+              <div class="prof-block">
+                <div class="prof-header">
+                  <h3 class="prof-title">🛡️ Armures</h3>
+                  <button id="btn-add-prof-armor" class="btn-prof-add" title="Modifier">+</button>
+                </div>
+                <div id="prof-armor-list" class="tag-list"></div>
               </div>
-              <div id="prof-armor-list" class="tag-list"></div>
-            </div>
 
-            <div class="prof-block" id="prof-block-tools">
-              <div class="prof-header">
-                <h3 class="prof-title">🔧 Outils</h3>
-                <button id="btn-add-prof-tools" class="btn-prof-add" title="Modifier">+</button>
+              <div class="prof-block" id="prof-block-tools">
+                <div class="prof-header">
+                  <h3 class="prof-title">🔧 Outils</h3>
+                  <button id="btn-add-prof-tools" class="btn-prof-add" title="Modifier">+</button>
+                </div>
+                <div id="prof-tools-list"></div>
               </div>
-              <div id="prof-tools-list"></div>
-            </div>
 
+            </div>
           </div>
         </div>
 
-        <!-- Langues -->
+        <!-- Langues (collapsible) -->
         <div class="section-group">
-          <div class="lang-header">
-            <h2>Langues</h2>
-            <button id="btn-lang-edit" class="btn-lang-edit" title="Modifier"><span class="ic-pencil">✏</span></button>
+          <div class="section-collapsible-header">
+            <div class="lang-header-inner">
+              <h2>Langues</h2>
+              <button id="btn-lang-edit" class="btn-lang-edit" title="Modifier"><span class="ic-pencil">✏</span></button>
+            </div>
+            <button id="btn-toggle-languages" class="btn-section-toggle">▶</button>
           </div>
-          <div id="language-table-container"></div>
+          <div id="languages-body" class="section-body-hidden">
+            <div id="language-table-container"></div>
+          </div>
         </div>
 
         <div class="section-group">
           <h2>Traits raciaux</h2>
-          <div id="traits-list" class="tag-list"></div>
-          <div class="add-row">
-            <input type="text" id="trait-input" placeholder="Nouveau trait...">
-            <button id="btn-add-trait" class="btn-add">+</button>
-          </div>
+          <div id="traits-list"></div>
         </div>
 
         <div class="section-group">

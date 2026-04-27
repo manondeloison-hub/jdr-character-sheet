@@ -71,6 +71,143 @@
     'dragonborn':            { strength: 2, charisma: 1 },
   };
 
+  const RACIAL_TRAITS = {
+    'haute-elfe': [
+      'Vision dans le noir (60 pi)',
+      'Sens aiguisés (maîtrise Perception)',
+      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
+      'Transe (méditation 4h remplace sommeil)',
+      'Maîtrise des armes elfes',
+      'Langue supplémentaire',
+      'Tour de magie supplémentaire (Intelligence)',
+    ],
+    'elfe des bois': [
+      'Vision dans le noir (60 pi)',
+      'Sens aiguisés (maîtrise Perception)',
+      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
+      'Transe (méditation 4h remplace sommeil)',
+      'Maîtrise des armes elfes',
+      'Vitesse accrue (35 pi)',
+      'Camouflage naturel (se cacher dans la nature)',
+    ],
+    'elfe noir': [
+      'Vision supérieure dans le noir (120 pi)',
+      'Sens aiguisés (maîtrise Perception)',
+      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
+      'Transe (méditation 4h remplace sommeil)',
+      'Magie drow (sorts innés)',
+      'Maîtrise des armes drows',
+      'Sensibilité à la lumière du soleil',
+    ],
+    'elfe': [
+      'Vision dans le noir (60 pi)',
+      'Sens aiguisés (maîtrise Perception)',
+      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
+      'Transe (méditation 4h remplace sommeil)',
+    ],
+    'nain des collines': [
+      'Vision dans le noir (60 pi)',
+      'Résistance naine (avantage contre poison, résistance dégâts poison)',
+      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
+      'Maîtrise des outils (forgeron, brasseur ou maçon)',
+      'Connaissance de la pierre',
+      'Ténacité naine (+1 PV par niveau)',
+    ],
+    'nain des montagnes': [
+      'Vision dans le noir (60 pi)',
+      'Résistance naine (avantage contre poison, résistance dégâts poison)',
+      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
+      'Maîtrise des outils (forgeron, brasseur ou maçon)',
+      'Connaissance de la pierre',
+      'Formation aux armures naines (armures légères et intermédiaires)',
+    ],
+    'nain': [
+      'Vision dans le noir (60 pi)',
+      'Résistance naine (avantage contre poison, résistance dégâts poison)',
+      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
+      'Maîtrise des outils (forgeron, brasseur ou maçon)',
+      'Connaissance de la pierre',
+    ],
+    'humain': [
+      'Langue supplémentaire',
+    ],
+    'halfelin pied-léger': [
+      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
+      'Brave (avantage contre l\'état effrayé)',
+      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
+      'Discrétion naturelle (se cacher derrière une créature plus grande)',
+    ],
+    'halfelin robuste': [
+      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
+      'Brave (avantage contre l\'état effrayé)',
+      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
+      'Résistance robuste (avantage contre poison, résistance dégâts poison)',
+    ],
+    'halfelin': [
+      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
+      'Brave (avantage contre l\'état effrayé)',
+      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
+    ],
+    'gnome des roches': [
+      'Vision dans le noir (60 pi)',
+      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
+      'Connaissance des machines (maîtrise outils de bricoleur)',
+      'Trafiquant (construire petits automates)',
+    ],
+    'gnome des forêts': [
+      'Vision dans le noir (60 pi)',
+      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
+      'Illusion naturelle (tour de magie illusion mineure)',
+      'Parler aux bêtes (communiquer avec petits animaux)',
+    ],
+    'gnome': [
+      'Vision dans le noir (60 pi)',
+      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
+    ],
+    'demi-elfe': [
+      'Vision dans le noir (60 pi)',
+      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
+      'Polyvalent (deux maîtrises de compétences au choix)',
+      'Langue supplémentaire',
+    ],
+    'demi-orc': [
+      'Vision dans le noir (60 pi)',
+      'Menaçant (maîtrise Intimidation)',
+      'Endurance implacable (tomber à 1 PV au lieu de 0, une fois par repos long)',
+      'Attaques sauvages (un dé de dégâts supplémentaire sur coup critique)',
+    ],
+    'tieffelin': [
+      'Vision dans le noir (60 pi)',
+      'Résistance infernale (résistance dégâts de feu)',
+      'Ascendance infernale (sorts innés : thaumaturgie, flammes de l\'enfer, ténèbres)',
+    ],
+    'draconide': [
+      'Ascendance draconique (type de dégâts selon couleur du dragon)',
+      'Souffle draconique (arme de souffle selon ascendance)',
+      'Résistance aux dégâts (résistance selon ascendance)',
+    ],
+  };
+
+  // English aliases for RACIAL_TRAITS
+  RACIAL_TRAITS['high elf']          = RACIAL_TRAITS['haute-elfe'];
+  RACIAL_TRAITS['wood elf']          = RACIAL_TRAITS['elfe des bois'];
+  RACIAL_TRAITS['drow']              = RACIAL_TRAITS['elfe noir'];
+  RACIAL_TRAITS['elf']               = RACIAL_TRAITS['elfe'];
+  RACIAL_TRAITS['hill dwarf']        = RACIAL_TRAITS['nain des collines'];
+  RACIAL_TRAITS['mountain dwarf']    = RACIAL_TRAITS['nain des montagnes'];
+  RACIAL_TRAITS['dwarf']             = RACIAL_TRAITS['nain'];
+  RACIAL_TRAITS['human']             = RACIAL_TRAITS['humain'];
+  RACIAL_TRAITS['lightfoot halfling']= RACIAL_TRAITS['halfelin pied-léger'];
+  RACIAL_TRAITS['stout halfling']    = RACIAL_TRAITS['halfelin robuste'];
+  RACIAL_TRAITS['halfling']          = RACIAL_TRAITS['halfelin'];
+  RACIAL_TRAITS['rock gnome']        = RACIAL_TRAITS['gnome des roches'];
+  RACIAL_TRAITS['forest gnome']      = RACIAL_TRAITS['gnome des forêts'];
+  RACIAL_TRAITS['gnome']             = RACIAL_TRAITS['gnome'];
+  RACIAL_TRAITS['half-elf']          = RACIAL_TRAITS['demi-elfe'];
+  RACIAL_TRAITS['half-orc']          = RACIAL_TRAITS['demi-orc'];
+  RACIAL_TRAITS['tiefling']          = RACIAL_TRAITS['tieffelin'];
+  RACIAL_TRAITS['dragonborn']        = RACIAL_TRAITS['draconide'];
+
   const CURRENCIES = [
     { key: 'pp', label: 'Platine',  hint: '1 pp = 10 po' },
     { key: 'po', label: 'Or',       hint: '1 po = 10 pa' },
@@ -413,6 +550,10 @@
       return;
     }
     character = await res.json();
+    // Migration: auto-populate racial traits if not set
+    if (character.race && !character.traits) {
+      character.traits = getRacialTraits(character.race);
+    }
     if (character.background && !character.backgroundSkills) {
       const _bg = BACKGROUNDS_DATA.find(b => b.name === character.background);
       character.backgroundSkills = _bg ? _bg.skills : [];
@@ -493,6 +634,11 @@
   function getRacialBonus(race) {
     if (!race) return {};
     return RACIAL_BONUSES[race.toLowerCase().trim()] || {};
+  }
+
+  function getRacialTraits(race) {
+    if (!race) return [];
+    return RACIAL_TRAITS[race.toLowerCase().trim()] || [];
   }
 
   function recalcStats() {
@@ -657,8 +803,11 @@
         character[field] = el.value;
         if (field === 'race') {
           recalcStats();
+          character.traits = getRacialTraits(el.value);
+          saveCharacter();
           renderProfil();
           renderCombat();
+          renderCapacites();
         }
         if (field === 'class') {
           syncSpellSlots();
@@ -1723,6 +1872,7 @@
 
   let profPickerOutsideHandler = null;
   let langEditMode = false;
+  let capacitesCollapsed = { proficiencies: true, languages: true };
 
   function getProfLeaves(node) {
     if (!node.children) return [node.label];
@@ -2120,13 +2270,59 @@
       else openProfPicker('tools', $btnTools);
     };
 
-    renderLanguageTable();
-    document.getElementById('btn-lang-edit').onclick = () => {
-      langEditMode = !langEditMode;
-      renderLanguageTable();
+    // Collapsible: Maîtrises
+    const $profSection = document.getElementById('section-proficiencies');
+    const $profToggle  = document.getElementById('btn-toggle-proficiencies');
+    const $profBody    = document.getElementById('proficiencies-body');
+    $profBody.classList.toggle('section-body-hidden', capacitesCollapsed.proficiencies);
+    $profToggle.textContent = capacitesCollapsed.proficiencies ? '▶' : '▼';
+    $profToggle.onclick = () => {
+      capacitesCollapsed.proficiencies = !capacitesCollapsed.proficiencies;
+      renderCapacites();
     };
 
-    renderTagList('traits-list', character.traits || [], 'traits');
+    // Collapsible: Langues
+    const $langToggle = document.getElementById('btn-toggle-languages');
+    const $langBody   = document.getElementById('languages-body');
+    $langBody.classList.toggle('section-body-hidden', capacitesCollapsed.languages);
+    $langToggle.textContent = capacitesCollapsed.languages ? '▶' : '▼';
+    $langToggle.onclick = () => {
+      capacitesCollapsed.languages = !capacitesCollapsed.languages;
+      renderCapacites();
+    };
+
+    document.getElementById('btn-lang-edit').onclick = () => {
+      if (capacitesCollapsed.languages) {
+        capacitesCollapsed.languages = false;
+        langEditMode = true;
+        renderCapacites();
+      } else {
+        langEditMode = !langEditMode;
+        renderLanguageTable();
+      }
+    };
+    if (!capacitesCollapsed.languages) {
+      renderLanguageTable();
+    }
+
+    // Traits raciaux (auto depuis race)
+    const $traitsList = document.getElementById('traits-list');
+    $traitsList.innerHTML = '';
+    const traits = character.traits || [];
+    if (traits.length === 0) {
+      const empty = document.createElement('span');
+      empty.className = 'text-dim';
+      empty.textContent = character.race ? 'Aucun trait racial défini pour cette race.' : 'Sélectionne une race dans le profil.';
+      $traitsList.appendChild(empty);
+    } else {
+      traits.forEach(t => {
+        const tag = document.createElement('div');
+        tag.className = 'trait-racial-item';
+        tag.textContent = t;
+        $traitsList.appendChild(tag);
+      });
+    }
+
     renderTagList('features-list', character.classFeatures || [], 'classFeatures');
 
     const $notes = document.getElementById('notes');
@@ -2136,7 +2332,6 @@
       saveCharacter();
     };
 
-    document.getElementById('btn-add-trait').onclick = () => addTag('trait-input', 'traits');
     document.getElementById('btn-add-feature').onclick = () => addTag('feature-input', 'classFeatures');
   }
 
