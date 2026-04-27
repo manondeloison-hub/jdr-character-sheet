@@ -553,6 +553,129 @@ main {
   font-style: italic;
 }
 
+/* ---- Capacités de classe ---- */
+.class-features-auto {
+  margin-bottom: 0.5rem;
+}
+
+.class-feature-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.cf-level {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  min-width: 2.8rem;
+  flex-shrink: 0;
+}
+
+.cf-name         { font-size: 0.85rem; color: var(--text); }
+.cf-name.cf-asi  { color: var(--text-dim); font-style: italic; }
+.cf-name.cf-pending { color: rgba(245,158,11,0.9); font-style: italic; }
+.cf-pending-small { font-size: 0.75rem; color: rgba(245,158,11,0.75); }
+
+.btn-cf-pending {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.45rem 0.8rem;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.4);
+  color: rgba(245,158,11,0.95);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+}
+.btn-cf-pending:hover { background: rgba(245,158,11,0.15); }
+
+.cf-manual-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 0.6rem 0;
+}
+
+/* Modal class features */
+.modal-cf {
+  max-width: 580px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-modal-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 60px;
+  padding-right: 0.25rem;
+}
+
+.cf-level-group { margin-bottom: 1.2rem; }
+
+.cf-level-header {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--gold);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.cf-feature-choice { margin-bottom: 0.9rem; }
+
+.cf-feature-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.cf-count-hint {
+  font-weight: normal;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.cf-selected-count {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.cf-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.cf-option {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: border-color 0.1s;
+}
+.cf-option:hover        { border-color: var(--gold-dim); }
+.cf-option-checked      { border-color: var(--gold); background: rgba(200,160,60,0.1); }
+.cf-option input        { display: none; }
+
+.cf-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
 /* --- Info grid --- */
 .info-grid {
   display: grid;

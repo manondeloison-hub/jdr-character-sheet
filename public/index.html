@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">23</span></span>
+        <span class="header-build">v<span id="build-number">24</span></span>
       </div>
     </header>
 
@@ -395,11 +395,16 @@
         </div>
 
         <div class="section-group">
-          <h2>Capacités de classe</h2>
-          <div id="features-list" class="tag-list"></div>
-          <div class="add-row">
-            <input type="text" id="feature-input" placeholder="Nouvelle capacité...">
-            <button id="btn-add-feature" class="btn-add">+</button>
+          <h2 id="features-header" class="section-collapsible">Capacités de classe <span id="features-toggle">▼</span></h2>
+          <div id="features-body">
+            <div id="class-features-auto" class="class-features-auto"></div>
+            <button id="btn-cf-choose" class="btn-cf-pending hidden">⚠ Choix en attente</button>
+            <div class="cf-manual-sep"></div>
+            <div id="features-list" class="tag-list"></div>
+            <div class="add-row">
+              <input type="text" id="feature-input" placeholder="Capacité supplémentaire...">
+              <button id="btn-add-feature" class="btn-add">+</button>
+            </div>
           </div>
         </div>
 
@@ -836,6 +841,19 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Modal : Capacités de classe -->
+  <div id="class-features-modal" class="modal hidden">
+    <div class="modal-content modal-cf">
+      <button class="modal-close" id="btn-cf-close">&times;</button>
+      <h2>Capacités de classe — choix</h2>
+      <div id="cf-modal-body" class="cf-modal-body"></div>
+      <div class="cf-modal-footer">
+        <button id="btn-cf-cancel" class="btn-secondary">Annuler</button>
+        <button id="btn-cf-confirm" class="btn-primary">Confirmer</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

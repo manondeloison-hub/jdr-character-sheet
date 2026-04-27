@@ -208,6 +208,354 @@
   RACIAL_TRAITS['tiefling']          = RACIAL_TRAITS['tieffelin'];
   RACIAL_TRAITS['dragonborn']        = RACIAL_TRAITS['draconide'];
 
+  // ---- Capacités de classe D&D 5e ----
+  // t: 'auto' | 'choice' | 'multi' | 'asi' | 'multi-more'
+  // id: clé pour classFeatureChoices (défaut = name)
+  // opts: liste d'options (choice/multi)
+  // count: nb de choix (multi)
+  const CLASS_FEATURES = {
+    'barbare': [
+      { l:1,  name:'Rage',                             t:'auto' },
+      { l:1,  name:'Défense sans armure',              t:'auto' },
+      { l:2,  name:'Attaque téméraire',                t:'auto' },
+      { l:2,  name:'Sens du danger',                   t:'auto' },
+      { l:3,  name:'Voie primitive', id:'voie-primitive', t:'choice',
+        opts:['Berserker','Totem guerrier','Âme ancestrale','Héraut de la tempête','Bête sauvage','Guerrier sauvage'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Attaque supplémentaire',           t:'auto' },
+      { l:5,  name:'Mouvement rapide',                 t:'auto' },
+      { l:6,  name:'Capacité de voie',                 t:'auto' },
+      { l:7,  name:'Instinct sauvage',                 t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:9,  name:'Critique brutal (1 dé)',            t:'auto' },
+      { l:10, name:'Capacité de voie',                 t:'auto' },
+      { l:11, name:'Rage inébranlable',                t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:13, name:'Critique brutal (2 dés)',           t:'auto' },
+      { l:14, name:'Capacité de voie',                 t:'auto' },
+      { l:15, name:'Rage persistante',                 t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:17, name:'Critique brutal (3 dés)',           t:'auto' },
+      { l:18, name:'Puissance indomptable',            t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Champion primitif',                t:'auto' },
+    ],
+    'barde': [
+      { l:1,  name:'Sorts de bardes',                  t:'auto' },
+      { l:1,  name:'Inspiration bardique (d6)',         t:'auto' },
+      { l:2,  name:'Touche-à-tout',                    t:'auto' },
+      { l:2,  name:'Chant reposant',                   t:'auto' },
+      { l:3,  name:'Collège bardique', id:'college-bardique', t:'choice',
+        opts:['Collège du savoir','Collège de la vaillance','Collège du glamour','Collège des épées','Collège des chuchotements'] },
+      { l:3,  name:'Expertise',                        t:'auto' },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Source d\'inspiration',            t:'auto' },
+      { l:5,  name:'Contre-charme',                    t:'auto' },
+      { l:6,  name:'Capacité de collège',              t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:10, name:'Expertise supplémentaire',         t:'auto' },
+      { l:10, name:'Secrets magiques',                 t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Capacité de collège',              t:'auto' },
+      { l:14, name:'Secrets magiques supplémentaires', t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Secrets magiques suprêmes',        t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Inspiration supérieure',           t:'auto' },
+    ],
+    'clerc': [
+      { l:1,  name:'Domaine divin', id:'domaine-divin', t:'choice',
+        opts:['Connaissance','Forge','Guerre','Lumière','Nature','Ordre','Paix','Tempête','Tombale','Tromperie','Vie'] },
+      { l:1,  name:'Sorts de domaine',                 t:'auto' },
+      { l:2,  name:'Canalisation divine',              t:'auto' },
+      { l:2,  name:'Capacité de domaine',              t:'auto' },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Destruction des morts-vivants',    t:'auto' },
+      { l:6,  name:'Canalisation divine (2/repos)',    t:'auto' },
+      { l:6,  name:'Capacité de domaine',              t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:8,  name:'Capacité de domaine',              t:'auto' },
+      { l:10, name:'Intervention divine',              t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Destruction des morts-vivants (améliorée)', t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Canalisation divine (3/repos)',    t:'auto' },
+      { l:18, name:'Capacité de domaine',              t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Intervention divine suprême',      t:'auto' },
+    ],
+    'druide': [
+      { l:1,  name:'Druidique',                        t:'auto' },
+      { l:1,  name:'Sorts de druide',                  t:'auto' },
+      { l:2,  name:'Forme sauvage',                    t:'auto' },
+      { l:2,  name:'Cercle druidique', id:'cercle-druidique', t:'choice',
+        opts:['Cercle de la lune','Cercle de la terre','Cercle du berger','Cercle du rêve','Cercle des spores','Cercle des étoiles'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:4,  name:'Forme sauvage améliorée',          t:'auto' },
+      { l:6,  name:'Capacité de cercle',               t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:8,  name:'Forme sauvage : bête élémentaire', t:'auto' },
+      { l:10, name:'Capacité de cercle',               t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Capacité de cercle',               t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Corps immortel',                   t:'auto' },
+      { l:18, name:'Sorts de bête',                    t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Archidruide',                      t:'auto' },
+    ],
+    'guerrier': [
+      { l:1,  name:'Second souffle',                   t:'auto' },
+      { l:1,  name:'Style de combat', id:'style-combat', t:'choice',
+        opts:['Archerie','Combat à deux armes','Défense','Duel','Protection','Supériorité à la lutte'] },
+      { l:2,  name:'Fougue (1)',                       t:'auto' },
+      { l:3,  name:'Archétype martial', id:'archetyp-martial', t:'choice',
+        opts:['Archer arcanique','Cavalier','Champion','Chevalier eldritch','Chevalier pourpre','Maître des batailles','Samouraï'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Attaque supplémentaire (×2)',      t:'auto' },
+      { l:6,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:7,  name:'Capacité d\'archétype',            t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:9,  name:'Indomptable (1)',                  t:'auto' },
+      { l:10, name:'Capacité d\'archétype',            t:'auto' },
+      { l:11, name:'Attaque supplémentaire (×3)',      t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:13, name:'Indomptable (2)',                  t:'auto' },
+      { l:14, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:15, name:'Capacité d\'archétype',            t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:17, name:'Fougue (2), Indomptable (3)',      t:'auto' },
+      { l:18, name:'Capacité d\'archétype',            t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Attaque supplémentaire (×4)',      t:'auto' },
+    ],
+    'moine': [
+      { l:1,  name:'Arts martiaux',                    t:'auto' },
+      { l:1,  name:'Défense sans armure',              t:'auto' },
+      { l:2,  name:'Ki',                               t:'auto' },
+      { l:2,  name:'Déplacement sans armure (+10 pi)', t:'auto' },
+      { l:3,  name:'Tradition monastique', id:'tradition-monastique', t:'choice',
+        opts:['Voie de la faucheuse','Voie de la miséricorde','Voie des cinq éléments','Voie du poing ouvert','Voie du soleil','Voie de l\'ombre'] },
+      { l:3,  name:'Parade de projectiles',            t:'auto' },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:4,  name:'Chute ralentie',                   t:'auto' },
+      { l:5,  name:'Attaque supplémentaire',           t:'auto' },
+      { l:5,  name:'Frappe étourdissante',             t:'auto' },
+      { l:6,  name:'Frappes ki (magiques)',            t:'auto' },
+      { l:6,  name:'Capacité de tradition',            t:'auto' },
+      { l:7,  name:'Tranquillité',                     t:'auto' },
+      { l:7,  name:'Langue du soleil et de la lune',   t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:9,  name:'Déplacement sans armure (+15 pi)', t:'auto' },
+      { l:10, name:'Pureté du corps',                  t:'auto' },
+      { l:11, name:'Capacité de tradition',            t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Âme de diamant',                   t:'auto' },
+      { l:15, name:'Corps immortel',                   t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:17, name:'Capacité de tradition',            t:'auto' },
+      { l:18, name:'Moi vide',                         t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Perfection de soi',                t:'auto' },
+    ],
+    'paladin': [
+      { l:1,  name:'Détection du mal et du bien',      t:'auto' },
+      { l:1,  name:'Imposition des mains',             t:'auto' },
+      { l:2,  name:'Style de combat', id:'style-combat', t:'choice',
+        opts:['Arme à deux mains','Défense','Duel','Protection'] },
+      { l:2,  name:'Sorts',                            t:'auto' },
+      { l:2,  name:'Châtiment divin',                  t:'auto' },
+      { l:3,  name:'Santé divine',                     t:'auto' },
+      { l:3,  name:'Serment sacré', id:'serment-sacre', t:'choice',
+        opts:['Serment de conquête','Serment de dévotion','Serment de gloire','Serment de rédemption','Serment de vengeance','Serment des anciens'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Attaque supplémentaire',           t:'auto' },
+      { l:6,  name:'Aura de protection',               t:'auto' },
+      { l:7,  name:'Capacité de serment',              t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:10, name:'Aura de courage',                  t:'auto' },
+      { l:11, name:'Châtiment divin amélioré',         t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Purification des maladies',        t:'auto' },
+      { l:15, name:'Capacité de serment',              t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Aura améliorée',                   t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Capacité de serment suprême',      t:'auto' },
+    ],
+    'rodeur': [
+      { l:1,  name:'Ennemi juré', id:'ennemi-jure-1', t:'choice',
+        opts:['Aberrations','Bêtes','Célestes','Constructions','Dragons','Élémentaires','Fées','Fiélons','Géants','Humanoïdes','Monstruosités','Morts-vivants','Plantes','Vases'] },
+      { l:1,  name:'Explorateur-né', id:'explorateur-1', t:'choice',
+        opts:['Arctique','Côte','Désert','Forêt','Marécage','Montagne','Plaine','Souterrain'] },
+      { l:2,  name:'Style de combat', id:'style-combat', t:'choice',
+        opts:['Archerie','Combat à deux armes','Défense','Duel'] },
+      { l:3,  name:'Sorts de rôdeur',                  t:'auto' },
+      { l:3,  name:'Conscience primitive',             t:'auto' },
+      { l:3,  name:'Archétype de rôdeur', id:'archetyp-rodeur', t:'choice',
+        opts:['Chasseur','Erreur glauque','Horizon','Maître des bêtes','Tueur de monstres'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Attaque supplémentaire',           t:'auto' },
+      { l:6,  name:'Ennemi juré supplémentaire', id:'ennemi-jure-2', t:'choice',
+        opts:['Aberrations','Bêtes','Célestes','Constructions','Dragons','Élémentaires','Fées','Fiélons','Géants','Humanoïdes','Monstruosités','Morts-vivants','Plantes','Vases'] },
+      { l:6,  name:'Explorateur-né supplémentaire', id:'explorateur-2', t:'choice',
+        opts:['Arctique','Côte','Désert','Forêt','Marécage','Montagne','Plaine','Souterrain'] },
+      { l:7,  name:'Capacité d\'archétype',            t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:8,  name:'Traversée des terres',             t:'auto' },
+      { l:10, name:'Camouflage naturel',               t:'auto' },
+      { l:10, name:'Explorateur-né supplémentaire', id:'explorateur-3', t:'choice',
+        opts:['Arctique','Côte','Désert','Forêt','Marécage','Montagne','Plaine','Souterrain'] },
+      { l:11, name:'Capacité d\'archétype',            t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Disparition',                      t:'auto' },
+      { l:14, name:'Ennemi juré suprême', id:'ennemi-jure-3', t:'choice',
+        opts:['Aberrations','Bêtes','Célestes','Constructions','Dragons','Élémentaires','Fées','Fiélons','Géants','Humanoïdes','Monstruosités','Morts-vivants','Plantes','Vases'] },
+      { l:15, name:'Capacité d\'archétype',            t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Sens sauvages',                    t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Tueur ennemi',                     t:'auto' },
+    ],
+    'roublard': [
+      { l:1,  name:'Attaque sournoise',                t:'auto' },
+      { l:1,  name:'Argot des voleurs',                t:'auto' },
+      { l:1,  name:'Expertise',                        t:'auto' },
+      { l:2,  name:'Action astucieuse',                t:'auto' },
+      { l:3,  name:'Archétype de roublard', id:'archetyp-roublard', t:'choice',
+        opts:['Âme volée','Assassin','Détective','Escroc','Esprit arcanique','Fantôme','Maître des couteaux'] },
+      { l:3,  name:'Esquive instinctive',              t:'auto' },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Esquive instinctive améliorée',    t:'auto' },
+      { l:6,  name:'Expertise supplémentaire',         t:'auto' },
+      { l:7,  name:'Esquive totale',                   t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:9,  name:'Capacité d\'archétype',            t:'auto' },
+      { l:10, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:11, name:'Talent fiable',                    t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:13, name:'Capacité d\'archétype',            t:'auto' },
+      { l:14, name:'Sens des angles morts',            t:'auto' },
+      { l:15, name:'Esprit glissant',                  t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:17, name:'Capacité d\'archétype',            t:'auto' },
+      { l:18, name:'Insaisissable',                    t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Coup de chance',                   t:'auto' },
+    ],
+    'ensorceleur': [
+      { l:1,  name:'Origine sorcière', id:'origine-sorciere', t:'choice',
+        opts:['Distorsion de la réalité','Héritage draconique','Magie de feu','Magie sauvage','Ombres divines','Tempête','Âme mécanique'] },
+      { l:2,  name:'Source de magie',                  t:'auto' },
+      { l:3,  name:'Métamagie', id:'metamagie', t:'multi', count:2,
+        opts:['Sorts accélérés','Sorts amplifiés','Sorts distants','Sorts étendus','Sorts hautains','Sorts jumeaux','Sorts prudents','Sorts subtils'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:6,  name:'Capacité d\'origine',              t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:10, name:'Métamagie supplémentaire', id:'metamagie', t:'multi-more', count:1 },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Capacité d\'origine',              t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:17, name:'Métamagie supplémentaire', id:'metamagie', t:'multi-more', count:1 },
+      { l:18, name:'Capacité d\'origine',              t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Restauration sorcière',            t:'auto' },
+    ],
+    'occultiste': [
+      { l:1,  name:'Protecteur de l\'au-delà', id:'protecteur-au-dela', t:'choice',
+        opts:['Archifée','Céleste','Faucheuse non-morte','Génie','Grand Ancien','Immonde'] },
+      { l:1,  name:'Magie du pacte',                   t:'auto' },
+      { l:2,  name:'Invocations occultes', id:'invocations', t:'multi', count:2,
+        opts:['Armure des ombres','Bonds du limier','Lance de Léthé','Marque du sentinelle','Parole répulsive','Répit du trompeur','Regard du sorcier','Souffle de la nuit','Vision du diable','Voix du maître des chaînes','Yeux de la rune gardienne'] },
+      { l:3,  name:'Pacte magique', id:'pacte-magique', t:'choice',
+        opts:['Pacte de la chaîne','Pacte de la lame','Pacte du grimoire'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:5,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:6,  name:'Capacité de protecteur',           t:'auto' },
+      { l:7,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:9,  name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:10, name:'Capacité de protecteur',           t:'auto' },
+      { l:11, name:'Invocation mystique',              t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:12, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:14, name:'Capacité de protecteur',           t:'auto' },
+      { l:15, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Invocations supplémentaires', id:'invocations', t:'multi-more', count:1 },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Maître de l\'au-delà',             t:'auto' },
+    ],
+    'magicien': [
+      { l:1,  name:'Récupération arcanique',           t:'auto' },
+      { l:2,  name:'Tradition arcanique', id:'tradition-arcanique', t:'choice',
+        opts:['Chronurgie','Graviturgie','Magie de guerre','École d\'abjuration','École d\'enchantement','École d\'évocation','École d\'illusion','École d\'invocation','École de divination','École de nécromancie','École de transmutation'] },
+      { l:4,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:6,  name:'Capacité de tradition',            t:'auto' },
+      { l:8,  name:'Amélioration de caractéristique',  t:'asi' },
+      { l:10, name:'Capacité de tradition',            t:'auto' },
+      { l:12, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:14, name:'Capacité de tradition',            t:'auto' },
+      { l:16, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:18, name:'Maîtrise des sorts',               t:'auto' },
+      { l:19, name:'Amélioration de caractéristique',  t:'asi' },
+      { l:20, name:'Sorts de légende',                 t:'auto' },
+    ],
+  };
+
+  const CLASS_KEY_MAP = {
+    'barbare': 'barbare', 'barbarian': 'barbare',
+    'barde': 'barde', 'bard': 'barde',
+    'clerc': 'clerc', 'cleric': 'clerc',
+    'druide': 'druide', 'druid': 'druide',
+    'guerrier': 'guerrier', 'fighter': 'guerrier',
+    'moine': 'moine', 'monk': 'moine',
+    'paladin': 'paladin',
+    'rôdeur': 'rodeur', 'rodeur': 'rodeur', 'ranger': 'rodeur',
+    'roublard': 'roublard', 'rogue': 'roublard',
+    'ensorceleur': 'ensorceleur', 'ensorceuse': 'ensorceleur', 'sorcerer': 'ensorceleur',
+    'sorcier': 'ensorceleur', 'sorcière': 'ensorceleur',
+    'occultiste': 'occultiste', 'warlock': 'occultiste',
+    'magicien': 'magicien', 'magicienne': 'magicien', 'wizard': 'magicien',
+  };
+
+  function getClassKey(cls) {
+    if (!cls) return null;
+    return CLASS_KEY_MAP[cls.toLowerCase().trim()] || null;
+  }
+
+  function getClassFeatureList(cls, level) {
+    const key = getClassKey(cls);
+    if (!key) return [];
+    return (CLASS_FEATURES[key] || []).filter(f => f.l <= level);
+  }
+
+  function getMultiTotalCount(features, id) {
+    let count = 0;
+    for (const f of features) {
+      if ((f.id || f.name) === id && (f.t === 'multi' || f.t === 'multi-more')) count += f.count;
+    }
+    return count;
+  }
+
+  function getPendingChoicesCount(cls, level) {
+    const features = getClassFeatureList(cls, level);
+    const choices = character.classFeatureChoices || {};
+    let count = 0;
+    const seenMulti = new Set();
+    for (const f of features) {
+      const id = f.id || f.name;
+      if (f.t === 'choice' && !choices[id]) count++;
+      if (f.t === 'multi' && !seenMulti.has(id)) {
+        seenMulti.add(id);
+        const need = getMultiTotalCount(features, id);
+        const have = (choices[id] || []).length;
+        if (have < need) count++;
+      }
+    }
+    return count;
+  }
+
   const CURRENCIES = [
     { key: 'pp', label: 'Platine',  hint: '1 pp = 10 po' },
     { key: 'po', label: 'Or',       hint: '1 po = 10 pa' },
@@ -550,6 +898,7 @@
       return;
     }
     character = await res.json();
+    if (!character.classFeatureChoices) character.classFeatureChoices = {};
     // Migration: auto-populate racial traits if not set
     if (character.race && !character.traits) {
       character.traits = getRacialTraits(character.race);
@@ -1872,9 +2221,11 @@
 
   let profPickerOutsideHandler = null;
   let langEditMode = false;
-  let profCollapsed    = true;
-  let langCollapsed    = true;
-  let traitsCollapsed  = true;
+  let profCollapsed      = true;
+  let langCollapsed      = true;
+  let traitsCollapsed    = true;
+  let featuresCollapsed  = false;
+  let cfTempChoices      = {};
 
   function getProfLeaves(node) {
     if (!node.children) return [node.label];
@@ -2307,6 +2658,68 @@
         tag.textContent = t;
         $traitsList.appendChild(tag);
       });
+    }
+
+    // Capacités de classe : collapsible
+    document.getElementById('features-toggle').textContent = featuresCollapsed ? '▶' : '▼';
+    document.getElementById('features-body').classList.toggle('hidden', featuresCollapsed);
+
+    if (!featuresCollapsed) {
+      const cls   = character.class || '';
+      const level = character.level || 1;
+      const allFeats = getClassFeatureList(cls, level);
+      const choices  = character.classFeatureChoices || {};
+      const $autoList = document.getElementById('class-features-auto');
+      $autoList.innerHTML = '';
+
+      const seenMulti = new Set();
+      for (const f of allFeats) {
+        if (f.t === 'multi-more') continue;
+        const id = f.id || f.name;
+        if (f.t === 'multi' && seenMulti.has(id)) continue;
+        if (f.t === 'multi') seenMulti.add(id);
+
+        const row = document.createElement('div');
+        row.className = 'class-feature-item';
+        const lvlSpan = '<span class="cf-level">Niv.' + f.l + '</span>';
+
+        if (f.t === 'auto') {
+          row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + '</span>';
+        } else if (f.t === 'asi') {
+          row.innerHTML = lvlSpan + '<span class="cf-name cf-asi">' + f.name + '</span>';
+        } else if (f.t === 'choice') {
+          const chosen = choices[id];
+          if (chosen) {
+            row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + ' : <strong>' + chosen + '</strong></span>';
+          } else {
+            row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + f.name + ' — à choisir</span>';
+          }
+        } else if (f.t === 'multi') {
+          const total  = getMultiTotalCount(allFeats, id);
+          const chosen = choices[id] || [];
+          if (chosen.length > 0) {
+            const extra = chosen.length < total ? ' <span class="cf-pending-small">(+' + (total - chosen.length) + ' à choisir)</span>' : '';
+            row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + ' : <strong>' + chosen.join(', ') + '</strong>' + extra + '</span>';
+          } else {
+            row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + f.name + ' (' + total + ' à choisir)</span>';
+          }
+        }
+        $autoList.appendChild(row);
+      }
+
+      if (!cls) {
+        $autoList.innerHTML = '<span class="text-dim">Sélectionne une classe dans le profil.</span>';
+      }
+
+      // Bouton pending
+      const pendingCount = getPendingChoicesCount(cls, level);
+      const $pendingBtn = document.getElementById('btn-cf-choose');
+      if (pendingCount > 0 && cls) {
+        $pendingBtn.classList.remove('hidden');
+        $pendingBtn.textContent = '⚠ ' + pendingCount + ' choix de capacité' + (pendingCount > 1 ? 's' : '') + ' en attente';
+      } else {
+        $pendingBtn.classList.add('hidden');
+      }
     }
 
     renderTagList('features-list', character.classFeatures || [], 'classFeatures');
@@ -2908,6 +3321,149 @@
     traitsCollapsed = !traitsCollapsed;
     renderCapacites();
   });
+
+  document.getElementById('features-header').addEventListener('click', () => {
+    featuresCollapsed = !featuresCollapsed;
+    renderCapacites();
+  });
+
+  document.getElementById('btn-cf-choose').addEventListener('click', () => {
+    openClassFeaturesModal();
+  });
+
+  document.getElementById('btn-cf-cancel').addEventListener('click', () => {
+    document.getElementById('class-features-modal').classList.add('hidden');
+  });
+
+  document.getElementById('btn-cf-close').addEventListener('click', () => {
+    document.getElementById('class-features-modal').classList.add('hidden');
+  });
+
+  document.getElementById('btn-cf-confirm').addEventListener('click', () => {
+    character.classFeatureChoices = cfTempChoices;
+    saveCharacter();
+    document.getElementById('class-features-modal').classList.add('hidden');
+    renderCapacites();
+  });
+
+  function openClassFeaturesModal() {
+    const cls   = character.class || '';
+    const level = character.level || 1;
+    const allFeats = getClassFeatureList(cls, level);
+    cfTempChoices  = JSON.parse(JSON.stringify(character.classFeatureChoices || {}));
+
+    const body = document.getElementById('cf-modal-body');
+    body.innerHTML = '';
+
+    // Collect choice/multi features deduplicated, grouped by level
+    const seenMulti = new Set();
+    const byLevel = {};
+    for (const f of allFeats) {
+      if (f.t !== 'choice' && f.t !== 'multi') continue;
+      if (f.t === 'multi-more') continue;
+      const id = f.id || f.name;
+      if (f.t === 'multi' && seenMulti.has(id)) continue;
+      if (f.t === 'multi') seenMulti.add(id);
+      if (!byLevel[f.l]) byLevel[f.l] = [];
+      byLevel[f.l].push(f);
+    }
+
+    const levels = Object.keys(byLevel).map(Number).sort((a, b) => a - b);
+    for (const lvl of levels) {
+      const grp = document.createElement('div');
+      grp.className = 'cf-level-group';
+      const hdr = document.createElement('div');
+      hdr.className = 'cf-level-header';
+      hdr.textContent = 'Niveau ' + lvl;
+      grp.appendChild(hdr);
+
+      for (const f of byLevel[lvl]) {
+        const id = f.id || f.name;
+        const block = document.createElement('div');
+        block.className = 'cf-feature-choice';
+
+        if (f.t === 'choice') {
+          const current = cfTempChoices[id] || null;
+          const title = document.createElement('div');
+          title.className = 'cf-feature-name';
+          title.textContent = f.name;
+          block.appendChild(title);
+          const optDiv = document.createElement('div');
+          optDiv.className = 'cf-options';
+          f.opts.forEach(opt => {
+            const lbl = document.createElement('label');
+            lbl.className = 'cf-option' + (opt === current ? ' cf-option-checked' : '');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'cf-' + id;
+            radio.value = opt;
+            radio.checked = opt === current;
+            radio.addEventListener('change', () => {
+              cfTempChoices[id] = opt;
+              optDiv.querySelectorAll('.cf-option').forEach(l => l.classList.remove('cf-option-checked'));
+              lbl.classList.add('cf-option-checked');
+            });
+            lbl.appendChild(radio);
+            lbl.appendChild(document.createTextNode(' ' + opt));
+            optDiv.appendChild(lbl);
+          });
+          block.appendChild(optDiv);
+
+        } else if (f.t === 'multi') {
+          const total   = getMultiTotalCount(allFeats, id);
+          const current = cfTempChoices[id] ? [...cfTempChoices[id]] : [];
+          if (!cfTempChoices[id]) cfTempChoices[id] = current;
+
+          const title = document.createElement('div');
+          title.className = 'cf-feature-name';
+          title.innerHTML = f.name + ' <span class="cf-count-hint">(choisir ' + total + ')</span>';
+          block.appendChild(title);
+
+          const counter = document.createElement('div');
+          counter.className = 'cf-selected-count';
+          counter.textContent = current.length + ' / ' + total + ' sélectionnés';
+          block.appendChild(counter);
+
+          const optDiv = document.createElement('div');
+          optDiv.className = 'cf-options';
+          f.opts.forEach(opt => {
+            const lbl = document.createElement('label');
+            lbl.className = 'cf-option' + (current.includes(opt) ? ' cf-option-checked' : '');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = opt;
+            cb.checked = current.includes(opt);
+            cb.addEventListener('change', () => {
+              const arr = cfTempChoices[id];
+              if (cb.checked) {
+                if (arr.length >= total) { cb.checked = false; return; }
+                arr.push(opt);
+                lbl.classList.add('cf-option-checked');
+              } else {
+                const idx = arr.indexOf(opt);
+                if (idx >= 0) arr.splice(idx, 1);
+                lbl.classList.remove('cf-option-checked');
+              }
+              counter.textContent = arr.length + ' / ' + total + ' sélectionnés';
+            });
+            lbl.appendChild(cb);
+            lbl.appendChild(document.createTextNode(' ' + opt));
+            optDiv.appendChild(lbl);
+          });
+          block.appendChild(optDiv);
+        }
+
+        grp.appendChild(block);
+      }
+      body.appendChild(grp);
+    }
+
+    if (levels.length === 0) {
+      body.innerHTML = '<span class="text-dim">Aucun choix disponible pour cette classe et ce niveau.</span>';
+    }
+
+    document.getElementById('class-features-modal').classList.remove('hidden');
+  }
 
   document.getElementById('weapons-inv-header').addEventListener('click', () => {
     weaponsInvCollapsed = !weaponsInvCollapsed;
