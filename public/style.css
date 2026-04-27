@@ -1308,23 +1308,105 @@ main {
 .spell-limits-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.6rem;
   flex-wrap: wrap;
   padding: 0.45rem 0.65rem;
   background: var(--bg-input);
+  border: 1px solid transparent;
   border-radius: var(--radius);
   margin-bottom: 0.5rem;
   font-size: 0.78rem;
   color: var(--text-dim);
+  transition: border-color 0.2s, background 0.2s;
 }
-
+.spell-limits-bar.slb-has-slots {
+  border-color: rgba(200,160,60,0.45);
+  background: rgba(200,160,60,0.07);
+}
+.slb-counts { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 .slb-sep { color: var(--border); }
-
 .slb-item strong { color: var(--text); }
-
+.slb-avail { color: var(--gold); }
+.slb-avail strong { color: var(--gold); font-weight: 700; }
 .slb-full { color: var(--gold-dim); }
 .slb-full strong { color: var(--gold); }
 .slb-full em { font-style: normal; color: var(--gold); }
+
+.btn-learn-spells {
+  padding: 0.28rem 0.8rem;
+  background: var(--gold);
+  color: #120e04;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.btn-learn-spells:hover { opacity: 0.82; }
+
+/* Learn spells modal */
+.modal-learn {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 90vh;
+}
+.learn-slots-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.65rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+  margin-bottom: 0.65rem;
+}
+.lsi-sep  { color: var(--border); }
+.lsi-item { color: var(--text-dim); }
+.lsi-avail { color: var(--gold); font-weight: 600; }
+.lsi-over  { color: #ef4444; font-weight: 600; }
+.lsi-exact { color: var(--text-dim); }
+.learn-sf-bar { margin-bottom: 0.4rem; flex-shrink: 0; }
+.learn-spells-list {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 80px;
+  max-height: calc(90vh - 280px);
+}
+.learn-spell-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.3rem 0.45rem;
+  border-radius: var(--radius);
+  transition: background 0.1s;
+}
+.learn-spell-item:hover  { background: rgba(255,255,255,0.04); }
+.learn-spell-item.learn-selected { background: rgba(200,160,60,0.1); }
+.learn-cb {
+  cursor: pointer;
+  accent-color: var(--gold);
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.learn-modal-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+.learn-sel-count { color: var(--text-dim); font-size: 0.8rem; flex: 1; }
 
 .sf-empty {
   color: var(--text-dim);

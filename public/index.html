@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">18</span></span>
+        <span class="header-build">v<span id="build-number">19</span></span>
       </div>
     </header>
 
@@ -787,6 +787,49 @@
       <div class="modal-content modal-large">
         <button class="modal-close">&times;</button>
         <div id="levelup-content"></div>
+      </div>
+    </div>
+
+    <!-- LEARN SPELLS MODAL -->
+    <div id="learn-spells-modal" class="modal hidden">
+      <div class="modal-content modal-learn">
+        <button class="modal-close" id="btn-learn-close">&times;</button>
+        <h2>Apprendre des sorts</h2>
+        <div id="learn-slots-info" class="learn-slots-info"></div>
+
+        <div class="sf-bar learn-sf-bar">
+          <input type="text" id="learn-search" placeholder="Rechercher un sort…">
+          <div class="sf-row">
+            <span class="sf-label">Niveau</span>
+            <div id="learn-sf-levels" class="sf-chips">
+              <button class="sf-chip sf-on" data-val="all">Tous</button>
+              <button class="sf-chip" data-val="0">Mineur</button>
+              <button class="sf-chip" data-val="1">1</button>
+              <button class="sf-chip" data-val="2">2</button>
+              <button class="sf-chip" data-val="3">3</button>
+              <button class="sf-chip" data-val="4">4</button>
+              <button class="sf-chip" data-val="5">5</button>
+            </div>
+          </div>
+          <div class="sf-row">
+            <div class="sf-group">
+              <span class="sf-label">Type</span>
+              <div class="sf-toggles" id="learn-sf-damage">
+                <button class="sf-toggle sf-on" data-val="all">Tous</button>
+                <button class="sf-toggle" data-val="yes">Dégâts</button>
+                <button class="sf-toggle" data-val="no">Utilitaire</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="learn-spells-list" class="learn-spells-list"></div>
+
+        <div class="learn-modal-footer">
+          <span id="learn-selected-count" class="learn-sel-count">Aucun sort sélectionné</span>
+          <button id="btn-learn-cancel" class="btn-secondary">Annuler</button>
+          <button id="btn-learn-confirm" class="btn-primary" disabled>Apprendre</button>
+        </div>
       </div>
     </div>
 

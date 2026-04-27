@@ -352,6 +352,12 @@
   let sfOrigin  = new Set();     // empty = toutes origines
   let sfDamage  = 'all';         // 'all' | 'yes' | 'no'
 
+  // Learn modal state
+  let lsSearch  = '';
+  let lsLevels  = new Set();
+  let lsDamage  = 'all';
+  let lsSelected = new Set();
+
   // --- DOM refs ---
   const $login = document.getElementById('login');
   const $loginForm = document.getElementById('login-form');
@@ -1307,18 +1313,29 @@
       const counts = countClassSpells();
       const cantripFull = counts.cantrips >= limits.cantrips;
       const spellFull   = counts.spells   >= limits.spells;
+      const hasSlots    = !cantripFull || !spellFull;
       const bar = document.createElement('div');
-      bar.className = 'spell-limits-bar';
-      bar.innerHTML =
-        '<span class="slb-item' + (cantripFull ? ' slb-full' : '') + '">' +
+      bar.className = 'spell-limits-bar' + (hasSlots ? ' slb-has-slots' : '');
+      const countsDiv = document.createElement('div');
+      countsDiv.className = 'slb-counts';
+      countsDiv.innerHTML =
+        '<span class="slb-item' + (cantripFull ? ' slb-full' : ' slb-avail') + '">' +
           'Sorts mineurs&nbsp;: <strong>' + counts.cantrips + '</strong>&nbsp;/&nbsp;' + limits.cantrips +
           (cantripFull ? ' — <em>limite atteinte</em>' : '') +
         '</span>' +
         '<span class="slb-sep">·</span>' +
-        '<span class="slb-item' + (spellFull ? ' slb-full' : '') + '">' +
-          'Sorts (niv.&nbsp;1+)&nbsp;: <strong>' + counts.spells + '</strong>&nbsp;/&nbsp;' + limits.spells +
+        '<span class="slb-item' + (spellFull ? ' slb-full' : ' slb-avail') + '">' +
+          'Sorts&nbsp;(niv.&nbsp;1+)&nbsp;: <strong>' + counts.spells + '</strong>&nbsp;/&nbsp;' + limits.spells +
           (spellFull ? ' — <em>limite atteinte</em>' : '') +
         '</span>';
+      bar.appendChild(countsDiv);
+      if (hasSlots) {
+        const learnBtn = document.createElement('button');
+        learnBtn.className = 'btn-learn-spells';
+        learnBtn.textContent = '+ Apprendre des sorts';
+        learnBtn.addEventListener('click', e => { e.stopPropagation(); openLearnSpellsModal(); });
+        bar.appendChild(learnBtn);
+      }
       $list.appendChild(bar);
     }
 
@@ -1505,6 +1522,189 @@
     });
   }
   initSpellFilters();
+
+  // --- Learn spells modal ---
+
+  async function openLearnSpellsModal() {
+    if (!spellsCache) await loadSpells();
+    lsSearch  = '';
+    lsLevels  = new Set();
+    lsDamage  = 'all';
+    lsSelected = new Set();
+    document.getElementById('learn-search').value = '';
+    document.querySelectorAll('#learn-sf-levels .sf-chip').forEach(b =>
+      b.classList.toggle('sf-on', b.dataset.val === 'all'));
+    document.querySelectorAll('#learn-sf-damage .sf-toggle').forEach(b =>
+      b.classList.toggle('sf-on', b.dataset.val === 'all'));
+    document.getElementById('learn-spells-modal').classList.remove('hidden');
+    updateLearnCount();
+    renderLearnableSpells();
+  }
+
+  function updateLearnSlotsInfo() {
+    const limits = getSpellLearnLimits();
+    const el = document.getElementById('learn-slots-info');
+    if (!el) return;
+    if (!limits) { el.innerHTML = ''; return; }
+    const counts = countClassSpells();
+    const pool   = spellsCache || [];
+    const cSel   = [...lsSelected].filter(id => { const s = pool.find(sp => sp.id === id); return s && s.level === 0; }).length;
+    const sSel   = lsSelected.size - cSel;
+    const cRemain = limits.cantrips - counts.cantrips - cSel;
+    const sRemain = limits.spells   - counts.spells   - sSel;
+    el.innerHTML =
+      '<span class="lsi-item ' + (cRemain > 0 ? 'lsi-avail' : cRemain < 0 ? 'lsi-over' : 'lsi-exact') + '">' +
+        'Sorts mineurs : ' + (counts.cantrips + cSel) + ' / ' + limits.cantrips +
+        (cRemain > 0 ? ' — ' + cRemain + ' restant' + (cRemain > 1 ? 's' : '') : '') +
+        (cRemain < 0 ? ' — ⚠ ' + (-cRemain) + ' de trop' : '') +
+      '</span>' +
+      '<span class="lsi-sep">·</span>' +
+      '<span class="lsi-item ' + (sRemain > 0 ? 'lsi-avail' : sRemain < 0 ? 'lsi-over' : 'lsi-exact') + '">' +
+        'Sorts : ' + (counts.spells + sSel) + ' / ' + limits.spells +
+        (sRemain > 0 ? ' — ' + sRemain + ' restant' + (sRemain > 1 ? 's' : '') : '') +
+        (sRemain < 0 ? ' — ⚠ ' + (-sRemain) + ' de trop' : '') +
+      '</span>';
+  }
+
+  function updateLearnCount() {
+    const n = lsSelected.size;
+    const el = document.getElementById('learn-selected-count');
+    if (el) el.textContent = n === 0 ? 'Aucun sort sélectionné' : n + ' sort' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : '');
+    const btn = document.getElementById('btn-learn-confirm');
+    if (btn) btn.disabled = n === 0;
+  }
+
+  function renderLearnableSpells() {
+    const $list = document.getElementById('learn-spells-list');
+    if (!$list) return;
+    $list.innerHTML = '';
+    updateLearnSlotsInfo();
+
+    const known   = new Set(character.knownSpells || []);
+    const pool    = (spellsCache || []);
+    const search  = lsSearch.toLowerCase().trim();
+
+    const filtered = pool.filter(spell => {
+      if (known.has(spell.id)) return false;
+      if (search && !spell.name.toLowerCase().includes(search) && !(spell.nameVO || '').toLowerCase().includes(search)) return false;
+      if (lsLevels.size > 0 && !lsLevels.has(spell.level)) return false;
+      if (lsDamage === 'yes' && !spellHasDamage(spell)) return false;
+      if (lsDamage === 'no'  &&  spellHasDamage(spell)) return false;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      $list.innerHTML = '<p class="sf-empty">Aucun sort disponible à l\'apprentissage.</p>';
+      return;
+    }
+
+    const groups = {};
+    for (const spell of filtered) {
+      if (!groups[spell.level]) groups[spell.level] = [];
+      groups[spell.level].push(spell);
+    }
+
+    const levels = Object.keys(groups).sort((a, b) => +a - +b);
+    for (const lvl of levels) {
+      const lvlNum = parseInt(lvl, 10);
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'spell-level-group';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'slg-header';
+      hdr.innerHTML =
+        '<h3>' + (lvlNum === 0 ? 'Sorts mineurs' : 'Niveau ' + lvl) + '</h3>' +
+        '<span class="slg-count">' + groups[lvl].length + '</span>';
+      groupDiv.appendChild(hdr);
+
+      for (const spell of groups[lvl]) {
+        const isSelected = lsSelected.has(spell.id);
+        const item = document.createElement('div');
+        item.className = 'spell-item learn-spell-item' + (isSelected ? ' learn-selected' : '');
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'learn-cb';
+        cb.checked = isSelected;
+        cb.addEventListener('change', e => {
+          e.stopPropagation();
+          if (cb.checked) lsSelected.add(spell.id);
+          else lsSelected.delete(spell.id);
+          item.classList.toggle('learn-selected', cb.checked);
+          updateLearnCount();
+          updateLearnSlotsInfo();
+        });
+
+        const dot = document.createElement('div');
+        dot.className = 'spell-lvl-dot' + (lvlNum === 0 ? ' dot-cantrip' : '');
+        dot.textContent = lvlNum === 0 ? '✦' : lvl;
+
+        const info = document.createElement('div');
+        info.className = 'spell-info';
+        let tagsHtml = '<span class="spell-tag-school">' + (spell.school || '') + '</span>';
+        if (spellHasDamage(spell)) tagsHtml += '<span class="spell-tag-damage">⚔️</span>';
+        if (isConcentration(spell)) tagsHtml += '<span class="spell-tag-school">Conc.</span>';
+        info.innerHTML =
+          '<span class="spell-name">' + spell.name + '</span>' +
+          (spell.nameVO ? '<span class="spell-name-vo">' + spell.nameVO + '</span>' : '') +
+          '<div class="spell-tags">' + tagsHtml + '</div>';
+
+        item.appendChild(cb);
+        item.appendChild(dot);
+        item.appendChild(info);
+        item.addEventListener('click', e => { if (e.target === cb) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+
+        groupDiv.appendChild(item);
+      }
+      $list.appendChild(groupDiv);
+    }
+  }
+
+  function initLearnModal() {
+    const modal = document.getElementById('learn-spells-modal');
+    document.getElementById('btn-learn-close').onclick  = () => modal.classList.add('hidden');
+    document.getElementById('btn-learn-cancel').onclick = () => modal.classList.add('hidden');
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+
+    document.getElementById('btn-learn-confirm').onclick = () => {
+      if (lsSelected.size === 0) return;
+      if (!character.knownSpells)  character.knownSpells  = [];
+      if (!character.spellSources) character.spellSources = {};
+      for (const id of lsSelected) {
+        if (!character.knownSpells.includes(id)) character.knownSpells.push(id);
+        character.spellSources[id] = 'class';
+      }
+      saveCharacter();
+      modal.classList.add('hidden');
+      renderSpellsList();
+    };
+
+    document.getElementById('learn-search').addEventListener('input', e => {
+      lsSearch = e.target.value;
+      renderLearnableSpells();
+    });
+
+    document.getElementById('learn-sf-levels').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-chip');
+      if (!btn) return;
+      const val = btn.dataset.val;
+      if (val === 'all') lsLevels.clear();
+      else { const n = parseInt(val, 10); lsLevels.has(n) ? lsLevels.delete(n) : lsLevels.add(n); }
+      document.querySelectorAll('#learn-sf-levels .sf-chip').forEach(b =>
+        b.classList.toggle('sf-on', b.dataset.val === 'all' ? lsLevels.size === 0 : lsLevels.has(parseInt(b.dataset.val, 10))));
+      renderLearnableSpells();
+    });
+
+    document.getElementById('learn-sf-damage').addEventListener('click', e => {
+      const btn = e.target.closest('.sf-toggle');
+      if (!btn) return;
+      lsDamage = btn.dataset.val;
+      document.querySelectorAll('#learn-sf-damage .sf-toggle').forEach(b =>
+        b.classList.toggle('sf-on', b.dataset.val === lsDamage));
+      renderLearnableSpells();
+    });
+  }
+  initLearnModal();
 
   // --- Capacites ---
   // ---- Proficiency picker ----
