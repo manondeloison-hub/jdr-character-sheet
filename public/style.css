@@ -1350,7 +1350,7 @@ main {
 
 /* Learn spells modal */
 .modal-learn {
-  max-width: 640px;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
