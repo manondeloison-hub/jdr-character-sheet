@@ -1381,21 +1381,59 @@ main {
 }
 .learn-spell-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   cursor: pointer;
-  padding: 0.3rem 0.45rem;
+  padding: 0.55rem 0.45rem;
   border-radius: var(--radius);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   transition: background 0.1s;
 }
+.learn-spell-item:last-child { border-bottom: none; }
 .learn-spell-item:hover  { background: rgba(255,255,255,0.04); }
-.learn-spell-item.learn-selected { background: rgba(200,160,60,0.1); }
+.learn-spell-item.learn-selected { background: rgba(200,160,60,0.09); }
+.learn-spell-item .spell-lvl-dot { margin-top: 0.1rem; flex-shrink: 0; }
 .learn-cb {
   cursor: pointer;
   accent-color: var(--gold);
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+.learn-spell-info { flex: 1; min-width: 0; }
+.learn-spell-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+  flex-wrap: wrap;
+}
+.learn-conc-badge {
+  font-size: 0.6rem;
+  background: rgba(200,160,60,0.2);
+  color: var(--gold);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.learn-dmg-badge { font-size: 0.75rem; }
+.learn-spell-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+.lsm-school {
+  color: var(--gold-dim);
+  font-style: italic;
+}
+.learn-spell-desc {
+  font-size: 0.74rem;
+  color: rgba(200,190,170,0.6);
+  line-height: 1.45;
 }
 .learn-modal-footer {
   display: flex;

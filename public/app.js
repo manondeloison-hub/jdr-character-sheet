@@ -1640,14 +1640,26 @@
         dot.textContent = lvlNum === 0 ? '✦' : lvl;
 
         const info = document.createElement('div');
-        info.className = 'spell-info';
-        let tagsHtml = '<span class="spell-tag-school">' + (spell.school || '') + '</span>';
-        if (spellHasDamage(spell)) tagsHtml += '<span class="spell-tag-damage">⚔️</span>';
-        if (isConcentration(spell)) tagsHtml += '<span class="spell-tag-school">Conc.</span>';
+        info.className = 'learn-spell-info';
+
+        const metaParts = [];
+        if (spell.school)      metaParts.push('<span class="lsm-school">' + spell.school + '</span>');
+        if (spell.castingTime) metaParts.push('<span>⏱ ' + spell.castingTime + '</span>');
+        if (spell.range)       metaParts.push('<span>📍 ' + spell.range + '</span>');
+        if (spell.duration)    metaParts.push('<span>⏳ ' + spell.duration + '</span>');
+        if (spell.components)  metaParts.push('<span>' + spell.components + '</span>');
+
+        let desc = (spell.description || '').replace(/\n{2,}/g, '\n').trim();
+        if (spell.higherLevels) desc += '\n\nAux niveaux supérieurs : ' + spell.higherLevels;
+
         info.innerHTML =
-          '<span class="spell-name">' + spell.name + '</span>' +
-          (spell.nameVO ? '<span class="spell-name-vo">' + spell.nameVO + '</span>' : '') +
-          '<div class="spell-tags">' + tagsHtml + '</div>';
+          '<div class="learn-spell-header">' +
+            '<span class="spell-name">' + spell.name + '</span>' +
+            (isConcentration(spell) ? '<span class="learn-conc-badge">Conc.</span>' : '') +
+            (spellHasDamage(spell)  ? '<span class="learn-dmg-badge">⚔️</span>'     : '') +
+          '</div>' +
+          (metaParts.length ? '<div class="learn-spell-meta">' + metaParts.join('') + '</div>' : '') +
+          (desc ? '<div class="learn-spell-desc">' + desc.replace(/\n/g, '<br>') + '</div>' : '');
 
         item.appendChild(cb);
         item.appendChild(dot);
