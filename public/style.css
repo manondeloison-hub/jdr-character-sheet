@@ -578,19 +578,27 @@ main {
 .cf-name.cf-pending { color: rgba(245,158,11,0.9); font-style: italic; }
 .cf-pending-small { font-size: 0.75rem; color: rgba(245,158,11,0.75); }
 
-.btn-cf-pending {
+.btn-cf-pending, .btn-cf-edit {
   width: 100%;
   margin: 0.5rem 0;
   padding: 0.45rem 0.8rem;
-  background: rgba(245,158,11,0.08);
-  border: 1px solid rgba(245,158,11,0.4);
-  color: rgba(245,158,11,0.95);
   border-radius: var(--radius);
   font-size: 0.85rem;
   cursor: pointer;
   text-align: left;
 }
+.btn-cf-pending {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.4);
+  color: rgba(245,158,11,0.95);
+}
 .btn-cf-pending:hover { background: rgba(245,158,11,0.15); }
+.btn-cf-edit {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.btn-cf-edit:hover { border-color: var(--gold-dim); color: var(--text); }
 
 .cf-manual-sep {
   height: 1px;
@@ -629,7 +637,14 @@ main {
 .cf-feature-name {
   font-size: 0.88rem;
   font-weight: 600;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.cf-feature-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 0.4rem;
 }
 
 .cf-count-hint {
@@ -647,24 +662,33 @@ main {
 .cf-options {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 0.35rem;
 }
 
 .cf-option {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.3rem;
-  padding: 0.25rem 0.55rem;
+  padding: 0.3rem 0.55rem;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
-  font-size: 0.82rem;
   transition: border-color 0.1s;
+  max-width: 220px;
 }
 .cf-option:hover        { border-color: var(--gold-dim); }
 .cf-option-checked      { border-color: var(--gold); background: rgba(200,160,60,0.1); }
 .cf-option input        { display: none; }
+
+.cf-opt-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.cf-opt-name { font-size: 0.82rem; }
+.cf-opt-desc { font-size: 0.72rem; color: var(--text-dim); font-style: italic; line-height: 1.2; }
 
 .cf-modal-footer {
   display: flex;

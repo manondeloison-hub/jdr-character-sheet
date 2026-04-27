@@ -519,6 +519,237 @@
     'magicien': 'magicien', 'magicienne': 'magicien', 'wizard': 'magicien',
   };
 
+  const CF_DESCS = {
+    'voie-primitive': {
+      desc: 'Tradition barbare qui donne accès à des capacités supplémentaires lors de la rage.',
+      opts: {
+        'Berserker':             'Rage frénétique — attaque bonus, résistance au charme et à la peur.',
+        'Totem guerrier':        'Connexion spirituelle (ours, aigle, loup) avec pouvoirs distincts.',
+        'Âme ancestrale':        'Manifestation d\'ancêtres qui protègent et guident au combat.',
+        'Héraut de la tempête':  'Aura élémentaire lors de la rage : tonnerre ou froid au choix.',
+        'Bête sauvage':          'Mutations physiques bestiales (griffes, peau épaisse, crocs).',
+        'Guerrier sauvage':      'Accès à des tours de magie et sorts innés liés à la nature.',
+      },
+    },
+    'college-bardique': {
+      desc: 'Collège qui oriente votre art et vos capacités de bardique spécialisées.',
+      opts: {
+        'Collège du savoir':         'Maîtrises supplémentaires, secrets magiques élargis, critique raté ennemi.',
+        'Collège de la vaillance':   'Armures intermédiaires, armes de guerre, inspiration au combat.',
+        'Collège du glamour':        'Inspiration de masse, aura féérique, manteau d\'inspiration.',
+        'Collège des épées':         'Manœuvres de lame avec l\'inspiration bardique, style de combat.',
+        'Collège des chuchotements': 'Mots psychiques, ombre mimétique, don des murmures.',
+      },
+    },
+    'domaine-divin': {
+      desc: 'Domaine accordé par votre divinité — détermine sorts supplémentaires et capacités.',
+      opts: {
+        'Connaissance': 'Maîtrise de langues, sorts de divination, lecture des esprits.',
+        'Forge':        'Armes et armures bénites, bonus aux objets forgés.',
+        'Guerre':       'Attaques guidées, capacités martiales renforcées.',
+        'Lumière':      'Sorts radieux offensifs, aura lumineuse, pilier de lumière.',
+        'Nature':       'Connexion animale, sorts de druide, résistances naturelles.',
+        'Ordre':        'Commandement vocal, sorts de loi, punition divine.',
+        'Paix':         'Liens spirituels entre alliés, sorts de soutien amplifiés.',
+        'Tempête':      'Magie du tonnerre et de la foudre, déplacements aériens.',
+        'Tombale':      'Protection contre la mort, soins des mourants, résistance nécrotique.',
+        'Tromperie':    'Illusions et déguisements, sorts de trickster.',
+        'Vie':          'Sorts de soin amplifiés, stabilisation des mourants.',
+      },
+    },
+    'cercle-druidique': {
+      desc: 'Ordre de druides auquel vous appartenez, orientant vos connexions et pouvoirs.',
+      opts: {
+        'Cercle de la lune':    'Formes sauvages puissantes (élémentaires, challenges élevés).',
+        'Cercle de la terre':   'Sorts supplémentaires selon le terrain naturel choisi.',
+        'Cercle du berger':     'Invocations renforcées, totem de berger, communication animale.',
+        'Cercle du rêve':       'Soins féérique, déplacement dans le Féerond.',
+        'Cercle des spores':    'Spores de champignon, zombies fongiques, prolifération.',
+        'Cercle des étoiles':   'Cartographie céleste, formes constellées, prophéties.',
+      },
+    },
+    'style-combat': {
+      desc: 'Spécialité de combat qui confère un bonus passif permanent.',
+      opts: {
+        'Archerie':                    '+2 aux jets d\'attaque avec les armes à distance.',
+        'Arme à deux mains':           '+2 aux jets de dégâts avec les armes à deux mains.',
+        'Combat à deux armes':         'Ajoutez le modificateur de caractéristique aux dégâts de l\'attaque hors-directrice.',
+        'Défense':                     '+1 à la CA tant que vous portez une armure.',
+        'Duel':                        '+2 aux dégâts quand vous maniez une arme à une main sans autre arme.',
+        'Protection':                  'Imposez désavantage aux attaques ennemies contre un allié adjacent (nécessite bouclier).',
+        'Supériorité à la lutte':      'Avantage sur les tentatives de lutte et d\'agripper.',
+      },
+    },
+    'archetyp-martial': {
+      desc: 'Voie de spécialisation du guerrier qui détermine ses capacités avancées.',
+      opts: {
+        'Archer arcanique':    'Flèches magiques à effets variés, sorts de guidage en attaque.',
+        'Cavalier':            'Lien avec une monture magique, protection et attaques conjointes.',
+        'Champion':            'Critique sur 19-20, athlète remarquable, style de combat supplémentaire.',
+        'Chevalier eldritch':  'Accès aux sorts des écoles d\'abjuration et d\'évocation.',
+        'Chevalier pourpre':   'Inspiration d\'alliés, manœuvres de ralliement, aura de bravoure.',
+        'Maître des batailles':'Manœuvres tactiques avec dés de supériorité, versatilité martiale.',
+        'Samouraï':            'Regain d\'avantage par action bonus, volonté inébranlable, élégance sociale.',
+      },
+    },
+    'tradition-monastique': {
+      desc: 'Art martial approfondi qui oriente l\'usage du ki et vos techniques.',
+      opts: {
+        'Voie de la faucheuse':       'Ki offensif amplifié, techniques létales et dégâts de nécrose.',
+        'Voie de la miséricorde':     'Mains guérisseuses ou empoisonneuses, contrôle du corps ennemi.',
+        'Voie des cinq éléments':     'Sorts élémentaires (feu, eau, terre, air) canalisés via le ki.',
+        'Voie du poing ouvert':       'Projeter, renverser ou immobiliser avec le ki.',
+        'Voie du soleil':             'Rayons radiants, aura de lumière solaire, explosion.',
+        'Voie de l\'ombre':           'Téléportation dans les ombres, invisibilité dans l\'obscurité.',
+      },
+    },
+    'serment-sacre': {
+      desc: 'Serment solennel qui façonne vos idéaux et vous confère des pouvoirs sacrés uniques.',
+      opts: {
+        'Serment de conquête':   'Inspirer la terreur, contrôle mental, domination du champ de bataille.',
+        'Serment de dévotion':   'Protection des innocents, aura sainte, châtiment renforcé.',
+        'Serment de gloire':     'Exploits héroïques, inspiration alliés, aura d\'excellence.',
+        'Serment de rédemption': 'Protéger sans tuer, convertir les ennemis, absorber les dégâts.',
+        'Serment de vengeance':  'Poursuivre les coupables, sorts de punition, téléportation vengeresse.',
+        'Serment des anciens':   'Connexion à la nature, résistance aux sorts, lumière de l\'aube.',
+      },
+    },
+    'ennemi-jure-1': {
+      desc: 'Type de créature que vous avez étudié : avantage aux traquages, bonus aux dégâts.',
+      opts: {
+        'Aberrations':   'Créatures d\'ailleurs : aboleths, flagelleurs mentaux, beholders.',
+        'Bêtes':         'Animaux naturels non-magiques et monstrueux.',
+        'Célestes':      'Anges, pégases et créatures des plans supérieurs.',
+        'Constructions': 'Golems, automates et gardes animés.',
+        'Dragons':       'Dragons vrais, drakons, guivres.',
+        'Élémentaires':  'Créatures de feu, eau, air et terre.',
+        'Fées':          'Créatures du Féerond : korrigans, pixies, nymphes.',
+        'Fiélons':       'Démons, diables et créatures des plans inférieurs.',
+        'Géants':        'Géants des collines, du givre, du feu, des nuages.',
+        'Humanoïdes':    'Orcs, gobelins, humains et autres races.',
+        'Monstruosités': 'Créatures magiques inclassables : manticores, basilics.',
+        'Morts-vivants': 'Squelettes, zombies, vampires, liches.',
+        'Plantes':       'Plantes animées : vigne assassine, shambling mound.',
+        'Vases':         'Créatures amorphes : cube gélatineux, vase noire.',
+      },
+    },
+    'explorateur-1': {
+      desc: 'Terrain naturel sur lequel vous bénéficiez de déplacements doublés et de discrétion.',
+      opts: {
+        'Arctique':     'Toundra glacée, banquises, steppes enneigées.',
+        'Côte':         'Plages, falaises, zones côtières et estuaires.',
+        'Désert':       'Déserts de sable, de sel ou de roche.',
+        'Forêt':        'Forêts tempérées, tropicales ou boréales.',
+        'Marécage':     'Marais, tourbières, mangroves.',
+        'Montagne':     'Hauts reliefs, falaises, zones volcaniques.',
+        'Plaine':       'Prairies, savanes, terres agricoles.',
+        'Souterrain':   'Grottes, donjons, Outreterre.',
+      },
+    },
+    'archetyp-rodeur': {
+      desc: 'Spécialité de chasseur orientant vos techniques de traque et de combat.',
+      opts: {
+        'Chasseur':          'Techniques anti-foule, anti-colosse ou parade améliorée.',
+        'Erreur glauque':    'Magie étrange et imprévisible, effets aléatoires puissants.',
+        'Horizon':           'Déplacements accélérés et sorts liés aux grands espaces.',
+        'Maître des bêtes':  'Compagnon animal intégré au combat.',
+        'Tueur de monstres': 'Analyse des monstres, riposte sur sort, sorts défensifs.',
+      },
+    },
+    'archetyp-roublard': {
+      desc: 'Archétype définissant votre style de ruse et vos techniques spécialisées.',
+      opts: {
+        'Âme volée':         'Pouvoirs psychiques, lecture des émotions, parasite mental.',
+        'Assassin':          'Dégâts maximaux en surprise, déguisement parfait, poison.',
+        'Détective':         'Déduction rapide, analyse de scènes, interrogatoire.',
+        'Escroc':            'Charme redoublé, imposteur parfait, chance insolente.',
+        'Esprit arcanique':  'Sorts de magicien, objet magique lié, vol de sort.',
+        'Fantôme':           'Possession spectrale, intangibilité, lien avec les morts.',
+        'Maître des couteaux': 'Attaques à distance améliorées, vol en combat, lames magiques.',
+      },
+    },
+    'origine-sorciere': {
+      desc: 'Source de votre pouvoir magique inné qui détermine vos capacités spéciales.',
+      opts: {
+        'Distorsion de la réalité': 'Manipulation de la chance et des probabilités.',
+        'Héritage draconique':      'Résistance aux dégâts selon le dragon ancestral, ailes à haut niveau.',
+        'Magie de feu':             'Sorts de feu amplifiés, flammes réactives.',
+        'Magie sauvage':            'Surtension magique aléatoire, chance chaotique.',
+        'Ombres divines':           'Pouvoirs d\'obscurité, résistance nécrotique.',
+        'Tempête':                  'Sorts de foudre et tonnerre, résistance électrique.',
+        'Âme mécanique':            'Contrôle sur la chance, résistance aux dégâts aléatoires.',
+      },
+    },
+    'metamagie': {
+      desc: 'Techniques permettant de modifier la façon dont vous lancez vos sorts.',
+      opts: {
+        'Sorts accélérés': 'Lancer un sort (1 action) avec une action bonus.',
+        'Sorts amplifiés': 'Relancer les dés de dégâts inférieurs à 1 ou 2.',
+        'Sorts distants':  'Doubler la portée d\'un sort, ou toucher à 30 pi.',
+        'Sorts étendus':   'Doubler la durée d\'un sort de concentration.',
+        'Sorts hautains':  'Ignorer la résistance d\'une cible aux dégâts du sort.',
+        'Sorts jumeaux':   'Cibler deux créatures avec un sort à cible unique.',
+        'Sorts prudents':  'Les alliés réussissent automatiquement leurs jets de sauvegarde.',
+        'Sorts subtils':   'Lancer sans composantes verbales ni gestuelles.',
+      },
+    },
+    'protecteur-au-dela': {
+      desc: 'Entité surnaturelle qui vous a accordé vos pouvoirs en échange d\'un service.',
+      opts: {
+        'Archifée':           'Magie du charme et de la peur, connexion au Féerond.',
+        'Céleste':            'Pouvoirs de lumière et de soin, résistance radieuse.',
+        'Faucheuse non-morte': 'Pouvoirs de mort, nécrose, contrôle des morts-vivants.',
+        'Génie':              'Génie lié (dao, djinn, éfrit, marid) avec pouvoirs élémentaires.',
+        'Grand Ancien':       'Télépathie, connexion aux plans lointains.',
+        'Immonde':            'Résistance aux dégâts, sorts infernaux, résurrection temporaire.',
+      },
+    },
+    'pacte-magique': {
+      desc: 'Don de votre protecteur qui matérialise le lien de votre pacte.',
+      opts: {
+        'Pacte de la chaîne':  'Familier amélioré : pseudo-dragon, quasit, diablotin ou sprite.',
+        'Pacte de la lame':    'Arme de pacte magique évolutive, invocable à volonté.',
+        'Pacte du grimoire':   'Grimoire des ombres avec 3 sorts mineurs supplémentaires.',
+      },
+    },
+    'invocations': {
+      desc: 'Pouvoirs occultes permanents accordés par votre protecteur.',
+      opts: {
+        'Armure des ombres':          'Lancez armure du mage à volonté sans emplacement.',
+        'Bonds du limier':            'Lancez saut à volonté sans emplacement.',
+        'Lance de Léthé':             'Ajoutez 1d6 dégâts psychiques à vos touches.',
+        'Marque du sentinelle':       'Avantage sur Perception, bonus aux traquages.',
+        'Parole répulsive':           'Lancez répulsion une fois par repos long.',
+        'Répit du trompeur':          'Lancez invisibilité une fois par repos court.',
+        'Regard du sorcier':          'Voyez dans le noir jusqu\'à 30 pi.',
+        'Souffle de la nuit':         'Lancez silence une fois par repos long.',
+        'Vision du diable':           'Voyez dans l\'obscurité totale jusqu\'à 120 pi.',
+        'Voix du maître des chaînes': 'Communiquez télépathiquement avec votre familier.',
+        'Yeux de la rune gardienne':  'Lancez identification à volonté sans emplacement.',
+      },
+    },
+    'tradition-arcanique': {
+      desc: 'École de magie dans laquelle vous vous êtes spécialisé.',
+      opts: {
+        'Chronurgie':             'Manipulation du temps, ralentissement ou accélération des alliés.',
+        'Graviturgie':            'Manipulation de la gravité, attraction et répulsion.',
+        'Magie de guerre':        'Concentration renforcée, sorts défensifs et contre-sorts.',
+        'École d\'abjuration':    'Bouclier arcanique permanent, résistances renforcées.',
+        'École d\'enchantement':  'Charme et contrôle mental renforcés, suggestion amplifiée.',
+        'École d\'évocation':     'Dégâts amplifiés, alliés épargnés dans les zones d\'effet.',
+        'École d\'illusion':      'Illusions semi-réelles, malléabilité totale des illusions.',
+        'École d\'invocation':    'Invocations renforcées, téléportation de créatures.',
+        'École de divination':    'Présages, deux dés de précognition par repos long.',
+        'École de nécromancie':   'Morts-vivants renforcés, drain de vie, armée de zombies.',
+        'École de transmutation': 'Transmutation de matériaux, transformation du corps.',
+      },
+    },
+  };
+
+  // Shared aliases
+  CF_DESCS['ennemi-jure-2'] = CF_DESCS['ennemi-jure-3'] = CF_DESCS['ennemi-jure-1'];
+  CF_DESCS['explorateur-2'] = CF_DESCS['explorateur-3'] = CF_DESCS['explorateur-1'];
+
   function getClassKey(cls) {
     if (!cls) return null;
     return CLASS_KEY_MAP[cls.toLowerCase().trim()] || null;
@@ -2711,12 +2942,18 @@
         $autoList.innerHTML = '<span class="text-dim">Sélectionne une classe dans le profil.</span>';
       }
 
-      // Bouton pending
+      // Bouton — toujours visible si classe connue
       const pendingCount = getPendingChoicesCount(cls, level);
       const $pendingBtn = document.getElementById('btn-cf-choose');
-      if (pendingCount > 0 && cls) {
+      if (cls) {
         $pendingBtn.classList.remove('hidden');
-        $pendingBtn.textContent = '⚠ ' + pendingCount + ' choix de capacité' + (pendingCount > 1 ? 's' : '') + ' en attente';
+        if (pendingCount > 0) {
+          $pendingBtn.className = 'btn-cf-pending';
+          $pendingBtn.textContent = '⚠ ' + pendingCount + ' choix de capacité' + (pendingCount > 1 ? 's' : '') + ' en attente';
+        } else {
+          $pendingBtn.className = 'btn-cf-edit';
+          $pendingBtn.textContent = '✏ Modifier les choix';
+        }
       } else {
         $pendingBtn.classList.add('hidden');
       }
@@ -3382,12 +3619,20 @@
         const block = document.createElement('div');
         block.className = 'cf-feature-choice';
 
+        const cfDesc = CF_DESCS[id] || {};
+
         if (f.t === 'choice') {
           const current = cfTempChoices[id] || null;
           const title = document.createElement('div');
           title.className = 'cf-feature-name';
           title.textContent = f.name;
           block.appendChild(title);
+          if (cfDesc.desc) {
+            const descEl = document.createElement('div');
+            descEl.className = 'cf-feature-desc';
+            descEl.textContent = cfDesc.desc;
+            block.appendChild(descEl);
+          }
           const optDiv = document.createElement('div');
           optDiv.className = 'cf-options';
           f.opts.forEach(opt => {
@@ -3404,7 +3649,20 @@
               lbl.classList.add('cf-option-checked');
             });
             lbl.appendChild(radio);
-            lbl.appendChild(document.createTextNode(' ' + opt));
+            const optTextWrap = document.createElement('span');
+            optTextWrap.className = 'cf-opt-content';
+            const optName = document.createElement('span');
+            optName.className = 'cf-opt-name';
+            optName.textContent = opt;
+            optTextWrap.appendChild(optName);
+            const optD = cfDesc.opts && cfDesc.opts[opt];
+            if (optD) {
+              const optDesc = document.createElement('span');
+              optDesc.className = 'cf-opt-desc';
+              optDesc.textContent = optD;
+              optTextWrap.appendChild(optDesc);
+            }
+            lbl.appendChild(optTextWrap);
             optDiv.appendChild(lbl);
           });
           block.appendChild(optDiv);
@@ -3418,6 +3676,12 @@
           title.className = 'cf-feature-name';
           title.innerHTML = f.name + ' <span class="cf-count-hint">(choisir ' + total + ')</span>';
           block.appendChild(title);
+          if (cfDesc.desc) {
+            const descEl = document.createElement('div');
+            descEl.className = 'cf-feature-desc';
+            descEl.textContent = cfDesc.desc;
+            block.appendChild(descEl);
+          }
 
           const counter = document.createElement('div');
           counter.className = 'cf-selected-count';
@@ -3447,7 +3711,20 @@
               counter.textContent = arr.length + ' / ' + total + ' sélectionnés';
             });
             lbl.appendChild(cb);
-            lbl.appendChild(document.createTextNode(' ' + opt));
+            const optTextWrap = document.createElement('span');
+            optTextWrap.className = 'cf-opt-content';
+            const optName = document.createElement('span');
+            optName.className = 'cf-opt-name';
+            optName.textContent = opt;
+            optTextWrap.appendChild(optName);
+            const optD = cfDesc.opts && cfDesc.opts[opt];
+            if (optD) {
+              const optDesc = document.createElement('span');
+              optDesc.className = 'cf-opt-desc';
+              optDesc.textContent = optD;
+              optTextWrap.appendChild(optDesc);
+            }
+            lbl.appendChild(optTextWrap);
             optDiv.appendChild(lbl);
           });
           block.appendChild(optDiv);
