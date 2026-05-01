@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">30</span></span>
+        <span class="header-build">v<span id="build-number">31</span></span>
       </div>
     </header>
 
@@ -182,7 +182,10 @@
         <div class="combat-top">
           <div class="combat-stat">
             <span class="label">CA</span>
-            <input type="number" id="combat-ac" min="0">
+            <div class="hp-max-row">
+              <input type="number" id="combat-ac" min="0">
+              <button id="btn-ca-auto" class="btn-hp-auto" title="Calculer">⚙</button>
+            </div>
           </div>
           <div class="combat-stat">
             <span class="label">Initiative</span>
@@ -287,6 +290,9 @@
           </div>
           <div id="spell-slots"></div>
         </div>
+
+        <!-- Stats d'incantation -->
+        <div id="spell-casting-stats" class="spell-casting-stats hidden"></div>
 
         <!-- Sorts -->
         <div class="section-group">

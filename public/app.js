@@ -32,6 +32,13 @@
     { name: 'Tromperie', ability: 'charisma' },
   ];
 
+  const SPELLCASTING_ABILITY = {
+    'barde': 'charisma', 'clerc': 'wisdom', 'druide': 'wisdom',
+    'magicien': 'intelligence', 'occultiste': 'charisma',
+    'paladin': 'charisma', 'rodeur': 'wisdom', 'ensorceleur': 'charisma',
+    'moine': 'wisdom',
+  };
+
   const RACE_ALIASES = {
     'high elf': 'haute-elfe', 'wood elf': 'elfe des bois', 'drow': 'elfe noir',
     'elf': 'elfe', 'hill dwarf': 'nain des collines', 'mountain dwarf': 'nain des montagnes',
@@ -1341,13 +1348,15 @@
     if (!data) return;
     if (data.savingThrows) character.savingThrows = [...data.savingThrows];
 
-    const prev = character.classProficiencies || { weapons: [], armor: [] };
+    const prev = character.classProficiencies || { weapons: [], armor: [], tools: [] };
     if (!character.proficiencies) character.proficiencies = {};
     if (!character.proficiencies.weapons) character.proficiencies.weapons = [];
     if (!character.proficiencies.armor) character.proficiencies.armor = [];
+    if (!character.proficiencies.tools) character.proficiencies.tools = [];
     character.proficiencies.weapons = character.proficiencies.weapons.filter(p => !(prev.weapons || []).includes(p));
     character.proficiencies.armor   = character.proficiencies.armor.filter(p => !(prev.armor || []).includes(p));
-    const next = { weapons: [], armor: [] };
+    character.proficiencies.tools   = character.proficiencies.tools.filter(p => !(prev.tools || []).includes(p));
+    const next = { weapons: [], armor: [], tools: [] };
     for (const p of (data.weaponProf || [])) {
       if (!character.proficiencies.weapons.includes(p)) character.proficiencies.weapons.push(p);
       next.weapons.push(p);
@@ -1355,6 +1364,10 @@
     for (const p of (data.armorProf || [])) {
       if (!character.proficiencies.armor.includes(p)) character.proficiencies.armor.push(p);
       next.armor.push(p);
+    }
+    for (const p of (data.toolProf || [])) {
+      if (!character.proficiencies.tools.includes(p)) character.proficiencies.tools.push(p);
+      next.tools.push(p);
     }
     character.classProficiencies = next;
   }
@@ -1799,6 +1812,29 @@
     $ac.onchange = () => { character.armorClass = parseInt($ac.value, 10); saveCharacter(); };
     $speed.onchange = () => { character.speed = parseInt($speed.value, 10); saveCharacter(); };
 
+    const $caAuto = document.getElementById('btn-ca-auto');
+    if ($caAuto) {
+      const dexMod = mod(character.stats.dexterity);
+      const equippedNames = Object.values(character.equipmentSlots || {});
+      const chestItem = (character.inventoryEquipment || []).find(i => i.slotType === 'chest' && equippedNames.includes(i.name) && i.baseCA);
+      let ca;
+      if (chestItem) {
+        let dexBonus = dexMod;
+        for (const armors of Object.values(ARMOR_CATEGORIES)) {
+          const found = armors.find(a => a.name === chestItem.name);
+          if (found) { if (found.dex === 'max2') dexBonus = Math.min(dexMod, 2); if (found.dex === 'none') dexBonus = 0; break; }
+        }
+        ca = (chestItem.baseCA + (chestItem.armorBonus || 0)) + dexBonus;
+      } else {
+        const hasMageArmor = (character.activeSpells || []).some(s => s.id === 'armure-de-mage');
+        ca = hasMageArmor ? (13 + dexMod) : (10 + dexMod);
+      }
+      const hasShield = (character.inventoryEquipment || []).some(i => i.slotType === 'shield' && character.handSlots && (character.handSlots.left === i.name || character.handSlots.right === i.name));
+      if (hasShield) ca += 2;
+      $caAuto.title = 'CA calculée : ' + ca;
+      $caAuto.onclick = () => { character.armorClass = ca; saveCharacter(); renderCombat(); };
+    }
+
     // HP
     $hpCurrent.textContent = character.hp.current;
     $hpMax.value = character.hp.max;
@@ -1894,6 +1930,26 @@
   }
 
   function renderSpellSlots() {
+    // DD et bonus d'attaque des sorts
+    const $castStats = document.getElementById('spell-casting-stats');
+    if ($castStats) {
+      const clsKey = (character.class || '').toLowerCase().trim();
+      const ability = SPELLCASTING_ABILITY[clsKey];
+      if (ability) {
+        const abilityMod = mod(character.stats[ability]);
+        const prof = character.proficiencyBonus || 2;
+        const dc = 8 + prof + abilityMod;
+        const atk = prof + abilityMod;
+        $castStats.innerHTML =
+          '<span class="cs-item"><span class="cs-label">DD de sauvegarde</span><span class="cs-value">' + dc + '</span></span>' +
+          '<span class="cs-item"><span class="cs-label">Bonus d\'attaque</span><span class="cs-value">' + (atk >= 0 ? '+' : '') + atk + '</span></span>' +
+          '<span class="cs-item"><span class="cs-label">Caractéristique</span><span class="cs-value">' + (STATS[ability] || ability) + '</span></span>';
+        $castStats.classList.remove('hidden');
+      } else {
+        $castStats.classList.add('hidden');
+      }
+    }
+
     const $slots = document.getElementById('spell-slots');
     $slots.innerHTML = '';
     const slots = character.spellSlots || {};
@@ -1927,7 +1983,9 @@
     }
 
     document.getElementById('btn-short-rest').onclick = () => {
-      character.spellSlotsUsed = {};
+      // Seul l'Occultiste récupère ses emplacements sur repos court
+      const clsKey = (character.class || '').toLowerCase().trim();
+      if (clsKey === 'occultiste') character.spellSlotsUsed = {};
       rechargeItemSpells(['Repos court', 'Chaque aube', 'À volonté']);
       saveCharacter();
       renderSpellSlots();
