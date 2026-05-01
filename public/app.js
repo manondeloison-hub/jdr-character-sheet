@@ -4475,7 +4475,8 @@
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.value = prop;
-      cb.checked = selected.includes(prop);
+      // Comparaison normalisée : gère "lancer (6/18)" → "Lance", "munitions (24/96)" → "Munitions"
+      cb.checked = selected.some(s => s.toLowerCase().startsWith(prop.toLowerCase()));
       label.appendChild(cb);
       label.appendChild(document.createTextNode(' ' + prop));
       $c.appendChild(label);
