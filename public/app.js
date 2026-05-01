@@ -1340,6 +1340,23 @@
     const data = classesCache[cls.toLowerCase().trim()];
     if (!data) return;
     if (data.savingThrows) character.savingThrows = [...data.savingThrows];
+
+    const prev = character.classProficiencies || { weapons: [], armor: [] };
+    if (!character.proficiencies) character.proficiencies = {};
+    if (!character.proficiencies.weapons) character.proficiencies.weapons = [];
+    if (!character.proficiencies.armor) character.proficiencies.armor = [];
+    character.proficiencies.weapons = character.proficiencies.weapons.filter(p => !(prev.weapons || []).includes(p));
+    character.proficiencies.armor   = character.proficiencies.armor.filter(p => !(prev.armor || []).includes(p));
+    const next = { weapons: [], armor: [] };
+    for (const p of (data.weaponProf || [])) {
+      if (!character.proficiencies.weapons.includes(p)) character.proficiencies.weapons.push(p);
+      next.weapons.push(p);
+    }
+    for (const p of (data.armorProf || [])) {
+      if (!character.proficiencies.armor.includes(p)) character.proficiencies.armor.push(p);
+      next.armor.push(p);
+    }
+    character.classProficiencies = next;
   }
 
   function recalcStats() {
@@ -1750,11 +1767,33 @@
     $init.textContent = modStr(character.stats.dexterity);
     $prof.textContent = '+' + character.proficiencyBonus;
 
+    const clsKey = character.class ? character.class.toLowerCase().trim() : null;
+    const clsData = clsKey && classesCache ? classesCache[clsKey] : null;
+
     const $hitdie = document.getElementById('combat-hitdie');
-    if ($hitdie) {
-      const clsKey = character.class ? character.class.toLowerCase().trim() : null;
-      const clsData = clsKey && classesCache ? classesCache[clsKey] : null;
-      $hitdie.textContent = clsData ? 'd' + clsData.hitDie : '—';
+    if ($hitdie) $hitdie.textContent = clsData ? 'd' + clsData.hitDie : '—';
+
+    const $dv = document.getElementById('combat-darkvision');
+    if ($dv) {
+      const raceData = racesCache ? racesCache[resolveRaceKey(character.race)] : null;
+      $dv.textContent = (raceData && raceData.darkvision) ? raceData.darkvision + ' m' : '—';
+    }
+
+    const $hpAuto = document.getElementById('btn-hp-auto');
+    if ($hpAuto && clsData) {
+      const hitDie = clsData.hitDie;
+      const conMod = mod(character.stats.constitution);
+      const level = character.level || 1;
+      const calcHp = hitDie + conMod + (level - 1) * (Math.floor(hitDie / 2) + 1 + conMod);
+      const safe = Math.max(1, calcHp);
+      $hpAuto.title = 'PV calculés : ' + safe + ' (d' + hitDie + ' niv.1 + moyenne × ' + (level - 1) + ' niv. + mod CON ' + (conMod >= 0 ? '+' : '') + conMod + ')';
+      $hpAuto.onclick = () => {
+        character.hp.max = safe;
+        if (character.hp.current > character.hp.max) character.hp.current = character.hp.max;
+        saveCharacter();
+        renderCombat();
+        renderHeader();
+      };
     }
 
     $ac.onchange = () => { character.armorClass = parseInt($ac.value, 10); saveCharacter(); };

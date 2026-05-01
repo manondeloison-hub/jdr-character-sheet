@@ -227,6 +227,19 @@ body {
   padding: 0.1rem;
 }
 
+.hp-max-row { display: flex; align-items: center; gap: 0.3rem; }
+.btn-hp-auto {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  padding: 0.1rem 0.35rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.btn-hp-auto:hover { border-color: var(--gold); color: var(--gold); }
+
 .profil-hp-input:disabled {
   opacity: 1;
   color: var(--text);

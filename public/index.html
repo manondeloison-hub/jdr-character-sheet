@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">29</span></span>
+        <span class="header-build">v<span id="build-number">30</span></span>
       </div>
     </header>
 
@@ -200,6 +200,10 @@
             <span class="label">Dé de vie</span>
             <span id="combat-hitdie" class="combat-value">—</span>
           </div>
+          <div class="combat-stat">
+            <span class="label">Vision nuit</span>
+            <span id="combat-darkvision" class="combat-value">—</span>
+          </div>
         </div>
 
         <div class="section-group">
@@ -207,7 +211,10 @@
           <div class="profil-hp-grid">
             <div class="profil-hp-block">
               <span class="profil-hp-label">PV maximum</span>
-              <input type="number" id="hp-max" class="profil-hp-input" min="1">
+              <div class="hp-max-row">
+                <input type="number" id="hp-max" class="profil-hp-input" min="1">
+                <button id="btn-hp-auto" class="btn-hp-auto" title="Calculer">⚙</button>
+              </div>
             </div>
             <div class="profil-hp-block">
               <span class="profil-hp-label">PV actuels</span>
