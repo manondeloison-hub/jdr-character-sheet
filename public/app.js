@@ -1292,6 +1292,12 @@
     return data ? (data.traits || []).map(t => t.name) : [];
   }
 
+  function getRaceTraitDetails(race) {
+    if (!racesCache || !race) return [];
+    const data = racesCache[resolveRaceKey(race)];
+    return data ? (data.traits || []) : [];
+  }
+
   function recalcStats() {
     const racial = getRacialBonus(character.race);
     for (const key of Object.keys(STATS)) {
@@ -1439,6 +1445,26 @@
       $btn.innerHTML = editMode ? '<span class="ic-confirm">✓</span>' : '<span class="ic-pencil">✏</span>';
       $btn.title = editMode ? 'Verrouiller' : 'Modifier';
       $btn.classList.toggle('btn-edit-active', editMode);
+    }
+
+    // Peupler les selects race et classe depuis les caches
+    const $raceSelect = document.querySelector('select[data-field="race"]');
+    if ($raceSelect && racesCache) {
+      const current = character.race || '';
+      $raceSelect.innerHTML = '<option value="">— Choisir —</option>' +
+        Object.values(racesCache)
+          .sort((a, b) => a.name.localeCompare(b.name, 'fr'))
+          .map(r => `<option value="${r.name}"${r.name === current ? ' selected' : ''}>${r.name}</option>`)
+          .join('');
+    }
+    const $classSelect = document.querySelector('select[data-field="class"]');
+    if ($classSelect && classesCache) {
+      const current = character.class || '';
+      $classSelect.innerHTML = '<option value="">— Choisir —</option>' +
+        Object.values(classesCache)
+          .sort((a, b) => a.name.localeCompare(b.name, 'fr'))
+          .map(c => `<option value="${c.name}"${c.name === current ? ' selected' : ''}>${c.name}</option>`)
+          .join('');
     }
 
     // Info fields (inputs + selects)
@@ -2954,11 +2980,30 @@
       empty.textContent = character.race ? 'Aucun trait racial défini pour cette race.' : 'Sélectionne une race dans le profil.';
       $traitsList.appendChild(empty);
     } else {
+      const traitDetails = getRaceTraitDetails(character.race);
       traits.forEach(t => {
-        const tag = document.createElement('div');
-        tag.className = 'trait-racial-item';
-        tag.textContent = t;
-        $traitsList.appendChild(tag);
+        const detail = traitDetails.find(d => d.name === t);
+        const item = document.createElement('div');
+        item.className = 'trait-racial-item' + (detail ? ' trait-expandable' : '');
+
+        const header = document.createElement('div');
+        header.className = 'trait-racial-header';
+        header.textContent = t;
+        item.appendChild(header);
+
+        if (detail && detail.desc) {
+          const descEl = document.createElement('div');
+          descEl.className = 'trait-racial-desc hidden';
+          descEl.textContent = detail.desc;
+          item.appendChild(descEl);
+
+          header.addEventListener('click', () => {
+            descEl.classList.toggle('hidden');
+            item.classList.toggle('trait-open');
+          });
+        }
+
+        $traitsList.appendChild(item);
       });
     }
 
@@ -3686,6 +3731,15 @@
     renderCapacites();
   });
 
+  function getClassFeatureDesc(cls, featureName) {
+    if (!classesCache || !cls) return null;
+    const key = getClassKey(cls);
+    const clsData = key ? classesCache[key] : null;
+    if (!clsData) return null;
+    const feat = clsData.features.find(f => f.name.toLowerCase() === featureName.toLowerCase());
+    return feat ? feat.desc : null;
+  }
+
   function openClassFeaturesModal() {
     const cls   = character.class || '';
     const level = character.level || 1;
@@ -3730,10 +3784,11 @@
           title.className = 'cf-feature-name';
           title.textContent = f.name;
           block.appendChild(title);
-          if (cfDesc.desc) {
+          const featureDesc = getClassFeatureDesc(cls, f.name) || cfDesc.desc || null;
+          if (featureDesc) {
             const descEl = document.createElement('div');
             descEl.className = 'cf-feature-desc';
-            descEl.textContent = cfDesc.desc;
+            descEl.textContent = featureDesc;
             block.appendChild(descEl);
           }
           const optDiv = document.createElement('div');
@@ -3779,10 +3834,11 @@
           title.className = 'cf-feature-name';
           title.innerHTML = f.name + ' <span class="cf-count-hint">(choisir ' + total + ')</span>';
           block.appendChild(title);
-          if (cfDesc.desc) {
+          const featureDesc = getClassFeatureDesc(cls, f.name) || cfDesc.desc || null;
+          if (featureDesc) {
             const descEl = document.createElement('div');
             descEl.className = 'cf-feature-desc';
-            descEl.textContent = cfDesc.desc;
+            descEl.textContent = featureDesc;
             block.appendChild(descEl);
           }
 

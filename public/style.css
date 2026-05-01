@@ -546,6 +546,10 @@ main {
   color: var(--text);
   margin-bottom: 0.35rem;
 }
+.trait-expandable { cursor: pointer; }
+.trait-expandable .trait-racial-header::after { content: ' ▸'; font-size: 0.65rem; color: var(--text-dim); }
+.trait-open .trait-racial-header::after { content: ' ▾'; }
+.trait-racial-desc { font-size: 0.72rem; color: var(--text-dim); font-style: italic; line-height: 1.4; padding: 0.3rem 0.5rem 0.1rem; }
 
 .text-dim {
   color: var(--text-dim);
