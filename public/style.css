@@ -3402,6 +3402,19 @@ main {
   justify-content: flex-end;
 }
 
+/* --- Class skill hint --- */
+.class-skill-hint {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(192, 57, 43, 0.1);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+.class-skill-hint strong { color: var(--gold); font-weight: 600; }
+
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

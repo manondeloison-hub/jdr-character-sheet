@@ -1298,6 +1298,50 @@
     return data ? (data.traits || []) : [];
   }
 
+  function applyRacialData(race) {
+    const data = racesCache ? racesCache[resolveRaceKey(race)] : null;
+    if (data && data.speed) character.speed = data.speed;
+
+    // Languages: remove old racial langs, add new ones
+    const prevRacialLangs = character.racialLanguages || [];
+    if (!character.languages) character.languages = { spoken: [], scripts: [] };
+    if (!character.languages.spoken) character.languages.spoken = [];
+    character.languages.spoken = character.languages.spoken.filter(l => !prevRacialLangs.includes(l));
+    const newRacialLangs = [];
+    if (data && data.languages) {
+      for (const lang of data.languages) {
+        if (lang.includes('choix')) continue;
+        const matched = LANGUAGES_DATA.find(l => l.name.toLowerCase() === lang.toLowerCase());
+        if (matched) {
+          if (!character.languages.spoken.includes(matched.name)) character.languages.spoken.push(matched.name);
+          newRacialLangs.push(matched.name);
+        }
+      }
+    }
+    character.racialLanguages = newRacialLangs;
+
+    // Proficiencies: remove old racial profs, add new ones
+    const prevRacialProfs = character.racialProficiencies || [];
+    if (!character.proficiencies) character.proficiencies = {};
+    if (!character.proficiencies.weapons) character.proficiencies.weapons = [];
+    character.proficiencies.weapons = character.proficiencies.weapons.filter(p => !prevRacialProfs.includes(p));
+    const newRacialProfs = [];
+    if (data && data.proficiencies) {
+      for (const prof of data.proficiencies) {
+        if (!character.proficiencies.weapons.includes(prof)) character.proficiencies.weapons.push(prof);
+        newRacialProfs.push(prof);
+      }
+    }
+    character.racialProficiencies = newRacialProfs;
+  }
+
+  function applyClassData(cls) {
+    if (!classesCache || !cls) return;
+    const data = classesCache[cls.toLowerCase().trim()];
+    if (!data) return;
+    if (data.savingThrows) character.savingThrows = [...data.savingThrows];
+  }
+
   function recalcStats() {
     const racial = getRacialBonus(character.race);
     for (const key of Object.keys(STATS)) {
@@ -1481,6 +1525,7 @@
         if (field === 'race') {
           recalcStats();
           character.traits = getRacialTraits(el.value);
+          applyRacialData(el.value);
           saveCharacter();
           renderProfil();
           renderCombat();
@@ -1488,6 +1533,7 @@
         }
         if (field === 'class') {
           syncSpellSlots();
+          applyClassData(el.value);
         }
         saveCharacter();
         renderHeader();
@@ -1606,6 +1652,19 @@
     const passivePerception = 10 + mod(character.stats.wisdom) + (perceptionProficient ? character.proficiencyBonus : 0);
     document.getElementById('passive-perception').textContent = passivePerception;
 
+    // Skill choices hint from class
+    const $skillHint = document.getElementById('class-skill-hint');
+    if ($skillHint) {
+      const clsKey = character.class ? character.class.toLowerCase().trim() : null;
+      const clsData = clsKey && classesCache ? classesCache[clsKey] : null;
+      if (clsData && clsData.skillChoices && editMode) {
+        $skillHint.innerHTML = '<strong>Compétences de classe</strong> — choisissez ' + clsData.skillChoices.count + ' parmi : ' + clsData.skillChoices.from.join(', ');
+        $skillHint.classList.remove('hidden');
+      } else {
+        $skillHint.classList.add('hidden');
+      }
+    }
+
   }
 
   function applyBackground(name) {
@@ -1690,6 +1749,13 @@
     $speed.value = character.speed;
     $init.textContent = modStr(character.stats.dexterity);
     $prof.textContent = '+' + character.proficiencyBonus;
+
+    const $hitdie = document.getElementById('combat-hitdie');
+    if ($hitdie) {
+      const clsKey = character.class ? character.class.toLowerCase().trim() : null;
+      const clsData = clsKey && classesCache ? classesCache[clsKey] : null;
+      $hitdie.textContent = clsData ? 'd' + clsData.hitDie : '—';
+    }
 
     $ac.onchange = () => { character.armorClass = parseInt($ac.value, 10); saveCharacter(); };
     $speed.onchange = () => { character.speed = parseInt($speed.value, 10); saveCharacter(); };
