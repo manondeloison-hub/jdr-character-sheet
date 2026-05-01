@@ -1945,33 +1945,60 @@
     // Weapons
     const $weapons = document.getElementById('weapons-list');
     $weapons.innerHTML = '';
-    (character.weapons || []).forEach((w, i) => {
-      const row = document.createElement('div');
-      row.className = 'weapon-row';
-      row.innerHTML =
-        '<span class="weapon-name">' + w.name + '</span>' +
-        '<span class="weapon-atk">' + w.attack + '</span>' +
-        '<span class="weapon-dmg">' + w.damage + '</span>' +
-        '<button class="btn-remove">&times;</button>';
-      row.querySelector('.btn-remove').addEventListener('click', () => {
-        character.weapons.splice(i, 1);
-        saveCharacter();
-        renderCombat();
-      });
-      $weapons.appendChild(row);
-    });
 
-    document.getElementById('btn-add-weapon').onclick = () => {
-      const name = document.getElementById('weapon-name');
-      const atk = document.getElementById('weapon-atk');
-      const dmg = document.getElementById('weapon-dmg');
-      if (!name.value) return;
-      if (!character.weapons) character.weapons = [];
-      character.weapons.push({ name: name.value, attack: atk.value, damage: dmg.value });
-      name.value = ''; atk.value = ''; dmg.value = '';
-      saveCharacter();
-      renderCombat();
-    };
+    const handSlots = character.handSlots || {};
+    const equippedNames = new Set([handSlots.left, handSlots.right].filter(Boolean));
+    const allWeapons = character.inventoryWeapons || [];
+    const sorted = [...allWeapons].sort((a, b) => (equippedNames.has(a.name) ? 0 : 1) - (equippedNames.has(b.name) ? 0 : 1));
+
+    if (sorted.length === 0) {
+      $weapons.innerHTML = '<div class="weapons-empty">Aucune arme dans l\'inventaire — utilisez « Gérer → » pour en ajouter.</div>';
+    } else {
+      sorted.forEach(w => {
+        const equipped = equippedNames.has(w.name);
+        const wt = WEAPON_TYPES.find(t => t.name === w.type) || {};
+        const stats = calcWeaponStats(w);
+        const isProficient = hasWeaponProficiency(w.type);
+
+        const atkStr = (stats.atkTotal >= 0 ? '+' : '') + stats.atkTotal;
+        const atkParts = [(stats.abilityLabel + ' ' + (stats.abilityMod >= 0 ? '+' : '') + stats.abilityMod)];
+        if (stats.prof > 0) atkParts.push('maît. +' + stats.prof);
+        if (stats.magic !== 0) atkParts.push('mag. ' + (stats.magic >= 0 ? '+' : '') + stats.magic);
+
+        let dmgHtml = '<span class="weapon-dmg-main">' + stats.mainDmg;
+        if (stats.dmgType) dmgHtml += ' <span class="weapon-dmg-type">' + stats.dmgType + '</span>';
+        dmgHtml += '</span>';
+        (w.damageBonus || []).forEach(d => {
+          if (d.amount) dmgHtml += ' <span class="weapon-dmg-bonus">+' + d.amount + ' ' + d.type + '</span>';
+        });
+
+        const row = document.createElement('div');
+        row.className = 'weapon-row' + (equipped ? ' weapon-equipped' : '');
+        row.innerHTML =
+          '<div class="weapon-row-left"><span class="weapon-icon">' + (wt.icon || '⚔️') + '</span></div>' +
+          '<div class="weapon-row-body">' +
+            '<div class="weapon-row-top">' +
+              '<span class="weapon-name">' + w.name + '</span>' +
+              (equipped ? '<span class="weapon-equip-badge">équipé</span>' : '') +
+              (!isProficient ? '<span class="weapon-no-prof">⚠ non maîtrisé</span>' : '') +
+            '</div>' +
+            '<div class="weapon-row-stats">' +
+              '<span class="weapon-atk" title="' + atkParts.join(', ') + '">' + atkStr + '</span>' +
+              '<span class="weapon-atk-sep">·</span>' +
+              dmgHtml +
+            '</div>' +
+          '</div>';
+        $weapons.appendChild(row);
+      });
+    }
+
+    const $gotoWeapons = document.getElementById('btn-goto-weapons');
+    if ($gotoWeapons) {
+      $gotoWeapons.onclick = () => {
+        const btn = document.querySelector('[data-tab="inventaire"]');
+        if (btn) btn.click();
+      };
+    }
   }
 
   // --- Sorts ---
@@ -3865,6 +3892,44 @@
     if (profs.includes('armes de guerre')) return true;
     if (profs.includes('armes courantes') && cat.includes('courante')) return true;
     return false;
+  }
+
+  function calcWeaponStats(w) {
+    const wt = WEAPON_TYPES.find(t => t.name === w.type) || {};
+    const props = (w.properties || []).map(p => p.toLowerCase());
+
+    const isRanged = (wt.cat || '').toLowerCase().includes('distance');
+    const isFinesse = props.includes('finesse');
+
+    const strMod = mod(character.stats.strength);
+    const dexMod = mod(character.stats.dexterity);
+
+    let abilityMod, abilityLabel;
+    if (isFinesse) {
+      if (dexMod >= strMod) { abilityMod = dexMod; abilityLabel = 'DEX'; }
+      else                  { abilityMod = strMod; abilityLabel = 'FOR'; }
+    } else if (isRanged) {
+      abilityMod = dexMod; abilityLabel = 'DEX';
+    } else {
+      abilityMod = strMod; abilityLabel = 'FOR';
+    }
+
+    const prof = hasWeaponProficiency(w.type) ? (character.proficiencyBonus || 2) : 0;
+    const magic = parseInt(w.atkBonus, 10) || 0;
+    const atkTotal = abilityMod + prof + magic;
+
+    const baseDmg = w.baseDamage || wt.damage || '';
+    const dmgBonus = abilityMod + magic;
+    let mainDmg;
+    if (!baseDmg || baseDmg === '—') {
+      mainDmg = '—';
+    } else if (dmgBonus !== 0) {
+      mainDmg = baseDmg + (dmgBonus >= 0 ? '+' : '') + dmgBonus;
+    } else {
+      mainDmg = baseDmg;
+    }
+
+    return { atkTotal, abilityMod, abilityLabel, prof, magic, mainDmg, dmgType: wt.baseDmg || '' };
   }
 
   function getWeaponByName(name) {
