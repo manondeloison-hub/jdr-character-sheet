@@ -54,7 +54,7 @@
   // id: clé pour classFeatureChoices (défaut = name)
   // opts: liste d'options (choice/multi)
   // count: nb de choix (multi)
-  const CLASS_FEATURES = {
+  let CLASS_FEATURES = {
     'barbare': [
       { l:1,  name:'Rage',                             t:'auto' },
       { l:1,  name:'Défense sans armure',              t:'auto' },
@@ -348,7 +348,7 @@
     'magicien': 'magicien', 'magicienne': 'magicien', 'wizard': 'magicien',
   };
 
-  const CF_DESCS = {
+  let CF_DESCS = {
     'voie-primitive': {
       desc: 'Tradition barbare qui donne accès à des capacités supplémentaires lors de la rage.',
       opts: {
@@ -624,7 +624,7 @@
   // selectionType: 'single' (choisir 1) | 'multi' (choisir N)
   // countByLevel: pour multi, nombre CUMULATIF de choix par niveau de personnage
   // spells: [{l: niveau_perso_min, names:[...]}] — sorts étendus accessibles
-  const CLASS_FEATURES_TYPED = {
+  let CLASS_FEATURES_TYPED = {
     'occultiste': {
       types: [
         {
@@ -876,7 +876,7 @@
   ];
 
   // Limites de sorts connus par classe et niveau (sorts de classe uniquement)
-  const SPELL_LEARN_LIMITS = {
+  let SPELL_LEARN_LIMITS = {
     occultiste: {
       1:  { cantrips: 2, spells: 2 },
       2:  { cantrips: 2, spells: 3 },
@@ -904,7 +904,7 @@
   // hands: 1 = une main, 2 = deux mains, 'V' = polyvalente
   // icon: emoji affiché sur la ligne d'inventaire
   // baseDmg: type de dégâts de base
-  const WEAPON_TYPES = [
+  let WEAPON_TYPES = [
     { name: 'Bâton',             cat: 'Corps à corps courante',  hands: 'V', icon: '🪄', baseDmg: 'Contondant'  },
     { name: 'Dague',             cat: 'Corps à corps courante',  hands: 1,   icon: '🗡️', baseDmg: 'Perforant'   },
     { name: 'Faucille',          cat: 'Corps à corps courante',  hands: 1,   icon: '🌙', baseDmg: 'Tranchant'   },
@@ -943,7 +943,7 @@
     { name: 'Sarbacane',         cat: 'Distance de guerre',      hands: 1,   icon: '💨', baseDmg: 'Perforant'   },
   ];
 
-  const WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
+  let WEAPON_PROPERTIES = ['Allonge', 'Chargement', 'Dissimulée', 'Finesse', 'Lance', 'Légère', 'Lourde', 'Munitions', 'Spéciale'];
 
   function makeLeaves(cat) { return WEAPON_TYPES.filter(w => w.cat === cat).map(w => ({ label: w.name })); }
   const PROF_TREES = {
@@ -1012,7 +1012,7 @@
     { name: 'Voyageur',  skills: ['Discrétion', 'Perspicacité'],   tools: ['Outils de voleur'],        toolChoice: null,                  equipment: '2 dagues, outils de voleur, jeu, rouleau de couchage, 2 bourses, vêtements de voyageur, 16 po' },
   ];
 
-  const LANGUAGES_DATA = [
+  let LANGUAGES_DATA = [
     { name: 'Commun',                  script: 'Commun',     races: 'Humains',                        exotic: false },
     { name: 'Elfique',                 script: 'Elfique',    races: 'Elfes',                          exotic: false },
     { name: 'Géant',                   script: 'Nain',       races: 'Ogres, géants',                  exotic: false },
@@ -1067,13 +1067,13 @@
     ],
   };
 
-  const WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
+  let WEAPON_TYPE_CATS = ['Tous', 'Corps à corps courante', 'Corps à corps de guerre', 'Distance courante', 'Distance de guerre'];
 
-  const DAMAGE_TYPES = ['Acide', 'Contondant', 'Éclair', 'Feu', 'Force', 'Froid', 'Nécrotique', 'Perforant', 'Poison', 'Psychique', 'Radiant', 'Tonnerre', 'Tranchant'];
+  let DAMAGE_TYPES = ['Acide', 'Contondant', 'Éclair', 'Feu', 'Force', 'Froid', 'Nécrotique', 'Perforant', 'Poison', 'Psychique', 'Radiant', 'Tonnerre', 'Tranchant'];
 
   const RECOVERY_OPTIONS = ['Repos long', 'Repos court', 'Chaque aube', 'À volonté'];
 
-  const POTIONS = [
+  let POTIONS = [
     { name: 'Potion de soins',              cat: 'Soins',           desc: '2d4+2 PV' },
     { name: 'Potion de soins supérieure',   cat: 'Soins',           desc: '4d4+4 PV' },
     { name: 'Potion de soins excellente',   cat: 'Soins',           desc: '8d4+8 PV' },
@@ -1103,7 +1103,7 @@
     { name: 'Huile éthérée',               cat: 'Autres',          desc: 'Plan éthéré pendant 1h' },
   ];
 
-  const POTION_CATS = ['Toutes', 'Soins', 'Caractéristiques', 'Mobilité', 'Transformation', 'Autres'];
+  let POTION_CATS = ['Toutes', 'Soins', 'Caractéristiques', 'Mobilité', 'Transformation', 'Autres'];
 
   // --- State ---
   let character = null;
@@ -1114,6 +1114,9 @@
   let armorCache = null;
   let backgroundsCache = null;
   let conditionsCache = null;
+  let languagesCache = null;
+  let potionsCache = null;
+  let classFeaturesCache = null;
   let saveTimeout = null;
   let editMode = false;
   let consumablesCollapsed = true;
@@ -1185,13 +1188,16 @@
   });
 
   async function loadStaticData() {
-    const [racesRes, classesRes, weaponsRes, armorRes, backgroundsRes, conditionsRes] = await Promise.all([
+    const [racesRes, classesRes, weaponsRes, armorRes, backgroundsRes, conditionsRes, langsRes, potionsRes, cfRes] = await Promise.all([
       apiFetch('/api/races'),
       apiFetch('/api/classes'),
       apiFetch('/api/weapons'),
       apiFetch('/api/armor'),
       apiFetch('/api/backgrounds'),
       apiFetch('/api/conditions'),
+      apiFetch('/api/languages'),
+      apiFetch('/api/potions'),
+      apiFetch('/api/class-features'),
     ]);
     if (racesRes.ok) racesCache = await racesRes.json();
     if (classesRes.ok) classesCache = await classesRes.json();
@@ -1199,6 +1205,9 @@
     if (armorRes.ok) armorCache = await armorRes.json();
     if (backgroundsRes.ok) backgroundsCache = await backgroundsRes.json();
     if (conditionsRes.ok) conditionsCache = await conditionsRes.json();
+    if (langsRes.ok) languagesCache = await langsRes.json();
+    if (potionsRes.ok) potionsCache = await potionsRes.json();
+    if (cfRes.ok) classFeaturesCache = await cfRes.json();
     if (armorCache) {
       ARMOR_CATEGORIES = {};
       armorCache.filter(a => a.category !== 'Bouclier').forEach(a => {
@@ -1212,6 +1221,33 @@
         toolChoice: bg.toolChoice || null, equipment: bg.equipment,
         feature: bg.feature || null, featureDesc: bg.featureDesc || null,
       }));
+    }
+    if (weaponsCache && weaponsCache.weapons) {
+      WEAPON_TYPES = Object.entries(weaponsCache.weapons).map(([name, w]) => ({
+        name, cat: w.cat, hands: w.hands, icon: w.icon, baseDmg: w.baseDmg,
+      }));
+      WEAPON_PROPERTIES = weaponsCache.selectableProperties || WEAPON_PROPERTIES;
+      DAMAGE_TYPES      = weaponsCache.damageTypes || DAMAGE_TYPES;
+      WEAPON_TYPE_CATS  = weaponsCache.categories || WEAPON_TYPE_CATS;
+    }
+    if (potionsCache) {
+      POTIONS = potionsCache;
+      POTION_CATS = ['Toutes', ...new Set(potionsCache.map(p => p.cat))];
+    }
+    if (languagesCache) {
+      LANGUAGES_DATA = languagesCache;
+    }
+    if (classFeaturesCache) {
+      CLASS_FEATURES = classFeaturesCache.features || CLASS_FEATURES;
+      Object.assign(CF_DESCS, classFeaturesCache.featureDescs || {});
+      CF_DESCS['ennemi-jure-2'] = CF_DESCS['ennemi-jure-3'] = CF_DESCS['ennemi-jure-1'];
+      CF_DESCS['explorateur-2'] = CF_DESCS['explorateur-3'] = CF_DESCS['explorateur-1'];
+      if (classFeaturesCache.typedFeatures) {
+        Object.assign(CLASS_FEATURES_TYPED, classFeaturesCache.typedFeatures);
+      }
+      if (classFeaturesCache.spellLimits) {
+        Object.assign(SPELL_LEARN_LIMITS, classFeaturesCache.spellLimits);
+      }
     }
   }
 
@@ -4378,7 +4414,7 @@
           $sel.classList.remove('hidden');
           if (wt.hands) document.getElementById('wm-hands').value = wt.hands;
           // Auto-fill base damage from weapons cache
-          const wd = weaponsCache ? weaponsCache[wt.name] : null;
+          const wd = weaponsCache ? (weaponsCache.weapons || weaponsCache)[wt.name] : null;
           const $bdmg = document.getElementById('wm-base-dmg');
           if ($bdmg) {
             if (wd && wd.damage && wd.damage !== '—') {

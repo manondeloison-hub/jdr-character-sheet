@@ -1,0 +1,18 @@
+[
+  { "name": "Commun",                 "script": "Commun",     "races": "Humains",                        "exotic": false },
+  { "name": "Elfique",                "script": "Elfique",    "races": "Elfes",                          "exotic": false },
+  { "name": "Géant",                  "script": "Nain",       "races": "Ogres, géants",                  "exotic": false },
+  { "name": "Gnome",                  "script": "Nain",       "races": "Gnomes",                         "exotic": false },
+  { "name": "Gobelin",                "script": "Nain",       "races": "Gobelinoïdes",                   "exotic": false },
+  { "name": "Halfelin",               "script": "Commun",     "races": "Halfelins",                      "exotic": false },
+  { "name": "Nain",                   "script": "Nain",       "races": "Nains",                          "exotic": false },
+  { "name": "Orc",                    "script": "Nain",       "races": "Orcs",                           "exotic": false },
+  { "name": "Abyssal",                "script": "Infernal",   "races": "Démons",                         "exotic": true  },
+  { "name": "Céleste",                "script": "Céleste",    "races": "Célestes",                       "exotic": true  },
+  { "name": "Commun des profondeurs", "script": "Elfique",    "races": "Créatures de l'Outreterre",      "exotic": true  },
+  { "name": "Draconique",             "script": "Draconique", "races": "Dragons, drakéides",             "exotic": true  },
+  { "name": "Infernal",               "script": "Infernal",   "races": "Diables",                        "exotic": true  },
+  { "name": "Primordial",             "script": "Nain",       "races": "Élémentaires",                   "exotic": true  },
+  { "name": "Profond",                "script": "—",          "races": "Beholders, flagelleurs mentaux", "exotic": true  },
+  { "name": "Sylvestre",              "script": "Elfique",    "races": "Créatures féeriques",            "exotic": true  }
+]

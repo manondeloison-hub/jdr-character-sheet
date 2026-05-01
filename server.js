@@ -25,6 +25,9 @@ const allWeapons = require('./data/weapons.json');
 const allArmor = require('./data/armor.json');
 const allBackgrounds = require('./data/backgrounds.json');
 const allConditions = require('./data/conditions.json');
+const allLanguages = require('./data/languages.json');
+const allPotions = require('./data/potions.json');
+const allClassFeatures = require('./data/class-features.json');
 
 // --- Default character ---
 const DEFAULT_CHARACTER = {
@@ -158,6 +161,15 @@ app.get('/api/backgrounds', authMiddleware, (req, res) => res.json(allBackground
 // --- Conditions API ---
 app.get('/api/conditions', authMiddleware, (req, res) => res.json(allConditions));
 
+// --- Languages API ---
+app.get('/api/languages', authMiddleware, (req, res) => res.json(allLanguages));
+
+// --- Potions API ---
+app.get('/api/potions', authMiddleware, (req, res) => res.json(allPotions));
+
+// --- Class features API ---
+app.get('/api/class-features', authMiddleware, (req, res) => res.json(allClassFeatures));
+
 // --- Progression API ---
 app.get('/api/progression/:className/:level', authMiddleware, (req, res) => {
   const { className, level } = req.params;
@@ -179,5 +191,5 @@ app.get('/api/health', (req, res) => res.send('ok'));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur JDR démarré sur le port ${PORT}`);
-  console.log(`${allSpells.length} sorts | ${Object.keys(allRaces).length} races | ${Object.keys(allClasses).length} classes | ${Object.keys(allWeapons).length} armes | ${allArmor.length} armures | ${allBackgrounds.length} historiques | ${allConditions.length} conditions chargés`);
+  console.log(`${allSpells.length} sorts | ${Object.keys(allRaces).length} races | ${Object.keys(allClasses).length} classes | ${Object.keys(allWeapons.weapons).length} armes | ${allArmor.length} armures | ${allBackgrounds.length} historiques | ${allConditions.length} conditions | ${allLanguages.length} langues | ${allPotions.length} potions chargés`);
 });
