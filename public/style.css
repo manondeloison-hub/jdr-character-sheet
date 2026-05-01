@@ -3221,7 +3221,8 @@ main {
 /* Equipment modal armor info */
 .em-armor-info {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: rgba(244,197,66,0.06);
@@ -3457,6 +3458,29 @@ main {
   font-size: 0.8rem;
   color: var(--gold);
 }
+
+/* --- Weapon proficiency badge --- */
+.wtag-danger { background: rgba(231,76,60,0.18); color: var(--danger); border: 1px solid rgba(231,76,60,0.4); }
+
+/* --- Background feature row --- */
+.bg-bonus-feature { margin-top: 0.25rem; border-top: 1px solid var(--border); padding-top: 0.35rem; }
+
+/* --- Armor picker --- */
+.em-armor-picker { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.25rem; }
+.em-armor-pick-btn {
+  padding: 0.25rem 0.5rem; border: 1px solid var(--border); border-radius: 4px;
+  background: var(--bg-input); color: var(--text); cursor: pointer; font-size: 0.78rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.1rem;
+  transition: border-color 0.15s;
+}
+.em-armor-pick-btn:hover { border-color: var(--gold); }
+.em-armor-pick-btn.selected { border-color: var(--gold); background: rgba(244,197,66,0.1); color: var(--gold); }
+.em-pick-ca { font-size: 0.7rem; color: var(--text-dim); }
+.em-armor-pick-btn.selected .em-pick-ca { color: var(--gold-dim); }
+
+/* --- Armor info extras --- */
+.em-armor-stealth { color: var(--danger); font-size: 0.82rem; }
+.em-armor-cost { color: var(--text-dim); font-size: 0.82rem; }
 
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }

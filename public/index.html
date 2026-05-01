@@ -48,7 +48,7 @@
           <span id="header-xp">0</span>
         </div>
         <button id="btn-level-up" class="btn-level-up hidden" title="Monter de niveau">⬆ Niveau</button>
-        <span class="header-build">v<span id="build-number">32</span></span>
+        <span class="header-build">v<span id="build-number">33</span></span>
       </div>
     </header>
 
@@ -702,7 +702,9 @@
         </div>
 
         <div class="wm-section hidden" id="em-armor-section">
-          <label class="wm-label">Catégorie d'armure</label>
+          <label class="wm-label">Choisir rapidement</label>
+          <div id="em-armor-picker" class="em-armor-picker"></div>
+          <label class="wm-label" style="margin-top:0.5rem">Catégorie d'armure</label>
           <select id="em-armor-cat" class="wm-select">
             <option value="">Choisir…</option>
             <option value="Légère">Légère</option>
@@ -723,6 +725,8 @@
           <div id="em-armor-info" class="em-armor-info hidden">
             <span id="em-armor-ca-display"></span>
             <span id="em-armor-dex-display"></span>
+            <span id="em-armor-stealth-display" class="em-armor-stealth"></span>
+            <span id="em-armor-cost-display" class="em-armor-cost"></span>
           </div>
         </div>
 

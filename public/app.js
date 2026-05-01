@@ -993,7 +993,7 @@
     ],
   };
 
-  const BACKGROUNDS_DATA = [
+  let BACKGROUNDS_DATA = [
     { name: 'Acolyte',   skills: ['Perspicacité', 'Religion'],      tools: ['Outils de calligraphe'],  toolChoice: null,                  equipment: 'Outils de calligraphe, livre de prières, symbole sacré, parchemin, robe, 8 po' },
     { name: 'Artisan',   skills: ['Investigation', 'Persuasion'],   tools: [],                          toolChoice: "Outils d'artisan",    equipment: "Outils d'artisan (au choix), 2 bourses, vêtements de voyageur, 32 po" },
     { name: 'Artiste',   skills: ['Acrobaties', 'Représentation'],  tools: [],                          toolChoice: 'Instruments de musique', equipment: 'Instrument de musique (au choix), 2 costumes, miroir, parfum, vêtements de voyageur, 11 po' },
@@ -1046,7 +1046,7 @@
     { key: 'shield', label: 'Bouclier',          icon: '🛡️' },
   ];
 
-  const ARMOR_CATEGORIES = {
+  let ARMOR_CATEGORIES = {
     'Légère':       [
       { name: 'Matelassée',  baseCA: 11, dex: 'full' },
       { name: 'Cuir',        baseCA: 11, dex: 'full' },
@@ -1199,6 +1199,20 @@
     if (armorRes.ok) armorCache = await armorRes.json();
     if (backgroundsRes.ok) backgroundsCache = await backgroundsRes.json();
     if (conditionsRes.ok) conditionsCache = await conditionsRes.json();
+    if (armorCache) {
+      ARMOR_CATEGORIES = {};
+      armorCache.filter(a => a.category !== 'Bouclier').forEach(a => {
+        if (!ARMOR_CATEGORIES[a.category]) ARMOR_CATEGORIES[a.category] = [];
+        ARMOR_CATEGORIES[a.category].push(a);
+      });
+    }
+    if (backgroundsCache) {
+      BACKGROUNDS_DATA = backgroundsCache.map(bg => ({
+        name: bg.name, skills: bg.skills, tools: bg.tools || [],
+        toolChoice: bg.toolChoice || null, equipment: bg.equipment,
+        feature: bg.feature || null, featureDesc: bg.featureDesc || null,
+      }));
+    }
   }
 
   async function loadApp() {
@@ -1760,7 +1774,8 @@
     el.innerHTML =
       '<div class="bg-bonus-row"><span class="bg-bonus-label">Compétences</span><span class="bg-bonus-val">' + bg.skills.join(', ') + '</span></div>' +
       '<div class="bg-bonus-row"><span class="bg-bonus-label">Outil</span><span class="bg-bonus-val">' + toolDisplay + '</span></div>' +
-      '<div class="bg-bonus-row"><span class="bg-bonus-label">Équipement</span><span class="bg-bonus-val bg-bonus-equip">' + bg.equipment + '</span></div>';
+      '<div class="bg-bonus-row"><span class="bg-bonus-label">Équipement</span><span class="bg-bonus-val bg-bonus-equip">' + bg.equipment + '</span></div>' +
+      (bg.feature ? '<div class="bg-bonus-row bg-bonus-feature"><span class="bg-bonus-label">Capacité</span><span class="bg-bonus-val"><strong>' + bg.feature + '</strong>' + (bg.featureDesc ? ' — ' + bg.featureDesc : '') + '</span></div>' : '');
   }
 
   document.getElementById('btn-edit-mode').addEventListener('click', () => {
@@ -3523,6 +3538,7 @@
         (w.properties || []).forEach(p => { propTags += '<span class="wtag wtag-prop">' + p + '</span>'; });
         if (w.atkBonus)       propTags += '<span class="wtag wtag-bonus">' + w.atkBonus + '</span>';
         if (w.spells && w.spells.length) propTags += '<span class="wtag wtag-spell">✨ ' + w.spells.length + ' sort' + (w.spells.length > 1 ? 's' : '') + '</span>';
+        if (w.type && !hasWeaponProficiency(w.type)) propTags += '<span class="wtag wtag-danger">Non maîtrisé</span>';
 
         const row = document.createElement('div');
         row.className = 'weapon-inv-row' + (equipped ? ' weapon-equipped' : '');
@@ -3803,6 +3819,18 @@
   document.getElementById('potion-search').addEventListener('input', renderPotionList);
 
   // --- Emplacements main ---
+  function hasWeaponProficiency(typeName) {
+    if (!typeName) return true;
+    const wt = WEAPON_TYPES.find(t => t.name === typeName);
+    if (!wt) return true;
+    const profs = ((character.proficiencies && character.proficiencies.weapons) || []).map(p => p.toLowerCase());
+    if (profs.includes(typeName.toLowerCase())) return true;
+    const cat = wt.cat.toLowerCase();
+    if (profs.includes('armes de guerre')) return true;
+    if (profs.includes('armes courantes') && cat.includes('courante')) return true;
+    return false;
+  }
+
   function getWeaponByName(name) {
     return (character.inventoryWeapons || []).find(w => w.name === name) || null;
   }
@@ -4715,6 +4743,29 @@
     const slotType = document.getElementById('em-slot-type').value;
     document.getElementById('em-armor-section').classList.toggle('hidden', slotType !== 'chest');
     document.getElementById('em-shield-section').classList.toggle('hidden', slotType !== 'shield');
+    if (slotType === 'chest') renderEmArmorPicker();
+  }
+
+  function renderEmArmorPicker() {
+    const $picker = document.getElementById('em-armor-picker');
+    if (!$picker) return;
+    const source = armorCache ? armorCache.filter(a => a.category !== 'Bouclier') : Object.values(ARMOR_CATEGORIES).flat();
+    $picker.innerHTML = source.map(a =>
+      '<button type="button" class="em-armor-pick-btn" data-name="' + a.name + '" data-cat="' + a.category + '">' +
+        a.name + '<span class="em-pick-ca">CA ' + a.baseCA + '</span>' +
+      '</button>'
+    ).join('');
+    $picker.querySelectorAll('.em-armor-pick-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.dataset.name;
+        const cat  = btn.dataset.cat;
+        document.getElementById('em-name').value = name;
+        document.getElementById('em-armor-cat').value = cat;
+        updateEmArmorTypes(name);
+        $picker.querySelectorAll('.em-armor-pick-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
   }
 
   function updateEmArmorTypes(selectedName) {
@@ -4739,6 +4790,10 @@
       document.getElementById('em-armor-ca-display').textContent = 'CA de base : ' + armor.baseCA + bonusStr;
       const dexLabel = armor.dex === 'full' ? 'Dextérité : totale' : armor.dex === 'max2' ? 'Dextérité : max +2' : 'Dextérité : aucune';
       document.getElementById('em-armor-dex-display').textContent = dexLabel;
+      const stealthEl = document.getElementById('em-armor-stealth-display');
+      if (stealthEl) stealthEl.textContent = armor.stealth ? '⚠️ Désavantage Discrétion' : '';
+      const costEl = document.getElementById('em-armor-cost-display');
+      if (costEl) costEl.textContent = armor.cost ? armor.cost + (armor.strength ? ' · FOR ' + armor.strength + ' min.' : '') : '';
     } else {
       $info.classList.add('hidden');
     }
