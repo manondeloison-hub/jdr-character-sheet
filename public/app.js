@@ -32,181 +32,15 @@
     { name: 'Tromperie', ability: 'charisma' },
   ];
 
-  // Bonus raciaux D&D 5e (valeur normalisée en minuscules)
-  const RACIAL_BONUSES = {
-    'haute-elfe':            { dexterity: 2, intelligence: 1 },
-    'high elf':              { dexterity: 2, intelligence: 1 },
-    'elfe des bois':         { dexterity: 2, wisdom: 1 },
-    'wood elf':              { dexterity: 2, wisdom: 1 },
-    'elfe noir':             { dexterity: 2, charisma: 1 },
-    'drow':                  { dexterity: 2, charisma: 1 },
-    'elfe':                  { dexterity: 2 },
-    'elf':                   { dexterity: 2 },
-    'nain des collines':     { constitution: 2, wisdom: 1 },
-    'hill dwarf':            { constitution: 2, wisdom: 1 },
-    'nain des montagnes':    { constitution: 2, strength: 2 },
-    'mountain dwarf':        { constitution: 2, strength: 2 },
-    'nain':                  { constitution: 2 },
-    'dwarf':                 { constitution: 2 },
-    'humain':                { strength: 1, dexterity: 1, constitution: 1, intelligence: 1, wisdom: 1, charisma: 1 },
-    'human':                 { strength: 1, dexterity: 1, constitution: 1, intelligence: 1, wisdom: 1, charisma: 1 },
-    'halfelin pied-léger':   { dexterity: 2, charisma: 1 },
-    'lightfoot halfling':    { dexterity: 2, charisma: 1 },
-    'halfelin robuste':      { dexterity: 2, constitution: 1 },
-    'stout halfling':        { dexterity: 2, constitution: 1 },
-    'halfelin':              { dexterity: 2 },
-    'halfling':              { dexterity: 2 },
-    'gnome des roches':      { intelligence: 2, constitution: 1 },
-    'rock gnome':            { intelligence: 2, constitution: 1 },
-    'gnome des forêts':      { intelligence: 2, dexterity: 1 },
-    'forest gnome':          { intelligence: 2, dexterity: 1 },
-    'gnome':                 { intelligence: 2 },
-    'demi-elfe':             { charisma: 2 },
-    'half-elf':              { charisma: 2 },
-    'demi-orc':              { strength: 2, constitution: 1 },
-    'half-orc':              { strength: 2, constitution: 1 },
-    'tieffelin':             { intelligence: 1, charisma: 2 },
-    'tiefling':              { intelligence: 1, charisma: 2 },
-    'draconide':             { strength: 2, charisma: 1 },
-    'dragonborn':            { strength: 2, charisma: 1 },
+  const RACE_ALIASES = {
+    'high elf': 'haute-elfe', 'wood elf': 'elfe des bois', 'drow': 'elfe noir',
+    'elf': 'elfe', 'hill dwarf': 'nain des collines', 'mountain dwarf': 'nain des montagnes',
+    'dwarf': 'nain', 'human': 'humain', 'lightfoot halfling': 'halfelin pied-léger',
+    'stout halfling': 'halfelin robuste', 'halfling': 'halfelin',
+    'rock gnome': 'gnome des roches', 'forest gnome': 'gnome des forêts',
+    'half-elf': 'demi-elfe', 'half-orc': 'demi-orc',
+    'tiefling': 'tieffelin', 'dragonborn': 'draconide',
   };
-
-  const RACIAL_TRAITS = {
-    'haute-elfe': [
-      'Vision dans le noir (60 pi)',
-      'Sens aiguisés (maîtrise Perception)',
-      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
-      'Transe (méditation 4h remplace sommeil)',
-      'Maîtrise des armes elfes',
-      'Langue supplémentaire',
-      'Tour de magie supplémentaire (Intelligence)',
-    ],
-    'elfe des bois': [
-      'Vision dans le noir (60 pi)',
-      'Sens aiguisés (maîtrise Perception)',
-      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
-      'Transe (méditation 4h remplace sommeil)',
-      'Maîtrise des armes elfes',
-      'Vitesse accrue (35 pi)',
-      'Camouflage naturel (se cacher dans la nature)',
-    ],
-    'elfe noir': [
-      'Vision supérieure dans le noir (120 pi)',
-      'Sens aiguisés (maîtrise Perception)',
-      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
-      'Transe (méditation 4h remplace sommeil)',
-      'Magie drow (sorts innés)',
-      'Maîtrise des armes drows',
-      'Sensibilité à la lumière du soleil',
-    ],
-    'elfe': [
-      'Vision dans le noir (60 pi)',
-      'Sens aiguisés (maîtrise Perception)',
-      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
-      'Transe (méditation 4h remplace sommeil)',
-    ],
-    'nain des collines': [
-      'Vision dans le noir (60 pi)',
-      'Résistance naine (avantage contre poison, résistance dégâts poison)',
-      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
-      'Maîtrise des outils (forgeron, brasseur ou maçon)',
-      'Connaissance de la pierre',
-      'Ténacité naine (+1 PV par niveau)',
-    ],
-    'nain des montagnes': [
-      'Vision dans le noir (60 pi)',
-      'Résistance naine (avantage contre poison, résistance dégâts poison)',
-      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
-      'Maîtrise des outils (forgeron, brasseur ou maçon)',
-      'Connaissance de la pierre',
-      'Formation aux armures naines (armures légères et intermédiaires)',
-    ],
-    'nain': [
-      'Vision dans le noir (60 pi)',
-      'Résistance naine (avantage contre poison, résistance dégâts poison)',
-      'Résistance au combat (maîtrise armes de guerre naines, haches de guerre, hachettes, marteaux légers, marteaux de guerre)',
-      'Maîtrise des outils (forgeron, brasseur ou maçon)',
-      'Connaissance de la pierre',
-    ],
-    'humain': [
-      'Langue supplémentaire',
-    ],
-    'halfelin pied-léger': [
-      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
-      'Brave (avantage contre l\'état effrayé)',
-      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
-      'Discrétion naturelle (se cacher derrière une créature plus grande)',
-    ],
-    'halfelin robuste': [
-      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
-      'Brave (avantage contre l\'état effrayé)',
-      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
-      'Résistance robuste (avantage contre poison, résistance dégâts poison)',
-    ],
-    'halfelin': [
-      'Chanceux (relancer les 1 sur attaque, jet de caractéristique ou sauvegarde)',
-      'Brave (avantage contre l\'état effrayé)',
-      'Agilité halfeline (traverser l\'espace d\'une créature plus grande)',
-    ],
-    'gnome des roches': [
-      'Vision dans le noir (60 pi)',
-      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
-      'Connaissance des machines (maîtrise outils de bricoleur)',
-      'Trafiquant (construire petits automates)',
-    ],
-    'gnome des forêts': [
-      'Vision dans le noir (60 pi)',
-      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
-      'Illusion naturelle (tour de magie illusion mineure)',
-      'Parler aux bêtes (communiquer avec petits animaux)',
-    ],
-    'gnome': [
-      'Vision dans le noir (60 pi)',
-      'Ruse gnome (avantage en Intelligence, Sagesse et Charisme contre magie)',
-    ],
-    'demi-elfe': [
-      'Vision dans le noir (60 pi)',
-      'Ascendance féerique (avantage contre charme, immunité sommeil magique)',
-      'Polyvalent (deux maîtrises de compétences au choix)',
-      'Langue supplémentaire',
-    ],
-    'demi-orc': [
-      'Vision dans le noir (60 pi)',
-      'Menaçant (maîtrise Intimidation)',
-      'Endurance implacable (tomber à 1 PV au lieu de 0, une fois par repos long)',
-      'Attaques sauvages (un dé de dégâts supplémentaire sur coup critique)',
-    ],
-    'tieffelin': [
-      'Vision dans le noir (60 pi)',
-      'Résistance infernale (résistance dégâts de feu)',
-      'Ascendance infernale (sorts innés : thaumaturgie, flammes de l\'enfer, ténèbres)',
-    ],
-    'draconide': [
-      'Ascendance draconique (type de dégâts selon couleur du dragon)',
-      'Souffle draconique (arme de souffle selon ascendance)',
-      'Résistance aux dégâts (résistance selon ascendance)',
-    ],
-  };
-
-  // English aliases for RACIAL_TRAITS
-  RACIAL_TRAITS['high elf']          = RACIAL_TRAITS['haute-elfe'];
-  RACIAL_TRAITS['wood elf']          = RACIAL_TRAITS['elfe des bois'];
-  RACIAL_TRAITS['drow']              = RACIAL_TRAITS['elfe noir'];
-  RACIAL_TRAITS['elf']               = RACIAL_TRAITS['elfe'];
-  RACIAL_TRAITS['hill dwarf']        = RACIAL_TRAITS['nain des collines'];
-  RACIAL_TRAITS['mountain dwarf']    = RACIAL_TRAITS['nain des montagnes'];
-  RACIAL_TRAITS['dwarf']             = RACIAL_TRAITS['nain'];
-  RACIAL_TRAITS['human']             = RACIAL_TRAITS['humain'];
-  RACIAL_TRAITS['lightfoot halfling']= RACIAL_TRAITS['halfelin pied-léger'];
-  RACIAL_TRAITS['stout halfling']    = RACIAL_TRAITS['halfelin robuste'];
-  RACIAL_TRAITS['halfling']          = RACIAL_TRAITS['halfelin'];
-  RACIAL_TRAITS['rock gnome']        = RACIAL_TRAITS['gnome des roches'];
-  RACIAL_TRAITS['forest gnome']      = RACIAL_TRAITS['gnome des forêts'];
-  RACIAL_TRAITS['gnome']             = RACIAL_TRAITS['gnome'];
-  RACIAL_TRAITS['half-elf']          = RACIAL_TRAITS['demi-elfe'];
-  RACIAL_TRAITS['half-orc']          = RACIAL_TRAITS['demi-orc'];
-  RACIAL_TRAITS['tiefling']          = RACIAL_TRAITS['tieffelin'];
-  RACIAL_TRAITS['dragonborn']        = RACIAL_TRAITS['draconide'];
 
   // ---- Capacités de classe D&D 5e ----
   // t: 'auto' | 'choice' | 'multi' | 'asi' | 'multi-more'
@@ -1267,6 +1101,8 @@
   // --- State ---
   let character = null;
   let spellsCache = null;
+  let racesCache = null;
+  let classesCache = null;
   let saveTimeout = null;
   let editMode = false;
   let consumablesCollapsed = true;
@@ -1337,7 +1173,17 @@
     loadApp();
   });
 
+  async function loadStaticData() {
+    const [racesRes, classesRes] = await Promise.all([
+      apiFetch('/api/races'),
+      apiFetch('/api/classes'),
+    ]);
+    if (racesRes.ok) racesCache = await racesRes.json();
+    if (classesRes.ok) classesCache = await classesRes.json();
+  }
+
   async function loadApp() {
+    await loadStaticData();
     const res = await apiFetch('/api/character');
     if (!res.ok) {
       localStorage.removeItem('jdr-token');
@@ -1428,14 +1274,22 @@
     return Math.floor((level - 1) / 4) + 2;
   }
 
+  function resolveRaceKey(race) {
+    if (!race) return null;
+    const key = race.toLowerCase().trim();
+    return RACE_ALIASES[key] || key;
+  }
+
   function getRacialBonus(race) {
-    if (!race) return {};
-    return RACIAL_BONUSES[race.toLowerCase().trim()] || {};
+    if (!racesCache || !race) return {};
+    const data = racesCache[resolveRaceKey(race)];
+    return data ? (data.bonuses || {}) : {};
   }
 
   function getRacialTraits(race) {
-    if (!race) return [];
-    return RACIAL_TRAITS[race.toLowerCase().trim()] || [];
+    if (!racesCache || !race) return [];
+    const data = racesCache[resolveRaceKey(race)];
+    return data ? (data.traits || []).map(t => t.name) : [];
   }
 
   function recalcStats() {

@@ -1,0 +1,797 @@
+{
+  "barbare": {
+    "name": "Barbare",
+    "hitDie": 12,
+    "primaryAbility": "Force",
+    "savingThrows": ["strength", "constitution"],
+    "armorProf": ["armures légères", "armures intermédiaires", "boucliers"],
+    "weaponProf": ["armes courantes", "armes de guerre"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Athlétisme", "Dressage", "Intimidation", "Nature", "Perception", "Survie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Rage",
+        "desc": "Au combat, vous vous battez avec une férocité primitive. Par une action bonus, vous entrez en état de rage pendant 1 minute. Pendant la rage, vous avez l'avantage aux jets de caractéristique et jets d'attaque utilisant la Force, vous obtenez un bonus aux jets de dégâts des attaques de corps à corps utilisant la Force (+2 aux niveaux 1-8, +3 aux niveaux 9-15, +4 aux niveaux 16-20), et vous êtes résistant aux dégâts contondants, perforants et tranchants. La rage se termine si vous êtes inconscient, si votre tour se passe sans que vous ayez attaqué une créature hostile ni subi de dégâts, ou si vous y mettez fin par une action bonus. Vous pouvez utiliser la Rage 2 fois par repos long (progressant jusqu'à illimitée au niveau 20)."
+      },
+      {
+        "level": 1,
+        "name": "Défense sans armure",
+        "desc": "Lorsque vous ne portez aucune armure, votre Classe d'Armure est égale à 10 + votre modificateur de Dextérité + votre modificateur de Constitution. Vous pouvez utiliser un bouclier et bénéficier de cette capacité."
+      },
+      {
+        "level": 2,
+        "name": "Attaque téméraire",
+        "desc": "À partir du niveau 2, vous pouvez tout mettre dans une attaque, en ignorant les menaces qui pèsent sur vous. Lorsque vous effectuez votre première attaque lors de votre tour, vous pouvez décider d'attaquer de façon téméraire. Vous avez l'avantage aux jets d'attaque de corps à corps utilisant la Force durant ce tour, mais les jets d'attaque effectués contre vous ont l'avantage jusqu'au début de votre prochain tour."
+      },
+      {
+        "level": 2,
+        "name": "Sens du danger",
+        "desc": "Au niveau 2, vous avez un sens aiguisé qui vous permet de percevoir les choses qui ne semblent pas naturelles dans votre environnement. Vous avez l'avantage aux jets de sauvegarde de Dextérité contre les effets que vous pouvez voir (comme les pièges et les sorts). Pour bénéficier de cet avantage, vous ne devez pas être aveuglé, assourdi ou incapable d'agir."
+      },
+      {
+        "level": 3,
+        "name": "Voie primitive",
+        "desc": "Au niveau 3, vous choisissez une voie qui façonne la nature de votre rage. Choisissez la Voie du Berserker, la Voie du Guerrier Totem ou la Voie de la Magie Sauvage. Chaque voie est détaillée à la fin de la description de la classe. Cette voie vous confère des capacités aux niveaux 3, 6, 10 et 14.\n\n**Voie du Berserker :** Lorsque vous entrez en rage, vous pouvez entrer dans un état de frénésie jusqu'à la fin de votre rage. Si vous le faites, pendant votre rage, vous pouvez effectuer une unique attaque de corps à corps en tant qu'action bonus à chacun de vos tours. À la fin de votre rage, vous souffrez d'un niveau d'épuisement. Au niveau 6, vous ne pouvez pas être charmé ou effrayé pendant votre rage ; si vous l'étiez avant d'entrer en rage, cet état est suspendu le temps de la rage. Au niveau 10, si une créature tente de vous effrayer ou de vous charmer, elle doit réussir un jet de sauvegarde de Sagesse (DD 8 + bonus de maîtrise + mod. Charisme) ou subit cet état à son tour. Au niveau 14, lorsque vous atteignez les 0 points de vie mais n'êtes pas tué net, faites un jet de sauvegarde de Constitution (DD 10). En cas de succès, vous tombez à 1 point de vie.\n\n**Voie du Guerrier Totem :** Choisissez un animal totem (aigle, ours, loup) pour bénéficier de capacités surnaturelles. Au niveau 3, ours : résistance à tous les dégâts sauf psychiques pendant la rage ; aigle : à moins d'armure lourde, fuite sans attaque d'opportunité pendant la rage + avantage à Perception avec la vue ; loup : pendant la rage, vos alliés ont l'avantage aux attaques de corps à corps contre les créatures à 1,5 m de vous. Au niveau 6 : ours : porter le double du poids normal et forcer l'avantage aux autres sur les vôtres ; aigle : vous bénéficiez d'une vitesse de vol pendant la rage ; loup : vous pouvez utiliser votre action bonus pour renverser une créature grande ou plus petite lors d'une frappe. Au niveau 10 : accès à l'esprit de l'animal. Au niveau 14 : esprit puissant de l'animal totem.\n\n**Voie de la Magie Sauvage :** Au niveau 3, Détection de la magie : vous pouvez lancer détection de la magie à volonté, sans emplacement de sort. Surge de magie sauvage : à chaque fois que vous entrez en rage, un effet aléatoire de magie sauvage peut se produire."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Vous ne pouvez pas dépasser 20 avec cette capacité. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Attaque supplémentaire",
+        "desc": "À partir du niveau 5, vous pouvez attaquer deux fois, au lieu d'une seule fois, chaque fois que vous faites l'action Attaquer lors de votre tour."
+      },
+      {
+        "level": 5,
+        "name": "Déplacement rapide",
+        "desc": "À partir du niveau 5, votre vitesse augmente de 3 mètres quand vous ne portez pas d'armure lourde."
+      },
+      {
+        "level": 7,
+        "name": "Instinct sauvage",
+        "desc": "À partir du niveau 7, vos instincts sont tellement affinés que vous avez l'avantage aux jets d'initiative. De plus, si vous êtes surpris au début du combat et que vous n'êtes pas incapacité, vous pouvez agir normalement lors de votre premier tour si vous entrez en rage avant de faire quoi que ce soit."
+      },
+      {
+        "level": 9,
+        "name": "Critique brutal",
+        "desc": "À partir du niveau 9, vous pouvez faire rouler un dé de dégâts de l'arme supplémentaire lors d'un coup critique (en plus des dés supplémentaires habituels). Vous lancez deux dés supplémentaires au niveau 13, et trois au niveau 17."
+      },
+      {
+        "level": 11,
+        "name": "Rage implacable",
+        "desc": "À partir du niveau 11, votre rage peut vous maintenir en vie malgré de terribles blessures. Si vous tombez à 0 point de vie pendant votre rage et n'êtes pas tué net, vous pouvez faire un jet de sauvegarde de Constitution DD 10. En cas de succès, vous tombez à 1 point de vie. Chaque fois que vous utilisez cette capacité après la première, le DD augmente de 5. Lorsque vous terminez un repos court ou long, le DD revient à 10."
+      },
+      {
+        "level": 15,
+        "name": "Rage persistante",
+        "desc": "À partir du niveau 15, votre rage est si féroce qu'elle ne prend fin prématurément que si vous devenez inconscient ou si vous y mettez fin vous-même."
+      },
+      {
+        "level": 18,
+        "name": "Puissance indomptable",
+        "desc": "À partir du niveau 18, si votre total pour un jet de caractéristique de Force est inférieur à votre valeur de Force, vous pouvez utiliser cette valeur en remplacement du total."
+      },
+      {
+        "level": 20,
+        "name": "Champion primitif",
+        "desc": "Au niveau 20, vous incarnez la puissance de la nature sauvage. Vos valeurs de Force et de Constitution augmentent chacune de 4. Votre maximum pour ces caractéristiques est maintenant de 24."
+      }
+    ]
+  },
+  "barde": {
+    "name": "Barde",
+    "hitDie": 8,
+    "primaryAbility": "Charisme",
+    "savingThrows": ["dexterity", "charisma"],
+    "armorProf": ["armures légères"],
+    "weaponProf": ["armes courantes", "arbalète de poing", "épée courte", "épée longue", "rapière"],
+    "toolProf": ["trois instruments de musique au choix"],
+    "skillChoices": {
+      "count": 3,
+      "from": ["Acrobaties", "Athlétisme", "Discrétion", "Dressage", "Escamotage", "Histoire", "Intimidation", "Intuition", "Investigation", "Médecine", "Nature", "Perception", "Persuasion", "Religion", "Représentation", "Survie", "Tromperie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Incantation",
+        "desc": "Vous avez appris à défaire la trame de la réalité pour plier la magie à votre volonté. Votre magie est canalisée par votre Charisme. Le DD de sauvegarde de vos sorts est égal à 8 + votre bonus de maîtrise + votre modificateur de Charisme. Votre bonus d'attaque de sort est égal à votre bonus de maîtrise + votre modificateur de Charisme. Vous connaissez 2 sorts mineurs au niveau 1 (jusqu'à 4 au niveau 10). Vous connaissez 4 sorts de niveau 1 au départ, et en apprenez de nouveaux à chaque niveau. Vous pouvez utiliser n'importe quel instrument de musique comme focaliseur arcanique."
+      },
+      {
+        "level": 1,
+        "name": "Inspiration bardique",
+        "desc": "Par une action bonus, vous pouvez inspirer une autre créature à portée de voix de 18 mètres qui peut vous voir et vous entendre. Cette créature reçoit un dé d'Inspiration bardique : un d6 (d8 au niveau 5, d10 au niveau 10, d12 au niveau 15). Dans les 10 minutes suivantes, la créature peut lancer ce dé et ajouter le résultat à un jet de caractéristique, d'attaque ou de sauvegarde qu'elle effectue. Cette décision peut être prise après le jet mais avant que le MJ annonce le résultat. Une fois le dé utilisé, il est perdu. Une créature ne peut avoir qu'un seul dé d'Inspiration bardique à la fois. Vous pouvez utiliser cette capacité un nombre de fois égal à votre modificateur de Charisme (minimum 1) par repos long. Au niveau 5, vous regagnez les utilisations après un repos court ou long."
+      },
+      {
+        "level": 2,
+        "name": "Touche-à-tout",
+        "desc": "À partir du niveau 2, vous pouvez ajouter la moitié de votre bonus de maîtrise (arrondi à l'inférieur) à tout jet de caractéristique qui n'inclut pas déjà votre bonus de maîtrise."
+      },
+      {
+        "level": 2,
+        "name": "Chant reposant",
+        "desc": "À partir du niveau 2, vous pouvez user de musique ou d'oraisons apaisantes pour aider à revigorer vos alliés blessés pendant un repos court. Si vous ou des créatures amicales qui peuvent vous entendre récupèrent des points de vie à la fin du repos court en dépensant un ou plusieurs dés de vie, chacune de ces créatures récupère 1d6 points de vie supplémentaires. Le montant supplémentaire passe à 1d8 au niveau 9, 1d10 au niveau 13 et 1d12 au niveau 17."
+      },
+      {
+        "level": 3,
+        "name": "Expertise",
+        "desc": "Au niveau 3, choisissez deux de vos maîtrises de compétences. Votre bonus de maîtrise est doublé pour tout jet de caractéristique utilisant l'une de ces compétences. Au niveau 10, vous pouvez choisir deux maîtrises supplémentaires."
+      },
+      {
+        "level": 3,
+        "name": "Collège bardique",
+        "desc": "Au niveau 3, vous plongez dans les techniques avancées d'un collège bardique de votre choix.\n\n**Collège du Savoir :** Maîtrises supplémentaires : choisissez 3 compétences supplémentaires. Mots cinglants (niveau 3) : lorsqu'une créature à 18 m de vous que vous pouvez voir effectue un jet d'attaque, de caractéristique ou de dégâts, utilisez votre réaction et dépensez une Inspiration bardique pour soustraire le résultat du dé du résultat de la créature. Secrets magiques supplémentaires (niveau 6) : apprenez 2 sorts de n'importe quelle classe. Compétence hors pair (niveau 14) : lorsque vous effectuez un jet de caractéristique, vous pouvez utiliser l'Inspiration bardique. Lancez le dé et ajoutez le résultat au jet. Vous pouvez choisir de le faire après avoir lancé le dé, mais avant que le MD ne décide si vous avez réussi ou échoué.\n\n**Collège de la Vaillance :** Maîtrises supplémentaires : armures intermédiaires, boucliers, armes de guerre. Inspiration martiale (niveau 3) : les créatures qui reçoivent votre Inspiration bardique peuvent utiliser leur dé pour ajouter son résultat aux dégâts d'une attaque ou à leur CA contre une attaque. Attaque supplémentaire (niveau 6) : vous pouvez attaquer deux fois par action Attaquer. Magie de combat (niveau 14) : après avoir lancé un sort de barde avec une durée de lancement d'une action, vous pouvez faire une attaque d'arme par une action bonus."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Vous ne pouvez pas dépasser 20 avec cette capacité. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Source d'inspiration",
+        "desc": "À partir du niveau 5, vous regagnez vos utilisations d'Inspiration bardique dépensées après un repos court ou long."
+      },
+      {
+        "level": 6,
+        "name": "Contre-charme",
+        "desc": "À partir du niveau 6, vous maîtrisez les arts de la perturbation des effets de charme et d'effroi sur d'autres personnes. Par une action, vous commencez une représentation qui dure jusqu'à la fin de votre prochain tour. Pendant ce temps, toute créature amicale qui se trouve dans un rayon de 9 mètres de vous et qui peut vous voir ou vous entendre a l'avantage sur les jets de sauvegarde contre l'effet effrayé et contre l'effet charmé. Une créature qui est déjà charmée ou effrayée a l'avantage sur le prochain jet de sauvegarde contre cet effet."
+      },
+      {
+        "level": 10,
+        "name": "Secrets magiques",
+        "desc": "Au niveau 10, vous avez pillé des connaissances magiques dans une grande variété de disciplines. Choisissez deux sorts parmi n'importe quelle classe, y compris celui de barde. Un sort que vous choisissez doit être d'un niveau que vous pouvez lancer, ou un sort mineur. Les sorts choisis comptent comme des sorts de barde pour vous et sont inclus dans les sorts que vous connaissez. Vous apprenez deux sorts supplémentaires de n'importe quelle classe aux niveaux 14 et 18."
+      },
+      {
+        "level": 20,
+        "name": "Inspiration supérieure",
+        "desc": "Au niveau 20, lorsque vous lancez l'initiative et n'avez aucune utilisation d'Inspiration bardique, vous en récupérez une."
+      }
+    ]
+  },
+  "clerc": {
+    "name": "Clerc",
+    "hitDie": 8,
+    "primaryAbility": "Sagesse",
+    "savingThrows": ["wisdom", "charisma"],
+    "armorProf": ["armures légères", "armures intermédiaires", "boucliers"],
+    "weaponProf": ["armes courantes"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Histoire", "Intuition", "Médecine", "Persuasion", "Religion"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Incantation",
+        "desc": "En tant que conduit de la puissance divine, vous pouvez lancer des sorts de clerc. La Sagesse est votre caractéristique d'incantation. Le DD de vos sorts est égal à 8 + votre bonus de maîtrise + votre modificateur de Sagesse. Vous connaissez 3 sorts mineurs au niveau 1. Vous préparez la liste de sorts de clerc disponibles à partir de vos sorts de clerc connus. Pour ce faire, choisissez un nombre de sorts de clerc égal à votre modificateur de Sagesse + votre niveau de clerc (minimum 1 sort). Vous pouvez utiliser un symbole sacré comme focaliseur arcanique."
+      },
+      {
+        "level": 1,
+        "name": "Domaine divin",
+        "desc": "Choisissez un domaine divin lié à votre déité : Duperie, Forge, Guerre, Lumière, Nature, Savoir, Tempête ou Vie. Chaque domaine est décrit à la fin de la description de la classe et confère des sorts de domaine et autres capacités.\n\n**Domaine de la Duperie :** Sorts de domaine : charme-personne, déguisement (niv.1) ; image miroir, passage sans trace (niv.3) ; clignotement, dissipation de la magie (niv.5) ; métamorphose, porte dimensionnelle (niv.7) ; domination de personne, modification de mémoire (niv.9). Bénédiction de l'escroc (niv.1) : action pour conférer l'avantage aux jets de Discrétion à une créature consentante. Conduit divin : Invocation de réplique (niv.2) : créez un double parfait pendant 1 minute. Conduit divin : Linceul d'ombre (niv.6) : devenez invisible jusqu'à votre prochain tour. Frappe divine (niv.8) : 1d8 dégâts de poison supplémentaires (2d8 au niv.14). Réplique améliorée (niv.17) : créez jusqu'à 4 doubles.\n\n**Domaine de la Forge :** Sorts de domaine : châtiment calcinant, identification (niv.1) ; arme magique, métal brûlant (niv.3) ; arme élémentaire, protection contre une énergie (niv.5) ; fabrication, mur de feu (niv.7) ; animation d'objets, création (niv.9). Maîtrises supplémentaires (niv.1) : armures lourdes et outils de forgeron. Bénédiction de la forge (niv.1) : rendez une armure ou une arme magique (+1). Conduit divin : Bénédiction de l'artisan (niv.2) : créez un objet métallique non magique valant jusqu'à 100 po. Âme de la forge (niv.6) : résistance aux dégâts de feu, +1 CA en armure lourde. Frappe divine (niv.8) : 1d8 dégâts de feu supplémentaires. Saint de la forge et du feu (niv.17) : immunité feu, résistance contondant/perforant/tranchant non magique en armure lourde.\n\n**Domaine de la Guerre :** Sorts de domaine : bouclier de la foi, faveur divine (niv.1) ; arme magique, arme spirituelle (niv.3) ; aura du croisé, esprits gardiens (niv.5) ; liberté de mouvement, peau de pierre (niv.7) ; colonne de flamme, immobilisation de monstre (niv.9). Maîtrises supplémentaires (niv.1) : armes de guerre et armures lourdes. Prêtre de guerre (niv.1) : attaque bonus après action Attaquer, utilisations = modificateur de Sagesse. Conduit divin : Frappe guidée (niv.2) : +10 à un jet d'attaque. Conduit divin : Bénédiction du dieu de la guerre (niv.6) : +10 à un jet d'attaque d'un allié. Frappe divine (niv.8) : 1d8 dégâts du type de l'arme. Avatar de bataille (niv.17) : résistance aux dégâts contondants/perforants/tranchants non magiques.\n\n**Domaine de la Lumière :** Sorts de domaine : lueurs féeriques, mains brûlantes (niv.1) ; rayon ardent, sphère de feu (niv.3) ; boule de feu, lumière du jour (niv.5) ; gardien de la foi, mur de feu (niv.7) ; colonne de flamme, scrutation (niv.9). Sort mineur supplémentaire (niv.1) : lumière. Illumination protectrice (niv.1) : réaction pour imposer le désavantage à une attaque. Conduit divin : Radiance de l'aube (niv.2) : dissipe l'obscurité et inflige des dégâts radiants. Illumination améliorée (niv.6) : protégez aussi vos alliés. Incantation puissante (niv.8) : ajoutez le modificateur de Sagesse aux dégâts des sorts mineurs. Halo de lumière (niv.17) : émettez une lumière vive sur 18 m pendant 1 minute.\n\n**Domaine de la Nature :** Sorts de domaine : amitié avec les animaux, communication avec les animaux (niv.1) ; croissance d'épines, peau d'écorce (niv.3) ; croissance végétale, mur de vent (niv.5) ; domination de bête, liane avide (niv.7) ; fléau d'insectes, passage par les arbres (niv.9). Acolyte de la nature (niv.1) : un sort mineur de druide + maîtrise d'Athlétisme, Nature ou Survie. Maîtrise supplémentaire (niv.1) : armures lourdes. Conduit divin : Charme des animaux et des plantes (niv.2) : charmez bêtes et plantes. Atténuation des éléments (niv.6) : accordez la résistance aux dégâts élémentaires. Frappe divine (niv.8) : 1d8 dégâts de froid/feu/foudre. Maître de la nature (niv.17) : commandez les créatures charmées.\n\n**Domaine du Savoir :** Sorts de domaine : identification, injonction (niv.1) ; augure, suggestion (niv.3) ; antidétection, communication avec les morts (niv.5) ; confusion, œil magique (niv.7) ; mythes et légendes, scrutation (niv.9). Bénédictions du savoir (niv.1) : deux langues, expertise dans deux compétences. Conduit divin : Savoir ancestral (niv.2) : maîtrise temporaire d'une compétence. Conduit divin : Lecture des pensées (niv.6) : lisez les pensées superficielles. Incantation puissante (niv.8). Visions du passé (niv.17) : obtenez des visions liées à un objet ou lieu.\n\n**Domaine de la Tempête :** Sorts de domaine : nappe de brouillard, vague tonnante (niv.1) ; bourrasque, fracassement (niv.3) ; appel de la foudre, tempête de neige (niv.5) ; contrôle de l'eau, tempête de grêle (niv.7) ; fléau d'insectes, vague destructrice (niv.9). Maîtrises supplémentaires (niv.1) : armes de guerre et armures lourdes. Fureur de l'ouragan (niv.1) : infligez des dégâts de foudre ou de tonnerre en réaction. Conduit divin : Fureur destructrice (niv.2) : maximisez les dégâts de foudre/tonnerre. Frappe de l'éclair (niv.6) : repoussez une créature de 3 m. Frappe divine (niv.8) : 1d8 dégâts de tonnerre. Enfant de la tempête (niv.17) : vitesse de vol égale à votre vitesse au sol.\n\n**Domaine de la Vie :** Sorts de domaine : bénédiction, soins (niv.1) ; arme spirituelle, restauration partielle (niv.3) ; lueur d'espoir, retour à la vie (niv.5) ; gardien de la foi, protection contre la mort (niv.7) ; rappel à la vie, soins de groupe (niv.9). Maîtrise supplémentaire (niv.1) : armures lourdes. Disciple de la vie (niv.1) : +2 + niveau du sort aux soins prodigués. Conduit divin : Préservation de la vie (niv.2) : soignez 5 × niveau de clerc en PV répartis. Guérisseur béni (niv.6) : récupérez des PV quand vous soignez un allié. Frappe divine (niv.8) : 1d8 dégâts radiants. Guérison suprême (niv.17) : maximisez les jets de soins."
+      },
+      {
+        "level": 2,
+        "name": "Conduit divin",
+        "desc": "Au niveau 2, vous pouvez canaliser l'énergie divine directement à travers vous, en l'utilisant pour alimenter des effets magiques. Vous commencez avec deux effets : Renvoi des morts-vivants et un effet déterminé par votre domaine. Certains domaines octroient des effets supplémentaires quand vous montez de niveau. Lorsque vous utilisez votre Conduit divin, vous choisissez quel effet créer. Vous devez ensuite terminer un repos court ou long pour pouvoir utiliser de nouveau votre Conduit divin. Certains effets de Conduit divin nécessitent des jets de sauvegarde. DD = 8 + bonus de maîtrise + modificateur de Sagesse. À partir du niveau 6, vous pouvez utiliser le Conduit divin deux fois entre deux repos; trois fois à partir du niveau 18."
+      },
+      {
+        "level": 2,
+        "name": "Conduit divin : Renvoi des morts-vivants",
+        "desc": "Par une action, vous brandissez votre symbole sacré et prononcez une prière contre les morts-vivants. Chaque mort-vivant qui peut vous voir ou vous entendre dans un rayon de 9 mètres doit effectuer un jet de sauvegarde de Sagesse. S'il échoue à ce jet de sauvegarde, le mort-vivant est renvoyé pendant 1 minute ou jusqu'à ce qu'il subisse des dégâts. Une créature renvoyée passe ses tours à essayer de s'éloigner le plus loin possible de vous et n'utilise que l'action Foncer. Au niveau 5 et au-delà, les morts-vivants qui échouent au jet de sauvegarde sont détruits si leur FP est inférieur ou égal au seuil indiqué dans le tableau."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Vous ne pouvez pas dépasser 20 avec cette capacité. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 10,
+        "name": "Intervention divine",
+        "desc": "À partir du niveau 10, vous pouvez faire appel à votre divinité pour qu'elle vous vienne en aide lorsque votre besoin est le plus grand. L'appel à votre divinité et la description de l'aide souhaitée constitue une action. Lancez un pourcentage (d100). Si vous obtenez un résultat inférieur ou égal à votre niveau de clerc, votre divinité intervient. Le MJ décide de la nature de l'intervention. Si l'intervention est accordée, vous ne pouvez pas utiliser cette capacité pendant 7 jours. Autrement, vous pouvez l'utiliser de nouveau après un repos long. Au niveau 20, l'intervention divine réussit automatiquement, sans nécessiter de lancer de dés."
+      }
+    ]
+  },
+  "druide": {
+    "name": "Druide",
+    "hitDie": 8,
+    "primaryAbility": "Sagesse",
+    "savingThrows": ["intelligence", "wisdom"],
+    "armorProf": ["armures légères (non métalliques)", "armures intermédiaires (non métalliques)", "boucliers (non métalliques)"],
+    "weaponProf": ["gourdin", "dague", "fléchette", "javeline", "masse d'armes", "bâton", "cimeterre", "fronde", "serpe", "lance"],
+    "toolProf": ["kit d'herboriste"],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Arcanes", "Dressage", "Intuition", "Médecine", "Nature", "Perception", "Religion", "Survie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Druidique",
+        "desc": "Vous connaissez le druidique, le langage secret des druides. Vous pouvez parler cette langue et l'utiliser pour laisser des messages cachés. Vous et les autres qui connaissent cette langue repérez automatiquement les messages de ce type. D'autres personnes remarquent la présence du message avec un jet de Sagesse (Perception) DD 15 réussi, mais ne peuvent le déchiffrer sans magie."
+      },
+      {
+        "level": 1,
+        "name": "Incantation",
+        "desc": "La magie des druides est sauvage et provient des forces naturelles. La Sagesse est votre caractéristique d'incantation. Le DD de vos sorts est égal à 8 + votre bonus de maîtrise + votre modificateur de Sagesse. Vous connaissez 2 sorts mineurs au niveau 1 (progressant jusqu'à 4). Vous préparez la liste de sorts disponibles chaque jour : choisissez un nombre égal à votre modificateur de Sagesse + votre niveau de druide. Vous pouvez utiliser un focaliseur druidique."
+      },
+      {
+        "level": 2,
+        "name": "Forme sauvage",
+        "desc": "À partir du niveau 2, vous pouvez utiliser votre action pour vous transformer par magie en une bête que vous avez déjà observée. Vous pouvez utiliser cette capacité deux fois et récupérez les utilisations dépensées après un repos court ou long. Votre niveau de druide détermine les bêtes que vous pouvez transformer : niveau 2 (FP 1/4, pas de vitesse de vol ou nage) ; niveau 4 (FP 1/2, pas de vol) ; niveau 8 (FP 1, vol possible). Vous gardez votre alignement, personnalité et valeurs d'Intelligence, Sagesse et Charisme. Vous adoptez les statistiques de la bête mais gardez vos maîtrises si elles sont meilleures. Vous ne pouvez pas lancer de sorts mais maintenez la concentration. La durée maximale est égale à la moitié de votre niveau druide. Vous revenez à votre forme normale si vous êtes inconscient ou si vos PV de bête tombent à 0 (l'excès de dégâts est transféré à votre forme normale)."
+      },
+      {
+        "level": 2,
+        "name": "Cercle druidique",
+        "desc": "Au niveau 2, vous vous affiliez à un cercle de druides. Choisissez le Cercle de la Lune ou le Cercle de la Terre.\n\n**Cercle de la Lune :** Forme sauvage de combat (niv.2) : transformez-vous par action bonus, récupérez des PV en dépensant des emplacements de sorts. Formes du cercle (niv.2) : FP jusqu'à 1 au niv.2, niv/3 au niv.6, élémentaires au niv.10 (2 utilisations). Frappe primitive (niv.6) : vos attaques en forme sauvage comptent comme magiques. Mille formes (niv.14) : lancez modification d'apparence à volonté.\n\n**Cercle de la Terre :** Sort mineur supplémentaire (niv.2). Récupération naturelle (niv.2) : récupérez des emplacements de sorts lors d'un repos court, total ≤ la moitié du niveau druide. Sorts de cercle (niv.3+) : sorts préparés supplémentaires selon le terrain choisi (arctique, désert, forêt, littoral, marais, montagne, Outreterre, plaine). Foulée tellurique (niv.6) : terrains difficiles non magiques ne coûtent pas de mouvement supplémentaire. Protégé de dame Nature (niv.10) : immunité charme/peur des fées/élémentaires, aux poisons et maladies. Sanctuaire de dame Nature (niv.14) : bêtes et plantes vous attaquant peuvent rater un jet de Sagesse."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Vous ne pouvez pas dépasser 20 avec cette capacité. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 18,
+        "name": "Jeunesse éternelle",
+        "desc": "À partir du niveau 18, la magie primal que vous puisez pour vous transformer prévient votre vieillissement. Pour chaque 10 années qui passent, votre corps ne vieillit que d'un an, et vous ne pouvez pas être vieilli magiquement."
+      },
+      {
+        "level": 18,
+        "name": "Incantation animale",
+        "desc": "À partir du niveau 18, vous pouvez lancer un grand nombre de vos sorts de druide sous votre Forme sauvage. Vous pouvez effectuer les composantes somatiques et verbales d'un sort de druide sous votre forme animale, mais vous ne pouvez pas fournir les composantes matérielles."
+      },
+      {
+        "level": 20,
+        "name": "Archidruide",
+        "desc": "Au niveau 20, vous pouvez utiliser votre Forme sauvage un nombre de fois illimité. De plus, vous pouvez ignorer les composantes verbales et somatiques de vos sorts de druide, ainsi que les composantes matérielles ne comportant ni valeur ni qui ne soient pas consommées par le sort."
+      }
+    ]
+  },
+  "guerrier": {
+    "name": "Guerrier",
+    "hitDie": 10,
+    "primaryAbility": "Force ou Dextérité",
+    "savingThrows": ["strength", "constitution"],
+    "armorProf": ["toutes les armures", "boucliers"],
+    "weaponProf": ["armes courantes", "armes de guerre"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Acrobaties", "Athlétisme", "Dressage", "Histoire", "Intimidation", "Intuition", "Perception", "Survie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Style de combat",
+        "desc": "Vous adoptez un style particulier de combat qui sera votre spécialité. Choisissez l'une des options suivantes : **Archerie** : +2 aux jets d'attaque à distance. **Arme à deux mains** : lorsque vous obtenez 1 ou 2 sur un dé de dégâts pour une attaque avec une arme de corps à corps tenue à deux mains, vous pouvez relancer ce dé. **Combat à deux armes** : lorsque vous combattez avec deux armes, ajoutez votre modificateur de caractéristique aux dégâts de la deuxième attaque. **Défense** : +1 à la CA tant que vous portez une armure. **Duel** : +2 aux jets de dégâts quand vous tenez une arme de corps à corps à une main et que l'autre main est vide. **Protection** : réaction pour imposer le désavantage au jet d'attaque d'une créature qui attaque une cible autre que vous à 1,5 m."
+      },
+      {
+        "level": 1,
+        "name": "Second souffle",
+        "desc": "Vous disposez d'une réserve d'endurance limitée que vous pouvez utiliser pour vous protéger. Par une action bonus, vous pouvez récupérer un nombre de points de vie égal à 1d10 + votre niveau de guerrier. Vous devez terminer un repos court ou long pour pouvoir utiliser de nouveau cette capacité."
+      },
+      {
+        "level": 2,
+        "name": "Fougue",
+        "desc": "À partir du niveau 2, lors de votre tour, vous pouvez effectuer une action supplémentaire en plus de votre action et action bonus habituelles. Une fois que vous utilisez cette capacité, vous devez terminer un repos court ou long avant de pouvoir l'utiliser à nouveau. À partir du niveau 17, vous pouvez utiliser Fougue deux fois entre deux repos."
+      },
+      {
+        "level": 3,
+        "name": "Archétype martial",
+        "desc": "Au niveau 3, vous choisissez un archétype qui reflète votre style et vos techniques de combat.\n\n**Champion :** Critique amélioré (niv.3) : coup critique sur 19-20. Athlète accompli (niv.7) : bonus de maîtrise aux jets de Force/Dex/Con non maîtrisés ; sauts améliorés. Style de combat supplémentaire (niv.10) : choisissez un deuxième style. Critique supérieur (niv.15) : coup critique sur 18-20. Survivant (niv.18) : si PV ≤ 50% du max en début de tour, récupérez 5 + modificateur de Constitution PV.\n\n**Maître de guerre :** Disciple martial (niv.3) : maîtrise d'un outil d'artisan. Supériorité martiale (niv.3) : 4 dés de supériorité (d8), apprenez 3 manœuvres parmi : Attaque menaçante, Attaque précise, Balayage, Croc-en-jambe, Désarmement, Diversion, Feinte, Fente, Instruction, Jeu de jambes défensif, Manœuvre tactique, Parade, Provocation, Regain, Repousser, Riposte. DD sauvegarde = 8 + bonus maîtrise + mod Force/Dex. Observation de l'ennemi (niv.7) : comparez 2 caractéristiques après 1 minute d'observation. Supériorité améliorée (niv.7) : dés passent à d10. Supériorité améliorée (niv.10) : +2 manœuvres, +1 dé. Implacable (niv.15) : regagnez 1 dé si vide à l'initiative. Supériorité améliorée (niv.18) : dés passent à d12.\n\n**Chevalier occulte :** Incantation (niv.3) : sorts d'abjuration et d'évocation (Intelligence). Lien avec une arme (niv.3) : liez-vous à une arme, invoquez-la par action bonus. Magie de guerre (niv.7) : lancez un sort mineur puis attaquez par action bonus. Frappe occulte (niv.10) : désavantage aux sauvegardes adverses. Charge arcanique (niv.15) : téléportez-vous de 9 m en utilisant Fougue. Magie de guerre améliorée (niv.18) : lancez n'importe quel sort puis attaquez par action bonus."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Vous ne pouvez pas dépasser 20 avec cette capacité. Répétée aux niveaux 6, 8, 12, 14, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Attaque supplémentaire",
+        "desc": "À partir du niveau 5, vous pouvez attaquer deux fois, au lieu d'une seule fois, chaque fois que vous faites l'action Attaquer lors de votre tour. Le nombre d'attaques passe à 3 au niveau 11 et à 4 au niveau 20."
+      },
+      {
+        "level": 9,
+        "name": "Inflexible",
+        "desc": "À partir du niveau 9, vous pouvez relancer un jet de sauvegarde que vous ratez. Si vous le faites, vous devez utiliser le nouveau résultat. Vous devez terminer un repos long avant de pouvoir utiliser de nouveau cette capacité. Au niveau 13, vous pouvez l'utiliser deux fois entre deux repos longs, et au niveau 17, trois fois."
+      }
+    ]
+  },
+  "moine": {
+    "name": "Moine",
+    "hitDie": 8,
+    "primaryAbility": "Dextérité et Sagesse",
+    "savingThrows": ["strength", "dexterity"],
+    "armorProf": [],
+    "weaponProf": ["armes courantes", "épée courte"],
+    "toolProf": ["un outil d'artisan ou un instrument de musique au choix"],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Acrobaties", "Athlétisme", "Discrétion", "Histoire", "Intuition", "Religion"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Défense sans armure",
+        "desc": "Lorsque vous ne portez ni armure ni bouclier, votre CA est égale à 10 + votre modificateur de Dextérité + votre modificateur de Sagesse."
+      },
+      {
+        "level": 1,
+        "name": "Arts martiaux",
+        "desc": "Votre pratique des arts martiaux vous confère la maîtrise des styles de combat utilisant les attaques à mains nues et les armes de moine. Vous pouvez utiliser la Dextérité à la place de la Force pour les jets d'attaque et de dégâts avec des attaques à mains nues et des armes de moine. Vous pouvez lancer un d4 à la place des dégâts normaux de votre attaque à mains nues ou arme de moine (ce dé augmente : d6 au niv.5, d8 au niv.11, d10 au niv.17). Quand vous utilisez l'action Attaquer avec une attaque à mains nues ou arme de moine, vous pouvez faire une attaque à mains nues par action bonus."
+      },
+      {
+        "level": 2,
+        "name": "Ki",
+        "desc": "À partir du niveau 2, votre entraînement vous permet d'exploiter la réserve mystique d'énergie en vous. Cette énergie est symbolisée par vos points de ki. Vous avez un nombre de points de ki égal à votre niveau de moine. Vous récupérez tous vos points de ki après un repos court ou long (30 minutes de méditation). Capacités de base : Défense patiente (1 ki) : action Esquiver en action bonus. Déluge de coups (1 ki) : deux attaques à mains nues en action bonus après l'action Attaquer. Déplacement aérien (1 ki) : action Se désengager ou Foncer en action bonus, et distance de saut doublée jusqu'à la fin du tour."
+      },
+      {
+        "level": 2,
+        "name": "Déplacement sans armure",
+        "desc": "À partir du niveau 2, votre vitesse augmente de 3 mètres lorsque vous ne portez pas d'armure ni de bouclier. Ce bonus passe à 4,5 m au niveau 9, 6 m au niveau 14 et 7,5 m au niveau 18. Au niveau 9, vous pouvez également vous déplacer sur des surfaces verticales et sur des liquides sans tomber durant votre déplacement."
+      },
+      {
+        "level": 3,
+        "name": "Tradition monastique",
+        "desc": "Au niveau 3, vous vous engagez dans une tradition monastique.\n\n**Voie de la Paume :** Technique de la paume (niv.3) : après Déluge de coups, imposez un effet : chute, repoussé de 4,5 m, ou aucune réaction jusqu'à fin du prochain tour. Plénitude physique (niv.6) : récupérez 3 × niveau moine PV par action (1/repos long). Tranquillité (niv.11) : effet sanctuaire après chaque repos long. Paume frémissante (niv.17) : 3 ki pour déclencher des vibrations mortelles.\n\n**Voie de l'Ombre :** Arts des ombres (niv.3) : 2 ki pour lancer ténèbres, vision dans le noir, passage sans trace ou silence; sort mineur illusion mineure. Foulée d'ombre (niv.6) : téléportez-vous 18 m dans zone de faible lumière. Linceul d'ombre (niv.11) : devenez invisible en faible lumière. Opportuniste (niv.17) : attaque de réaction si créature proche touchée par autrui.\n\n**Voie des Quatre Éléments :** Disciple des éléments (niv.3) : apprenez disciplines élémentaires (ki variable) : Lien élémentaire, Crochets du serpent de feu (1 ki), Frappe de cendres (2 ki), Fouet de l'onde (2 ki), Poing de l'air (2 ki), Poing des quatre tonnerres (2 ki), Ruée des esprits du vent (2 ki), Gong du sommet (3 ki, niv.6), Étreinte du vent du nord (3 ki, niv.6), Destrier des vents (4 ki, niv.11), Flammes du phénix (4 ki, niv.11), Posture de brume (4 ki, niv.11), Défense montagne éternelle (5 ki, niv.17), Torrent flammes voraces (5 ki, niv.17), Souffle hiver (6 ki, niv.17), Vague terre grondante (6 ki, niv.17)."
+      },
+      {
+        "level": 3,
+        "name": "Parade de projectiles",
+        "desc": "À partir du niveau 3, vous pouvez utiliser votre réaction pour dévier ou attraper le projectile lorsque vous êtes frappé par une attaque d'arme à distance. Lorsque vous faites cela, les dégâts que vous subissez sont réduits de 1d10 + votre modificateur de Dextérité + votre niveau de moine. Si vous ramenez les dégâts à 0, vous pouvez attraper le projectile si vous avez une main libre et dépenser 1 point de ki pour le relancer."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 4,
+        "name": "Chute ralentie",
+        "desc": "À partir du niveau 4, vous pouvez utiliser votre réaction lorsque vous tombez pour réduire les dégâts de chute que vous subissez d'un montant égal à cinq fois votre niveau de moine."
+      },
+      {
+        "level": 5,
+        "name": "Attaque supplémentaire",
+        "desc": "À partir du niveau 5, vous pouvez attaquer deux fois au lieu d'une seule fois chaque fois que vous faites l'action Attaquer lors de votre tour."
+      },
+      {
+        "level": 5,
+        "name": "Frappe étourdissante",
+        "desc": "À partir du niveau 5, vous pouvez interférer avec le flux de ki dans le corps d'un adversaire. Lorsque vous frappez une autre créature avec une attaque d'arme de corps à corps, vous pouvez dépenser 1 point de ki pour tenter une frappe étourdissante. La cible doit réussir un jet de sauvegarde de Constitution avec un DD égal à 8 + votre bonus de maîtrise + votre modificateur de Sagesse ou être étourdie jusqu'à la fin de votre prochain tour."
+      },
+      {
+        "level": 6,
+        "name": "Frappes de ki",
+        "desc": "À partir du niveau 6, vos attaques à mains nues sont considérées comme des attaques magiques pour ce qui est de surmonter les résistances et les immunités aux attaques et aux dégâts non magiques."
+      },
+      {
+        "level": 7,
+        "name": "Esquive totale",
+        "desc": "À partir du niveau 7, votre agilité instinctive vous permet d'esquiver certains effets de zone. Lorsque vous êtes soumis à un effet qui vous permet de faire un jet de sauvegarde de Dextérité pour ne subir que la moitié des dégâts, vous ne subissez aucun dégât si vous réussissez, et seulement la moitié si vous échouez."
+      },
+      {
+        "level": 7,
+        "name": "Sérénité",
+        "desc": "À partir du niveau 7, vous pouvez utiliser votre action pour mettre fin à un effet de charme ou de peur sur vous-même."
+      },
+      {
+        "level": 10,
+        "name": "Pureté physique",
+        "desc": "Au niveau 10, votre maîtrise du ki qui coule en vous vous rend immunisé aux maladies et aux poisons."
+      },
+      {
+        "level": 11,
+        "name": "Langue du soleil et de la lune",
+        "desc": "Au niveau 11, vous apprenez à toucher le ki des autres esprits et comprenez tous les langages parlés. De plus, toute créature qui peut comprendre un langage peut comprendre ce que vous dites."
+      },
+      {
+        "level": 13,
+        "name": "Âme de diamant",
+        "desc": "À partir du niveau 13, votre maîtrise du ki vous confère la maîtrise de tous les jets de sauvegarde. De plus, lorsque vous ratez un jet de sauvegarde, vous pouvez dépenser 1 point de ki pour le relancer et devez utiliser le nouveau résultat."
+      },
+      {
+        "level": 15,
+        "name": "Jeunesse éternelle",
+        "desc": "Au niveau 15, votre ki vous soutient si bien que vous ne souffrez plus des effets du vieillissement normal et ne pouvez pas être vieilli magiquement. Vous n'avez plus besoin de nourriture ni d'eau."
+      },
+      {
+        "level": 18,
+        "name": "Désertion de l'âme",
+        "desc": "Au niveau 18, vous pouvez projeter votre âme sur le plan astral. Dépensez 8 points de ki pour lancer projection astrale sans nécessiter de composantes matérielles. Avec 4 points de ki, vous devenez invisible pendant 1 minute et résistant à tous les dégâts sauf de Force."
+      },
+      {
+        "level": 20,
+        "name": "Perfection de l'être",
+        "desc": "Au niveau 20, lorsque vous lancez l'initiative et n'avez plus aucun point de ki, vous récupérez 4 points de ki."
+      }
+    ]
+  },
+  "occultiste": {
+    "name": "Occultiste",
+    "hitDie": 8,
+    "primaryAbility": "Charisme",
+    "savingThrows": ["wisdom", "charisma"],
+    "armorProf": ["armures légères"],
+    "weaponProf": ["armes courantes"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Arcanes", "Histoire", "Intimidation", "Investigation", "Nature", "Religion", "Tromperie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Patron d'Outremonde",
+        "desc": "Vous avez conclu un marché avec un être d'un autre monde qui vous octroie des pouvoirs magiques. Choisissez un patron : l'Archifée, le Fiélon, le Grand Ancien ou le Génie. Le patron vous confère des capacités aux niveaux 1, 6, 10 et 14, et des sorts de liste étendue.\n\n**L'Archifée :** Présence féerique (niv.1) : action, cube de 3 m, les créatures ratant un JS Sagesse sont charmées ou effrayées jusqu'à fin du prochain tour. Récupération après repos court/long. Sorts étendus : lueurs féeriques/sommeil (niv.1), apaisement des émotions/force fantasmagorique (niv.2), clignotement/croissance végétale (niv.3), domination de bête/invisibilité supérieure (niv.4), apparence trompeuse/domination de personne (niv.5). Échappatoire brumeuse (niv.6) : réaction, téléportez-vous 18 m et devenez invisible. Défenses captivantes (niv.10) : immunité aux charmes, retournez les tentatives de charme. Sombre délire (niv.14) : action, creature 18 m rate JS Sagesse ou est charmée/effrayée dans un univers illusoire.\n\n**Le Fiélon :** Bénédiction du Ténébreux (niv.1) : gagnez PV temporaires = modificateur Charisme + niveau occultiste quand vous réduisez une créature hostile à 0 PV. Sorts étendus : injonction/mains brûlantes (niv.1), cécité-surdité/rayon ardent (niv.2), boule de feu/nuage nauséabond (niv.3), bouclier de feu/mur de feu (niv.4), colonne de flamme/sanctification (niv.5). Chance du Ténébreux (niv.6) : ajoutez d10 après votre premier d20 (récupération après repos). Résistance fiélonne (niv.10) : choisissez une résistance aux dégâts. Traversée des Enfers (niv.14) : transportez une créature dans les plans inférieurs.\n\n**Le Grand Ancien :** Esprit éveillé (niv.1) : parlez télépathiquement aux créatures visibles à 9 m. Sorts étendus : fou rire de Tasha/murmures dissonants (niv.1), détection des pensées/force fantasmagorique (niv.2), clairvoyance/communication à distance (niv.3), domination de bête/tentacules noirs d'Evard (niv.4), domination de personne/télékinésie (niv.5). Protection entropique (niv.6) : réaction, imposez le désavantage à une attaque. Bouclier mental (niv.10) : protections mentales et résistance psychique. Asservissement (niv.14) : charmez un humanoïde de façon prolongée.\n\n**Le Génie (Dao/Djinn/Éfrit/Maride) :** Catalyseur de génie (niv.1) : focaliseur arcanique personnel pouvant servir d'espace de repos. Présent élémentaire (niv.6) : résistance élémentaire + vol 9 m. Sanctuaire du génie (niv.10) : faites entrer jusqu'à 5 créatures dans votre catalyseur. Souhait limité (niv.14) : reproduisez n'importe quel sort de niveau 6 ou inférieur."
+      },
+      {
+        "level": 1,
+        "name": "Magie de pacte",
+        "desc": "Votre recherche occulte vous a accordé des pouvoirs magiques. Votre caractéristique d'incantation est le Charisme. DD de sauvegarde = 8 + bonus de maîtrise + modificateur de Charisme. Vous connaissez 2 sorts mineurs au niveau 1 (jusqu'à 4 au niveau 10). Vous connaissez des sorts selon votre niveau et tous vos emplacements de sorts sont du même niveau (niveau 1 au départ). Vous récupérez tous vos emplacements après un repos court ou long. Le niveau des emplacements progresse (niveau 2 au niveau 3, niveau 3 au niveau 5, niveau 4 au niveau 7, niveau 5 au niveau 9) et le nombre d'emplacements augmente aussi."
+      },
+      {
+        "level": 2,
+        "name": "Manifestations occultes",
+        "desc": "Au fil de votre étude des savoirs occultes, vous avez déterré des manifestations occultes, des fragments de savoir interdit qui vous confèrent des capacités magiques permanentes. Au niveau 2, vous gagnez 2 manifestations de la liste (le nombre augmente aux niveaux suivants). Vous pouvez en remplacer une lorsque vous montez de niveau. Exemples notables : Armure d'ombres (lancer armure du mage à volonté) ; Vision du diable (voir dans les ténèbres à 36 m) ; Lance occulte (maléfice peut être utilisé comme action bonus) ; Livre des secrets anciens (accès aux rituels d'autres classes) ; Mille visages (altération de soi à volonté) ; Murmures de la tombe (parler aux morts à volonté) ; Aspect de la lune (pas besoin de sommeil, accès à communier avec la nature à volonté) ; Saut d'Outremonde (téléportation à 9 m par action bonus) ; Vigueur fiélonne (PV temporaires chaque jour) ; Vision de sorcier (conférez votre vision à votre familier)."
+      },
+      {
+        "level": 3,
+        "name": "Faveur de pacte",
+        "desc": "Au niveau 3, votre patron vous confère un don magique en échange de vos loyaux services. Choisissez parmi les options suivantes :\n\n**Pacte de la Chaîne :** Vous apprenez le sort appel de familier comme sort d'occultiste et il ne compte pas dans le nombre de sorts connus. Votre familier peut prendre les formes d'un esprit follet, diablotin, pseudodragon ou quasit. Votre familier peut utiliser sa réaction pour attaquer quand vous attaquez.\n\n**Pacte de la Lame :** Vous pouvez utiliser votre action pour créer une arme de pacte dans votre main libre. Vous pouvez choisir la forme, et elle disparaît si elle est éloignée de vous de plus de 1,5 m pendant plus d'une minute. Elle est considérée comme magique. Vous pouvez lier une arme magique par un rituel d'une heure.\n\n**Pacte du Grimoire :** Votre patron vous donne un grimoire appelé Livre des Ombres. Choisissez 3 sorts mineurs de n'importe quelle liste que vous pouvez lancer à volonté. Si perdu, recréez-le en 1 heure."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 11,
+        "name": "Arcanum mystique",
+        "desc": "Au niveau 11, votre patron vous confère un secret magique appelé arcanum. Choisissez un sort de niveau 6 dans la liste des sorts d'occultiste. Vous pouvez lancer ce sort une fois sans dépenser d'emplacement de sort. Vous devez terminer un repos long avant de pouvoir le faire à nouveau. Vous gagnez un autre sort de ce type à des niveaux supérieurs : niveau 7 au niveau 13, niveau 8 au niveau 15 et niveau 9 au niveau 17."
+      },
+      {
+        "level": 20,
+        "name": "Maître de l'occulte",
+        "desc": "Au niveau 20, vous pouvez puiser dans votre réserve intérieure de puissance mystique alors que vous suppliez votre patron de vous rendre vos emplacements de sorts dépensés. Vous pouvez passer 1 minute à prier votre patron magique pour récupérer tous vos emplacements de Magie de pacte dépensés. Vous devez terminer un repos long avant de pouvoir utiliser de nouveau cette capacité."
+      }
+    ]
+  },
+  "paladin": {
+    "name": "Paladin",
+    "hitDie": 10,
+    "primaryAbility": "Force et Charisme",
+    "savingThrows": ["wisdom", "charisma"],
+    "armorProf": ["toutes les armures", "boucliers"],
+    "weaponProf": ["armes courantes", "armes de guerre"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Athlétisme", "Intimidation", "Intuition", "Médecine", "Persuasion", "Religion"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Sens divin",
+        "desc": "La présence d'un mal puissant enregistre votre conscience comme un signal discordant. Par une action, vous pouvez ouvrir votre conscience pour détecter ces forces. Jusqu'à la fin de votre prochain tour, vous connaissez l'emplacement de tout céleste, fiélon ou mort-vivant dans un rayon de 18 mètres qui n'est pas derrière un abri total. Vous savez le type de tout être dont vous percevez la présence, mais pas son identité. Dans le même rayon, vous détectez aussi la présence de tout lieu ou objet consacré ou profané. Vous pouvez utiliser cette capacité un nombre de fois égal à 1 + votre modificateur de Charisme. Vous récupérez toutes les utilisations après un repos long."
+      },
+      {
+        "level": 1,
+        "name": "Imposition des mains",
+        "desc": "Votre contact béni peut guérir les blessures. Vous disposez d'une réserve de puissance curatrice qui se recharge lors d'un repos long. Avec cette réserve, vous pouvez restaurer un nombre total de points de vie égal à votre niveau de paladin × 5. Par une action, vous pouvez toucher une créature et puiser dans la réserve pour lui restaurer un nombre de points de vie jusqu'à concurrence du maximum restant dans votre réserve. Vous pouvez également dépenser 5 points de vie de votre réserve pour guérir la cible d'une maladie ou neutraliser un poison qui l'affecte. Cette capacité n'a pas d'effet sur les morts-vivants et les artificiciels."
+      },
+      {
+        "level": 2,
+        "name": "Style de combat",
+        "desc": "Choisissez un style de combat : Arme à deux mains (relancez 1 et 2 sur les dés de dégâts), Défense (+1 CA avec armure), Duel (+2 dégâts avec arme à une main seule), Protection (réaction pour imposer désavantage à une attaque contre un allié proche)."
+      },
+      {
+        "level": 2,
+        "name": "Incantation",
+        "desc": "À partir du niveau 2, vous avez appris à puiser dans la magie divine à travers la méditation et la prière. Le Charisme est votre caractéristique d'incantation. DD de sauvegarde = 8 + bonus de maîtrise + modificateur de Charisme. Vous préparez des sorts à partir de la liste de paladin, en nombre égal à votre modificateur de Charisme + votre niveau de paladin / 2 (arrondi à l'inférieur). Vous pouvez utiliser un symbole sacré comme focaliseur."
+      },
+      {
+        "level": 2,
+        "name": "Châtiment divin",
+        "desc": "Lorsque vous frappez une créature avec une arme de corps à corps, vous pouvez dépenser un emplacement de sort pour infliger des dégâts radiants supplémentaires à la cible. Les dégâts supplémentaires sont de 2d8 pour un emplacement de niveau 1, plus 1d8 pour chaque niveau de sort au-delà du premier, jusqu'à un maximum de 5d8. Les dégâts augmentent de 1d8 si la cible est un mort-vivant ou un fiélon, jusqu'à un maximum de 6d8."
+      },
+      {
+        "level": 3,
+        "name": "Santé divine",
+        "desc": "À partir du niveau 3, la magie divine qui coule dans vous vous immunise contre les maladies."
+      },
+      {
+        "level": 3,
+        "name": "Serment sacré",
+        "desc": "Lorsque vous atteignez le niveau 3, vous jurez le serment qui lie votre vie en tant que paladin. Choisissez le Serment de Dévotion, le Serment des Anciens ou le Serment de Vengeance.\n\n**Serment de Dévotion :** Sorts : protection contre le mal et le bien/sanctuaire (niv.3), restauration partielle/zone de vérité (niv.5), dissipation de la magie/lueur d'espoir (niv.9), gardien de la foi/liberté de mouvement (niv.13), colonne de flamme/communion (niv.17). Conduit divin : Arme sacrée (ajoutez Charisme aux attaques, lumière vive 6 m) et Renvoi des impies (morts-vivants/fiélons dans 9 m ratant un JS Sagesse sont renvoyés). Aura de dévotion (niv.7) : immunité au charme. Pureté de l'esprit (niv.15) : protection permanente contre le mal et le bien. Nimbe sacré (niv.20) : transformation rayonnante pendant 1 minute.\n\n**Serment des Anciens :** Sorts : communication avec les animaux/frappe piégeante (niv.3), foulée brumeuse/rayon de lune (niv.5), croissance végétale/protection contre une énergie (niv.9), peau de pierre/tempête de grêle (niv.13), communion avec la nature/passage par les arbres (niv.17). Conduit divin : Courroux de la nature (viande spectrales capturent une créature) et Renvoi des infidèles (féeriques/fiélons renvoyés). Aura de garde (niv.7) : résistance aux dégâts des sorts. Sentinelle immortelle (niv.15) : 1 fois, restez à 1 PV à la place de 0. Champion antique (niv.20) : transformation puissante pendant 1 minute.\n\n**Serment de Vengeance :** Sorts : fléau/marque du chasseur (niv.3), foulée brumeuse/immobilisation de personne (niv.5), hâte/protection contre une énergie (niv.9), bannissement/porte dimensionnelle (niv.13), immobilisation de monstre/scrutation (niv.17). Conduit divin : Conspuer l'ennemi (effrayez une créature 1 min) et Vœu d'hostilité (avantage aux attaques contre une créature). Vengeur implacable (niv.7) : déplacement gratuit après attaque d'opportunité réussie. Âme vengeresse (niv.15) : attaque de réaction contre une cible marquée. Ange de la vengeance (niv.20) : transformation avec ailes et aura terrifiante."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Attaque supplémentaire",
+        "desc": "À partir du niveau 5, vous pouvez attaquer deux fois, au lieu d'une seule fois, chaque fois que vous faites l'action Attaquer lors de votre tour."
+      },
+      {
+        "level": 6,
+        "name": "Aura de protection",
+        "desc": "À partir du niveau 6, chaque fois que vous ou une créature amicale dans un rayon de 3 mètres de vous devez faire un jet de sauvegarde, la créature reçoit un bonus égal à votre modificateur de Charisme (minimum +1). Vous devez être conscient pour accorder ce bonus. À partir du niveau 18, la portée de cette aura passe à 9 mètres."
+      },
+      {
+        "level": 10,
+        "name": "Aura de courage",
+        "desc": "À partir du niveau 10, vous et les créatures amicales dans un rayon de 3 mètres de vous ne pouvez pas être effrayés tant que vous êtes conscient. À partir du niveau 18, la portée de cette aura passe à 9 mètres."
+      },
+      {
+        "level": 11,
+        "name": "Châtiment divin amélioré",
+        "desc": "Au niveau 11, vous êtes tellement imprégné de la puissance juste que tous vos coups exercés au corps à corps portent avec eux la puissance divine. Chaque fois que vous frappez une créature avec une arme de corps à corps, la créature subit 1d8 dégâts radiants supplémentaires."
+      },
+      {
+        "level": 14,
+        "name": "Contact purifiant",
+        "desc": "À partir du niveau 14, vous pouvez utiliser votre action pour mettre fin à un sort sur vous-même ou sur une créature volontaire que vous touchez. Vous pouvez utiliser cette capacité un nombre de fois égal à votre modificateur de Charisme (minimum 1). Vous récupérez les utilisations dépensées lors d'un repos long."
+      }
+    ]
+  },
+  "rodeur": {
+    "name": "Rôdeur",
+    "hitDie": 10,
+    "primaryAbility": "Dextérité et Sagesse",
+    "savingThrows": ["strength", "dexterity"],
+    "armorProf": ["armures légères", "armures intermédiaires", "boucliers"],
+    "weaponProf": ["armes courantes", "armes de guerre"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 3,
+      "from": ["Athlétisme", "Discrétion", "Dressage", "Intuition", "Investigation", "Nature", "Perception", "Survie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Ennemi juré",
+        "desc": "Vous avez une expérience significative dans l'étude, le pistage et la chasse d'un certain type d'ennemi. Choisissez un type d'ennemi favori : aberrations, artificiels, bêtes, célestes, dragons, élémentaires, fées, fiélons, géants, monstruosités, morts-vivants, plantes, ou deux races d'humanoïdes. Vous avez l'avantage aux jets de Sagesse (Survie) pour pister vos ennemis favoris, ainsi qu'aux jets d'Intelligence pour vous rappeler des informations les concernant. Vous apprenez leur langue si applicable. Vous obtenez un ennemi favori supplémentaire aux niveaux 6 et 14."
+      },
+      {
+        "level": 1,
+        "name": "Explorateur-né",
+        "desc": "Vous êtes particulièrement familier avec un type de milieu naturel et êtes habile dans les voyages et la survie dans ce type de région. Choisissez un terrain favori : arctique, désert, forêt, littoral, marais, montagne, plaine ou Outreterre. Votre bonus de maîtrise est doublé pour les jets de caractéristique d'Intelligence ou de Sagesse utilisant des compétences que vous maîtrisez dans ce terrain. Pendant un voyage d'une heure ou plus dans le terrain favori : terrains difficiles normaux ne ralentissent pas le groupe ; le groupe ne peut pas se perdre par des moyens non magiques ; alerte même en d'autres activités ; seul, vous vous déplacez furtivement à vitesse normale ; vous trouvez deux fois plus de nourriture ; lorsque vous pistez des créatures, vous apprenez leur nombre, leur taille et depuis combien de temps elles ont passé. Vous choisissez un terrain supplémentaire aux niveaux 6 et 10."
+      },
+      {
+        "level": 2,
+        "name": "Style de combat",
+        "desc": "Choisissez un style de combat : Archerie (+2 aux jets d'attaque à distance), Combat à deux armes (ajoutez le modificateur de caractéristique aux dégâts de la 2e arme), Défense (+1 CA avec armure), Duel (+2 dégâts avec une arme à une main)."
+      },
+      {
+        "level": 2,
+        "name": "Incantation",
+        "desc": "Au niveau 2, vous avez appris à utiliser la magie liée à la nature. La Sagesse est votre caractéristique d'incantation. DD = 8 + bonus maîtrise + modificateur Sagesse. Vous connaissez 2 sorts de niveau 1 au départ. Vous pouvez apprendre de nouveaux sorts ou en remplacer lors d'une montée de niveau."
+      },
+      {
+        "level": 3,
+        "name": "Archétype de rôdeur",
+        "desc": "Au niveau 3, choisissez un archétype parmi Chasseur, Maître des bêtes ou Gardien de drake.\n\n**Chasseur :** Proie du chasseur (niv.3) : Tueur de colosses (dégâts supplémentaires 1d8), Tueur de géants (contre-attaque de réaction) ou Briseur de hordes (attaque une 2e créature voisine). Tactiques défensives (niv.7) : Échapper à la horde, Défense contre les attaques multiples (+4 CA) ou Moral d'acier (avantage vs peur). Attaques multiples (niv.11) : Volée (attaques à distance en zone) ou Tourbillon (attaques contre tous les ennemis proches). Défense supérieure (niv.15) : Esquive totale, Retour de bâton ou Esquive instinctive.\n\n**Maître des bêtes :** Compagnon du rôdeur (niv.3) : choisissez un animal compagnon (FP 1/4 max). Entraînement exceptionnel (niv.7) : votre compagnon peut Aider, Foncer, Se désengager. Fureur bestiale (niv.11) : deux attaques pour votre compagnon. Partage des sorts (niv.15) : vos sorts vous affectant peuvent aussi affecter votre compagnon.\n\n**Gardien de drake :** Don draconique (niv.3) : sort mineur Thaumaturgie + langue draconique. Compagnon drake (niv.3) : invoquez un drake à 9 m (type élémentaire au choix). Lien du croc et d'écailles (niv.7) : le drake gagne des ailes et grandit. Souffle de drake (niv.11) : cône de souffle (8d6) pour vous ou votre drake. Lien parfait (niv.15) : bonus de dégâts supplémentaires, drake devient Grand."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Attaque supplémentaire",
+        "desc": "À partir du niveau 5, vous pouvez attaquer deux fois au lieu d'une seule fois chaque fois que vous faites l'action Attaquer."
+      },
+      {
+        "level": 3,
+        "name": "Vigilance primitive",
+        "desc": "À partir du niveau 3, vous pouvez utiliser votre action et dépenser un emplacement de sort de rôdeur pour aiguiser vos sens pour détecter les créatures. Vous pouvez sentir la présence et la position de certains types de créatures dans un rayon de 1,5 km (6 km en terrain favori) pendant 1 minute par niveau de l'emplacement utilisé. Vous pouvez détecter : aberrations, célestes, dragons, élémentaires, fées, fiélons, morts-vivants. Cette détection ne révèle pas le nombre ou la position précise."
+      },
+      {
+        "level": 8,
+        "name": "Foulée tellurique",
+        "desc": "À partir du niveau 8, se déplacer dans des terrains difficiles non magiques ne coûte pas de mouvement supplémentaire. Vous pouvez également traverser des plantes non magiques sans être ralenti et sans subir de dégâts si elles ont des épines, des pointes ou un danger similaire. Vous avez également l'avantage aux jets de sauvegarde contre les plantes créées ou manipulées par magie pour entraver le mouvement."
+      },
+      {
+        "level": 10,
+        "name": "Camouflage naturel",
+        "desc": "À partir du niveau 10, vous pouvez dépenser 1 minute à rassembler des matériaux naturels et à vous les appliquer pour vous camoufler. Tant que vous ne bougez pas, vous recevez un bonus de +10 aux jets de Dextérité (Discrétion) et vous pouvez vous cacher contre des surfaces solides, même si elles n'offrent que peu ou pas de couverture."
+      },
+      {
+        "level": 14,
+        "name": "Disparition",
+        "desc": "À partir du niveau 14, vous pouvez utiliser l'action Se cacher par une action bonus. Vous pouvez également vous déplacer sans laisser de traces par des moyens non magiques et ne pouvez être pisté que si vous choisissez de laisser une piste."
+      },
+      {
+        "level": 18,
+        "name": "Sens sauvages",
+        "desc": "Au niveau 18, vous gagnez des sens surnaturels qui vous aident à combattre les créatures que vous ne pouvez pas voir. Lorsque vous attaquez une créature que vous ne pouvez pas voir, votre incapacité à la voir n'impose pas de désavantage à vos jets d'attaque contre elle. Vous êtes également conscient de l'emplacement de toute créature invisible dans un rayon de 9 mètres de vous, tant qu'elle n'est pas cachée."
+      },
+      {
+        "level": 20,
+        "name": "Tueur implacable",
+        "desc": "Au niveau 20, vous devenez un chasseur d'une efficacité inégalée. Une fois par tour, vous pouvez ajouter votre modificateur de Sagesse à votre jet d'attaque ou votre jet de dégâts contre un de vos ennemis favoris, avant ou après le lancer."
+      }
+    ]
+  },
+  "roublard": {
+    "name": "Roublard",
+    "hitDie": 8,
+    "primaryAbility": "Dextérité",
+    "savingThrows": ["dexterity", "intelligence"],
+    "armorProf": ["armures légères"],
+    "weaponProf": ["armes courantes", "arbalète de poing", "épée courte", "épée longue", "rapière"],
+    "toolProf": ["outils de voleur"],
+    "skillChoices": {
+      "count": 4,
+      "from": ["Acrobaties", "Athlétisme", "Discrétion", "Escamotage", "Intimidation", "Intuition", "Investigation", "Perception", "Persuasion", "Représentation", "Tromperie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Expertise",
+        "desc": "Au niveau 1, choisissez deux de vos maîtrises de compétences ou une maîtrise de compétence et votre maîtrise des outils de voleur. Votre bonus de maîtrise est doublé pour tout jet de caractéristique utilisant l'une ou l'autre de ces maîtrises choisies. Au niveau 6, vous pouvez choisir deux maîtrises de compétences supplémentaires."
+      },
+      {
+        "level": 1,
+        "name": "Attaque sournoise",
+        "desc": "À partir du niveau 1, vous savez comment frapper subtilement et exploiter les moments d'inattention de l'ennemi. Une fois par tour, vous pouvez infliger 1d6 dégâts supplémentaires à une créature que vous avez touchée avec une attaque si vous avez l'avantage sur le jet d'attaque. Cette attaque doit utiliser une arme de finesse ou une arme à distance. L'avantage n'est pas nécessaire si une autre créature ennemie de la cible se trouve à 1,5 mètre d'elle et que vous n'avez pas le désavantage sur le jet d'attaque. Les dégâts augmentent à 2d6 au niveau 3, 3d6 au niveau 5, et continuent d'augmenter jusqu'à 10d6 au niveau 19."
+      },
+      {
+        "level": 1,
+        "name": "Jargon des voleurs",
+        "desc": "Pendant votre formation, vous avez appris le jargon des voleurs, un dialecte secret fait d'expressions et de signes utilisés parmi les malfrats. Vous comprenez ce langage et pouvez l'utiliser pour laisser des messages cachés. Vous et les autres qui connaissent ce jargon pouvez ainsi communiquer des informations à toute créature qui comprend le jargon des voleurs. Il faut quatre fois plus de temps pour transmettre un tel message qu'en parlant."
+      },
+      {
+        "level": 2,
+        "name": "Ruse",
+        "desc": "À partir du niveau 2, votre réflexe aiguisé vous permet d'effectuer l'une des actions suivantes par une action bonus lors de chacun de vos tours : Se désengager, Se cacher, ou Foncer."
+      },
+      {
+        "level": 3,
+        "name": "Archétype de roublard",
+        "desc": "Au niveau 3, choisissez un archétype parmi Assassin, Voleur, Escroc arcanique ou Conspirateur.\n\n**Assassin :** Maîtrises supplémentaires : kit de déguisement et kit d'empoisonneur. Assassinat (niv.3) : avantage aux jets d'attaque contre les créatures n'ayant pas encore joué, coup critique automatique si la cible est surprise. Expert en infiltration (niv.9) : créez une identité fausse en 1 semaine et 25 po. Imposteur (niv.13) : imitez parfaitement discours, écriture et comportement d'une personne. Frappe meurtrière (niv.17) : créatures surprises ratant un JS Constitution ont leurs dégâts doublés.\n\n**Voleur :** Mains lestes (niv.3) : action bonus pour Escamotage, désarmer piège/serrure ou utiliser objet. Monte-en-l'air (niv.3) : escalade sans coût de mouvement, saut amélioré. Discrétion suprême (niv.9) : avantage à Discrétion si déplacement ≤ moitié de vitesse. Utilisation d'objets magiques (niv.13) : ignorez les restrictions de classe/race des objets magiques. Réflexes de voleur (niv.17) : jouez deux fois au premier round de combat.\n\n**Escroc arcanique :** Incantation (niv.3) : sorts d'enchantement et d'illusion (Intelligence). Main spectrale invisible pour ouvrir des serrures à distance. Embuscade magique (niv.9) : désavantage aux sauvegardes si vous étiez caché lors du lancer. Escroc polyvalent (niv.13) : action bonus pour donner l'avantage via la main spectrale. Voleur de sort (niv.17) : réaction pour voler la connaissance d'un sort.\n\n**Conspirateur :** Maître des intrigues (niv.3) : maîtrises supplémentaires, deux langues, imitation de voix. Maître des tactiques (niv.3) : action bonus pour Aider à 9 m. Manipulateur perspicace (niv.9) : évaluez les capacités d'une créature en 1 minute. Redirection (niv.13) : redirigez une attaque vers une créature proche. Âme de trompeur (niv.17) : immunité à la lecture de pensées."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 10, 12, 16 et 19."
+      },
+      {
+        "level": 5,
+        "name": "Esquive instinctive",
+        "desc": "À partir du niveau 5, lorsqu'un assaillant que vous pouvez voir vous frappe avec une attaque, vous pouvez utiliser votre réaction pour diviser par deux les dégâts de l'attaque à votre encontre."
+      },
+      {
+        "level": 7,
+        "name": "Esquive totale",
+        "desc": "À partir du niveau 7, votre agilité instinctive vous permet d'esquiver certains effets de zone comme un souffle de dragon ou un sort de boule de feu. Lorsque vous êtes soumis à un effet qui vous permet de faire un jet de sauvegarde de Dextérité pour ne subir que la moitié des dégâts, vous ne subissez aucun dégât si vous réussissez, et seulement la moitié si vous échouez."
+      },
+      {
+        "level": 11,
+        "name": "Savoir-faire",
+        "desc": "Au niveau 11, vous avez affiné vos compétences jusqu'à la maîtrise. Chaque fois que vous effectuez un jet de caractéristique qui vous permet d'ajouter votre bonus de maîtrise, si le dé indique 9 ou moins, vous pouvez traiter le résultat comme s'il avait indiqué 10."
+      },
+      {
+        "level": 14,
+        "name": "Perception aveugle",
+        "desc": "Au niveau 14, si vous êtes capable d'entendre, vous êtes conscient de l'emplacement de toute créature cachée ou invisible à 3 mètres de vous."
+      },
+      {
+        "level": 15,
+        "name": "Esprit fuyant",
+        "desc": "Au niveau 15, vous avez acquis une plus grande résistance mentale. Vous maîtrisez les jets de sauvegarde de Sagesse."
+      },
+      {
+        "level": 18,
+        "name": "Insaisissable",
+        "desc": "À partir du niveau 18, vous êtes si évasif que les attaquants ont rarement l'avantage contre vous. Aucun jet d'attaque n'a l'avantage contre vous tant que vous n'êtes pas incapable d'agir."
+      },
+      {
+        "level": 20,
+        "name": "Coup de chance",
+        "desc": "Au niveau 20, vous avez une capacité mystérieuse à éviter les échecs. Si votre attaque rate une cible à portée, vous pouvez transformer ce raté en réussite. Alternativement, si vous ratez un jet de caractéristique, vous pouvez traiter le dé comme si vous aviez obtenu 20. Une fois que vous avez utilisé cette capacité, vous devez terminer un repos court ou long avant de pouvoir l'utiliser à nouveau."
+      }
+    ]
+  },
+  "ensorceleur": {
+    "name": "Ensorceleur",
+    "hitDie": 6,
+    "primaryAbility": "Charisme",
+    "savingThrows": ["constitution", "charisma"],
+    "armorProf": [],
+    "weaponProf": ["dague", "fléchette", "fronde", "bâton", "arbalète légère"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Arcanes", "Intimidation", "Intuition", "Persuasion", "Religion", "Tromperie"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Incantation",
+        "desc": "Un événement dans votre passé, ou la vie de l'un de vos parents ou ancêtres, vous a laissé une empreinte indélébile reliée à la magie arcanique. Cette source de magie, quelle qu'en soit son origine, alimente vos sorts. Le Charisme est votre caractéristique d'incantation. DD de sauvegarde = 8 + bonus maîtrise + modificateur Charisme. Vous connaissez 4 sorts mineurs au niveau 1 (jusqu'à 6 au niveau 4). Vous connaissez 2 sorts de niveau 1 au départ et en apprenez de nouveaux en montant de niveau."
+      },
+      {
+        "level": 1,
+        "name": "Origine magique",
+        "desc": "Choisissez une origine qui décrit la source de votre puissance magique innée.\n\n**Lignée draconique :** Ancêtre draconique (niv.1) : choisissez un dragon (type de dégâts). Langue draconique, avantage aux jets de Charisme avec les dragons. Résistance draconique (niv.1) : +1 PV maximum à chaque niveau, CA = 13 + mod Dex sans armure. Affinité élémentaire (niv.6) : ajoutez Charisme aux dégâts du type de votre ancêtre ; 1 point de sorcellerie pour 1h de résistance à ce type. Ailes draconiques (niv.14) : action bonus pour faire apparaître des ailes (vitesse de vol égale à vitesse de déplacement). Présence draconique (niv.18) : 5 points de sorcellerie pour une aura d'effroi ou de fascination de 18 m pendant 1 minute.\n\n**Magie sauvage :** Sursaut de magie sauvage (niv.1) : après un sort de niveau 1+, le MJ peut demander un d20. Sur un 1, effet magique aléatoire (100 résultats possibles). Flux de chaos (niv.1) : réaction pour avantage sur un jet avant récupération (déclenche possible sursaut). Chance folle (niv.6) : dépensez 2 points de sorcellerie pour ajouter ou soustraire 1d4 à n'importe quel jet visible. Chaos contrôlé (niv.14) : lancez deux fois et choisissez le résultat lors d'un sursaut. Bombardement de sorts (niv.18) : si un dé de dégâts sort son maximum, relancez et ajoutez au total (une fois par tour)."
+      },
+      {
+        "level": 2,
+        "name": "Source de la magie",
+        "desc": "À partir du niveau 2, vous exploitez une source profonde de magie en vous. Cette source est représentée par des points de sorcellerie, qui vous permettent de créer diverses expressions magiques. Vous commencez avec 2 points de sorcellerie et gagnez davantage au fur et à mesure que vous montez de niveau, ainsi qu'un point par niveau. Vous récupérez tous les points dépensés après un repos long. Vous pouvez transformer un emplacement de sort en points de sorcellerie ou des points de sorcellerie en emplacement de sort. Conversion d'emplacement en points : niveau 1 = 2 pts, niveau 2 = 3 pts, etc. Création d'emplacement avec des points : niveau 1 = 2 pts, niveau 2 = 3 pts, niveau 3 = 5 pts, niveau 4 = 6 pts, niveau 5 = 7 pts (max)."
+      },
+      {
+        "level": 3,
+        "name": "Métamagie",
+        "desc": "Au niveau 3, vous acquérez la capacité de modifier vos sorts en utilisant votre magie sauvage. Vous gagnez deux options de Métamagie de la liste suivante et en gagnez une supplémentaire aux niveaux 10 et 17 : **Sort prudent** (1 pt) : choisissez jusqu'à Charisme créatures pour réussir automatiquement le JS ; **Sort à distance** (1 pt) : doublez la portée ; **Sort autonome** (1 pt) : maintenez la concentration 1h de plus ; **Sort renforcé** (1-3 pts) : relancez jusqu'à Charisme dés de dégâts (gardez les meilleurs) ; **Sort étendu** (1 pt) : doublez la durée (max 24h) ; **Subtil** (1 pt) : sans composantes verbales/somatiques ; **Sort accéléré** (2 pts) : action bonus au lieu d'action ; **Sort amplifié** (2 pts) : si échec, cible a quand même désavantage au JS suivant ; **Sort jumeau** (variable) : dépensez points égaux au niveau pour affecter une deuxième cible."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 20,
+        "name": "Restauration magique",
+        "desc": "Au niveau 20, vous récupérez 4 points de sorcellerie dépensés lors d'un repos court."
+      }
+    ]
+  },
+  "magicien": {
+    "name": "Magicien",
+    "hitDie": 6,
+    "primaryAbility": "Intelligence",
+    "savingThrows": ["intelligence", "wisdom"],
+    "armorProf": [],
+    "weaponProf": ["dague", "fléchettes", "fronde", "bâton", "arbalète légère"],
+    "toolProf": [],
+    "skillChoices": {
+      "count": 2,
+      "from": ["Arcanes", "Histoire", "Intuition", "Investigation", "Médecine", "Religion"]
+    },
+    "features": [
+      {
+        "level": 1,
+        "name": "Incantation",
+        "desc": "En tant qu'étudiant de la magie arcanique, vous disposez d'un grimoire contenant des sorts qui révèlent les premières lueurs de votre vrai pouvoir. L'Intelligence est votre caractéristique d'incantation. DD de sauvegarde = 8 + bonus maîtrise + modificateur Intelligence. Vous connaissez 3 sorts mineurs au niveau 1. Votre grimoire contient 6 sorts de niveau 1. Vous préparez chaque jour un nombre de sorts de magicien égal à votre modificateur d'Intelligence + votre niveau de magicien (minimum 1). Vous pouvez lancer des rituels. Vous pouvez copier de nouveaux sorts dans votre grimoire."
+      },
+      {
+        "level": 1,
+        "name": "Restauration arcanique",
+        "desc": "Vous avez appris à regagner certaines de vos ressources magiques lors d'un repos court. Une fois par jour, lorsque vous terminez un repos court, vous pouvez récupérer des emplacements de sorts dépensés. Les emplacements récupérés ne peuvent pas représenter plus de la moitié de votre niveau de magicien (arrondi à l'inférieur), et aucun des emplacements récupérés ne peut être de niveau 6 ou plus."
+      },
+      {
+        "level": 2,
+        "name": "Tradition arcanique",
+        "desc": "Lorsque vous atteignez le niveau 2, vous choisissez une tradition arcanique qui façonne la pratique de la magie à travers l'une des huit écoles.\n\n**École d'Abjuration :** Abjurateur érudit (niv.2) : copie d'abjuration deux fois moins cher/long. Protection arcanique (niv.2) : sceau absorbant les dégâts (2 × niveau + mod Intelligence PV). Protection projetée (niv.6) : partagez le sceau avec une créature proche. Abjuration améliorée (niv.10) : ajoutez votre bonus de maîtrise aux jets de contresort. Résistance aux sorts (niv.14) : avantage aux JS contre sorts, résistance aux dégâts de sorts.\n\n**École de Divination :** Devin érudit (niv.2) : copie moins chère/longue. Présage (niv.2) : après repos long, lancez 2d20 pour remplacer n'importe quel jet. Divination experte (niv.6) : récupérez un emplacement après sort de divination niveau 2+. Troisième œil (niv.10) : action bonus pour compréhension des langues, vision dans le noir, vision éthérée ou voir l'invisible. Présage supérieur (niv.14) : 3 dés pour le Présage.\n\n**École d'Enchantement :** Enchanteur érudit (niv.2) : copie moins chère/longue. Regard hypnotique (niv.2) : étourdissez une créature proche par action. Charme instinctif (niv.6) : réaction pour rediriger une attaque. Partage d'enchantement (niv.10) : ciblez deux créatures avec un sort. Altération mémorielle (niv.14) : effacez des heures de charme d'une créature.\n\n**École d'Évocation :** Évocateur érudit (niv.2) : copie moins chère/longue. Façonneur de sorts (niv.2) : protégez automatiquement des alliés dans un sort de zone. Sort mineur puissant (niv.6) : même en cas de réussite, demi-dégâts. Évocation améliorée (niv.10) : ajoutez Intelligence à un jet de dégâts d'évocation. Surcharge magique (niv.14) : dégâts maximaux sur un sort (avec effets secondaires).\n\n**École d'Illusion :** Illusionniste érudit (niv.2) : copie moins chère/longue. Illusion mineure améliorée (niv.2) : créez son ET image avec un seul lancement. Illusions malléables (niv.6) : modifiez une illusion active. Double illusoire (niv.10) : réaction pour qu'une attaque vous rate. Réalité illusoire (niv.14) : rendez un objet illusoire réel pendant 1 minute.\n\n**École d'Invocation :** Invocateur érudit (niv.2) : copie moins chère/longue. Invocation mineure (niv.2) : invoquez un objet inanimé. Permutation (niv.6) : téléportez-vous ou échangez de place avec une créature consentante. Invocation consciencieuse (niv.10) : concentration sur invocations non brisée par dégâts. Convocations coriaces (niv.14) : +30 PV temporaires aux créatures invoquées.\n\n**École de Nécromancie :** Nécromancien érudit (niv.2) : copie moins chère/longue. Sinistre moisson (niv.2) : récupérez des PV quand vous tuez une créature avec un sort. Serviteurs morts-vivants (niv.6) : plus de morts-vivants à la fois, plus puissants. Insensibilité à la non-vie (niv.10) : résistance nécrotique, max PV ne peut être réduit. Contrôle des morts-vivants (niv.14) : prenez le contrôle d'un mort-vivant existant.\n\n**École de Transmutation :** Transmutateur érudit (niv.2) : copie moins chère/longue. Alchimie mineure (niv.2) : transformez temporairement la matière. Pierre du transmutateur (niv.6) : créez une pierre magique aux effets variés. Métamorphe (niv.10) : lancez métamorphose sur vous-même sans emplacement. Maître transmutateur (niv.14) : effets puissants en consommant la pierre (jouvence, panacée, retour à la vie, transformation majeure)."
+      },
+      {
+        "level": 4,
+        "name": "Amélioration de caractéristiques",
+        "desc": "Augmentez une valeur de caractéristique de 2, ou deux valeurs de caractéristique de 1 chacune. Répétée aux niveaux 8, 12, 16 et 19."
+      },
+      {
+        "level": 18,
+        "name": "Maîtrise des sorts",
+        "desc": "Au niveau 18, vous avez atteint une telle maîtrise de certains sorts que vous pouvez les lancer à volonté. Choisissez un sort de magicien de niveau 1 et un sort de magicien de niveau 2 de votre grimoire. Vous pouvez les lancer à leur niveau le plus bas sans dépenser d'emplacement de sort. Si vous souhaitez lancer l'un d'eux à un niveau supérieur, vous devez utiliser un emplacement de sort comme d'habitude. En passant 8 heures d'étude, vous pouvez échanger l'un ou les deux sorts choisis contre d'autres sorts des mêmes niveaux respectifs."
+      },
+      {
+        "level": 20,
+        "name": "Sorts de prédilection",
+        "desc": "Au niveau 20, vous maîtrisez deux sorts puissants et les avez toujours à l'esprit. Choisissez deux sorts de magicien de niveau 3 de votre grimoire comme sorts de prédilection. Ils comptent toujours comme préparés, n'entrent pas dans la limite de vos sorts préparés, et vous pouvez lancer chacun d'eux une fois sans dépenser d'emplacement de sort. Vous récupérez ces deux lancers après un repos court ou long."
+      }
+    ]
+  }
+}

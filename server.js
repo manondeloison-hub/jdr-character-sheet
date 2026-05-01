@@ -19,6 +19,8 @@ const redis = new Redis({
 // --- Load static data ---
 const allSpells = require('./data/spells.json');
 const classProgression = require('./data/class-progression.json');
+const allRaces = require('./data/races.json');
+const allClasses = require('./data/classes.json');
 
 // --- Default character ---
 const DEFAULT_CHARACTER = {
@@ -127,6 +129,19 @@ app.get('/api/spells', authMiddleware, (req, res) => {
   res.json(filtered);
 });
 
+// --- Races API ---
+app.get('/api/races', authMiddleware, (req, res) => res.json(allRaces));
+
+// --- Classes API ---
+app.get('/api/classes', authMiddleware, (req, res) => {
+  const { name } = req.query;
+  if (name) {
+    const data = allClasses[name.toLowerCase()];
+    return data ? res.json(data) : res.status(404).json({ error: 'Classe inconnue' });
+  }
+  res.json(allClasses);
+});
+
 // --- Progression API ---
 app.get('/api/progression/:className/:level', authMiddleware, (req, res) => {
   const { className, level } = req.params;
@@ -148,5 +163,5 @@ app.get('/api/health', (req, res) => res.send('ok'));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur JDR démarré sur le port ${PORT}`);
-  console.log(`${allSpells.length} sorts chargés`);
+  console.log(`${allSpells.length} sorts | ${Object.keys(allRaces).length} races | ${Object.keys(allClasses).length} classes chargés`);
 });

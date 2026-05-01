@@ -1,0 +1,300 @@
+{
+  "haute-elfe": {
+    "name": "Haute-Elfe",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "dexterity": 2, "intelligence": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Sens aiguisés", "desc": "Vous maîtrisez la compétence Perception." },
+      { "name": "Ascendance féerique", "desc": "Vous avez un avantage aux jets de sauvegarde contre les effets de charme et la magie ne peut pas vous endormir." },
+      { "name": "Transe", "desc": "Les elfes n'ont pas besoin de dormir. Ils méditent profondément 4 heures par jour. Après un repos de ce type, vous obtenez les mêmes avantages qu'un humain après 8 heures de sommeil." },
+      { "name": "Entraînement aux armes elfiques", "desc": "Vous obtenez la maîtrise des épées longues, épées courtes, arcs courts et arcs longs." },
+      { "name": "Sort mineur", "desc": "Vous connaissez un sort mineur de votre choix parmi la liste des sorts mineurs de magicien. L'Intelligence est votre caractéristique d'incantation pour ce sort." },
+      { "name": "Langue supplémentaire", "desc": "Vous parlez, lisez et écrivez une langue supplémentaire de votre choix." }
+    ],
+    "languages": ["commun", "elfique", "1 au choix"],
+    "proficiencies": ["épées longues", "épées courtes", "arcs courts", "arcs longs"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "elfe des bois": {
+    "name": "Elfe des Bois",
+    "speed": 10.5,
+    "size": "Moyenne",
+    "bonuses": { "dexterity": 2, "wisdom": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Sens aiguisés", "desc": "Vous maîtrisez la compétence Perception." },
+      { "name": "Ascendance féerique", "desc": "Vous avez un avantage aux jets de sauvegarde contre les effets de charme et la magie ne peut pas vous endormir." },
+      { "name": "Transe", "desc": "Les elfes n'ont pas besoin de dormir. Ils méditent profondément 4 heures par jour. Après un repos de ce type, vous obtenez les mêmes avantages qu'un humain après 8 heures de sommeil." },
+      { "name": "Entraînement aux armes elfiques", "desc": "Vous obtenez la maîtrise des épées longues, épées courtes, arcs courts et arcs longs." },
+      { "name": "Foulée légère", "desc": "Votre vitesse de base passe à 10,50 mètres." },
+      { "name": "Cachette naturelle", "desc": "Vous pouvez tenter de vous cacher dans une zone à visibilité réduite, comme en présence de branchages, de forte pluie, de neige qui tombe, de brume ou autre phénomène naturel." }
+    ],
+    "languages": ["commun", "elfique"],
+    "proficiencies": ["épées longues", "épées courtes", "arcs courts", "arcs longs"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "elfe noir": {
+    "name": "Elfe Noir (Drow)",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "dexterity": 2, "charisma": 1 },
+    "darkvision": 36,
+    "traits": [
+      { "name": "Sens aiguisés", "desc": "Vous maîtrisez la compétence Perception." },
+      { "name": "Ascendance féerique", "desc": "Vous avez un avantage aux jets de sauvegarde contre les effets de charme et la magie ne peut pas vous endormir." },
+      { "name": "Transe", "desc": "Les elfes n'ont pas besoin de dormir. Ils méditent profondément 4 heures par jour. Après un repos de ce type, vous obtenez les mêmes avantages qu'un humain après 8 heures de sommeil." },
+      { "name": "Vision dans le noir supérieure", "desc": "Votre vision dans le noir est étendue à 36 mètres." },
+      { "name": "Sensibilité au soleil", "desc": "Vous avez un désavantage aux jets d'attaque et aux jets de Sagesse (Perception) basés sur la vue quand vous, la cible ou ce que vous essayez de détecter est exposé à la lumière du soleil." },
+      { "name": "Magie drow", "desc": "Vous connaissez le sort mineur lumières dansantes. Niveau 3 : lueurs féeriques une fois par repos long. Niveau 5 : ténèbres une fois par repos long. Le Charisme est votre caractéristique d'incantation." },
+      { "name": "Entraînement aux armes drows", "desc": "Vous obtenez la maîtrise des rapières, des épées courtes et des arbalètes de poing." }
+    ],
+    "languages": ["commun", "elfique"],
+    "proficiencies": ["rapières", "épées courtes", "arbalètes de poing"],
+    "darkvisionNote": "Vision dans le noir supérieure à 36 mètres."
+  },
+
+  "elfe": {
+    "name": "Elfe",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "dexterity": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Sens aiguisés", "desc": "Vous maîtrisez la compétence Perception." },
+      { "name": "Ascendance féerique", "desc": "Vous avez un avantage aux jets de sauvegarde contre les effets de charme et la magie ne peut pas vous endormir." },
+      { "name": "Transe", "desc": "Les elfes n'ont pas besoin de dormir. Ils méditent profondément 4 heures par jour. Après un repos de ce type, vous obtenez les mêmes avantages qu'un humain après 8 heures de sommeil." }
+    ],
+    "languages": ["commun", "elfique"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "nain des collines": {
+    "name": "Nain des Collines",
+    "speed": 7.5,
+    "size": "Moyenne",
+    "bonuses": { "constitution": 2, "wisdom": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Résistance naine", "desc": "Vous avez un avantage aux jets de sauvegarde contre le poison et obtenez la résistance contre les dégâts de poison." },
+      { "name": "Entraînement aux armes naines", "desc": "Vous obtenez la maîtrise des hachettes, des haches d'armes, des marteaux légers et des marteaux de guerre." },
+      { "name": "Maîtrise des outils", "desc": "Vous obtenez la maîtrise d'un des outils d'artisan suivants au choix : outils de forgeron, outils de brasseur ou outils de maçon." },
+      { "name": "Connaissance de la pierre", "desc": "Chaque fois que vous effectuez un jet d'Intelligence (Histoire) en relation avec l'origine d'un travail lié à la pierre, vous ajoutez le double de votre bonus de maîtrise au jet." },
+      { "name": "Vitesse non réduite par les armures lourdes", "desc": "Votre vitesse n'est pas réduite par le port d'une armure lourde." },
+      { "name": "Ténacité naine", "desc": "Votre maximum de points de vie augmente de 1 à chaque niveau." }
+    ],
+    "languages": ["commun", "nain"],
+    "proficiencies": ["hachettes", "haches d'armes", "marteaux légers", "marteaux de guerre"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "nain des montagnes": {
+    "name": "Nain des Montagnes",
+    "speed": 7.5,
+    "size": "Moyenne",
+    "bonuses": { "constitution": 2, "strength": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Résistance naine", "desc": "Vous avez un avantage aux jets de sauvegarde contre le poison et obtenez la résistance contre les dégâts de poison." },
+      { "name": "Entraînement aux armes naines", "desc": "Vous obtenez la maîtrise des hachettes, des haches d'armes, des marteaux légers et des marteaux de guerre." },
+      { "name": "Maîtrise des outils", "desc": "Vous obtenez la maîtrise d'un des outils d'artisan suivants au choix : outils de forgeron, outils de brasseur ou outils de maçon." },
+      { "name": "Connaissance de la pierre", "desc": "Chaque fois que vous effectuez un jet d'Intelligence (Histoire) en relation avec l'origine d'un travail lié à la pierre, vous ajoutez le double de votre bonus de maîtrise au jet." },
+      { "name": "Vitesse non réduite par les armures lourdes", "desc": "Votre vitesse n'est pas réduite par le port d'une armure lourde." },
+      { "name": "Formation au port des armures naines", "desc": "Vous maîtrisez les armures légères et intermédiaires." }
+    ],
+    "languages": ["commun", "nain"],
+    "proficiencies": ["hachettes", "haches d'armes", "marteaux légers", "marteaux de guerre", "armures légères", "armures intermédiaires"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "nain": {
+    "name": "Nain",
+    "speed": 7.5,
+    "size": "Moyenne",
+    "bonuses": { "constitution": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Résistance naine", "desc": "Vous avez un avantage aux jets de sauvegarde contre le poison et obtenez la résistance contre les dégâts de poison." },
+      { "name": "Entraînement aux armes naines", "desc": "Vous obtenez la maîtrise des hachettes, des haches d'armes, des marteaux légers et des marteaux de guerre." },
+      { "name": "Maîtrise des outils", "desc": "Vous obtenez la maîtrise d'un des outils d'artisan suivants au choix : outils de forgeron, outils de brasseur ou outils de maçon." },
+      { "name": "Connaissance de la pierre", "desc": "Chaque fois que vous effectuez un jet d'Intelligence (Histoire) en relation avec l'origine d'un travail lié à la pierre, vous ajoutez le double de votre bonus de maîtrise au jet." },
+      { "name": "Vitesse non réduite par les armures lourdes", "desc": "Votre vitesse n'est pas réduite par le port d'une armure lourde." }
+    ],
+    "languages": ["commun", "nain"],
+    "proficiencies": ["hachettes", "haches d'armes", "marteaux légers", "marteaux de guerre"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "humain": {
+    "name": "Humain",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "strength": 1, "dexterity": 1, "constitution": 1, "intelligence": 1, "wisdom": 1, "charisma": 1 },
+    "darkvision": null,
+    "traits": [
+      { "name": "Langue supplémentaire", "desc": "Vous pouvez parler, lire et écrire une langue supplémentaire de votre choix." }
+    ],
+    "languages": ["commun", "1 au choix"],
+    "proficiencies": []
+  },
+
+  "halfelin pied-léger": {
+    "name": "Halfelin Pied-Léger",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "dexterity": 2, "charisma": 1 },
+    "darkvision": null,
+    "traits": [
+      { "name": "Chanceux", "desc": "Lorsque vous obtenez un 1 au dé d'un jet d'attaque, de caractéristique ou de sauvegarde, vous pouvez relancer le dé et devez alors utiliser ce nouveau résultat." },
+      { "name": "Brave", "desc": "Vous avez un avantage aux jets de sauvegarde pour ne pas être effrayé." },
+      { "name": "Agilité halfeline", "desc": "Vous pouvez passer dans l'espace de toute créature d'une taille supérieure à la vôtre." },
+      { "name": "Discrétion naturelle", "desc": "Vous pouvez tenter de vous cacher si vous vous trouvez derrière une créature d'une taille supérieure à la vôtre." }
+    ],
+    "languages": ["commun", "halfelin"],
+    "proficiencies": []
+  },
+
+  "halfelin robuste": {
+    "name": "Halfelin Robuste",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "dexterity": 2, "constitution": 1 },
+    "darkvision": null,
+    "traits": [
+      { "name": "Chanceux", "desc": "Lorsque vous obtenez un 1 au dé d'un jet d'attaque, de caractéristique ou de sauvegarde, vous pouvez relancer le dé et devez alors utiliser ce nouveau résultat." },
+      { "name": "Brave", "desc": "Vous avez un avantage aux jets de sauvegarde pour ne pas être effrayé." },
+      { "name": "Agilité halfeline", "desc": "Vous pouvez passer dans l'espace de toute créature d'une taille supérieure à la vôtre." },
+      { "name": "Résistance des robustes", "desc": "Vous obtenez un avantage aux jets de sauvegarde contre le poison et la résistance contre les dégâts de poison." }
+    ],
+    "languages": ["commun", "halfelin"],
+    "proficiencies": []
+  },
+
+  "halfelin": {
+    "name": "Halfelin",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "dexterity": 2 },
+    "darkvision": null,
+    "traits": [
+      { "name": "Chanceux", "desc": "Lorsque vous obtenez un 1 au dé d'un jet d'attaque, de caractéristique ou de sauvegarde, vous pouvez relancer le dé et devez alors utiliser ce nouveau résultat." },
+      { "name": "Brave", "desc": "Vous avez un avantage aux jets de sauvegarde pour ne pas être effrayé." },
+      { "name": "Agilité halfeline", "desc": "Vous pouvez passer dans l'espace de toute créature d'une taille supérieure à la vôtre." }
+    ],
+    "languages": ["commun", "halfelin"],
+    "proficiencies": []
+  },
+
+  "gnome des roches": {
+    "name": "Gnome des Roches",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "intelligence": 2, "constitution": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Ruse gnome", "desc": "Vous avez un avantage aux jets de sauvegarde d'Intelligence, de Sagesse et de Charisme contre la magie." },
+      { "name": "Connaissance en ingénierie", "desc": "Chaque fois que vous effectuez un jet d'Intelligence (Histoire) en relation avec l'alchimie, des objets magiques ou des dispositifs technologiques, ajoutez le double de votre bonus de maîtrise au jet." },
+      { "name": "Bricoleur", "desc": "Vous maîtrisez les outils de bricoleur. En utilisant ces outils, vous pouvez passer 1 heure et dépenser 10 po de matériaux pour construire un mécanisme de taille TP. Vous pouvez avoir jusqu'à trois dispositifs actifs à la fois (allume-feu, boîte à musique ou jouet mécanique)." }
+    ],
+    "languages": ["commun", "gnome"],
+    "proficiencies": ["outils de bricoleur"],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "gnome des forêts": {
+    "name": "Gnome des Forêts",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "intelligence": 2, "dexterity": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Ruse gnome", "desc": "Vous avez un avantage aux jets de sauvegarde d'Intelligence, de Sagesse et de Charisme contre la magie." },
+      { "name": "Illusionniste-né", "desc": "Vous connaissez le sort mineur illusion mineure. L'Intelligence est votre caractéristique d'incantation pour ce sort." },
+      { "name": "Communication avec les petits animaux", "desc": "À l'aide de sons et de gestes, vous pouvez communiquer des idées simples à des bêtes de taille Petite ou plus petite." }
+    ],
+    "languages": ["commun", "gnome"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "gnome": {
+    "name": "Gnome",
+    "speed": 7.5,
+    "size": "Petite",
+    "bonuses": { "intelligence": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Ruse gnome", "desc": "Vous avez un avantage aux jets de sauvegarde d'Intelligence, de Sagesse et de Charisme contre la magie." }
+    ],
+    "languages": ["commun", "gnome"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "demi-elfe": {
+    "name": "Demi-Elfe",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "charisma": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Ascendance féerique", "desc": "Vous avez un avantage aux jets de sauvegarde contre les effets de charme et la magie ne peut pas vous endormir." },
+      { "name": "Polyvalence", "desc": "Vous gagnez la maîtrise de deux compétences de votre choix." },
+      { "name": "Langue supplémentaire", "desc": "Vous pouvez parler, lire et écrire une langue supplémentaire de votre choix." }
+    ],
+    "languages": ["commun", "elfique", "1 au choix"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres.",
+    "bonusNote": "Deux autres caractéristiques de votre choix augmentent de 1 (en plus du +2 en Charisme)."
+  },
+
+  "demi-orc": {
+    "name": "Demi-Orc",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "strength": 2, "constitution": 1 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Menaçant", "desc": "Vous gagnez la maîtrise de la compétence Intimidation." },
+      { "name": "Endurance implacable", "desc": "Lorsque vous tombez à 0 point de vie, mais que vous n'êtes pas tué sur le coup, vous pouvez passer à 1 point de vie à la place. Vous devez terminer un repos long avant de pouvoir utiliser cette capacité de nouveau." },
+      { "name": "Attaques sauvages", "desc": "Lorsque vous réalisez un coup critique lors d'une attaque au corps à corps avec une arme, vous pouvez lancer l'un des dés de dégâts de l'arme une deuxième fois et l'ajouter aux dégâts supplémentaires du coup critique." }
+    ],
+    "languages": ["commun", "orc"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "tieffelin": {
+    "name": "Tieffelin",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "intelligence": 1, "charisma": 2 },
+    "darkvision": 18,
+    "traits": [
+      { "name": "Résistance infernale", "desc": "Vous avez la résistance aux dégâts de feu." },
+      { "name": "Ascendance infernale", "desc": "Vous connaissez le sort mineur thaumaturgie. Niveau 3 : représailles infernales (niveau 2) une fois par repos long. Niveau 5 : ténèbres une fois par repos long. Le Charisme est votre caractéristique d'incantation pour ces sorts." }
+    ],
+    "languages": ["commun", "infernal"],
+    "proficiencies": [],
+    "darkvisionNote": "Vision dans le noir à 18 mètres."
+  },
+
+  "draconide": {
+    "name": "Draconide",
+    "speed": 9,
+    "size": "Moyenne",
+    "bonuses": { "strength": 2, "charisma": 1 },
+    "darkvision": null,
+    "traits": [
+      { "name": "Ascendance draconique", "desc": "Vous avez une ascendance draconique. Choisissez un type de dragon (blanc, bleu, noir, rouge, vert, airain, argent, bronze, cuivre ou or). Votre type de souffle et votre résistance aux dégâts sont déterminés par ce choix." },
+      { "name": "Souffle", "desc": "Vous pouvez utiliser votre action pour libérer un souffle d'énergie destructrice selon votre ascendance. Toute créature dans la zone doit réussir un jet de sauvegarde (DD = 8 + modificateur de Con. + bonus de maîtrise) ou subir 2d6 dégâts (la moitié en cas de réussite). Dégâts : 3d6 (niv. 6), 4d6 (niv. 11), 5d6 (niv. 16). Utilisable après un repos court ou long." },
+      { "name": "Résistance aux dégâts", "desc": "Vous obtenez la résistance au type de dégâts associé à votre ascendance draconique." }
+    ],
+    "languages": ["commun", "draconique"],
+    "proficiencies": []
+  }
+}
