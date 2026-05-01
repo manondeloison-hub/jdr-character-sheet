@@ -1,0 +1,15 @@
+[
+  { "name": "Matelassée",      "category": "Légère",        "baseCA": 11, "dex": "full",  "stealth": true,  "strength": null, "cost": "5 po",    "weight": 4    },
+  { "name": "Cuir",            "category": "Légère",        "baseCA": 11, "dex": "full",  "stealth": false, "strength": null, "cost": "10 po",   "weight": 5    },
+  { "name": "Cuir clouté",     "category": "Légère",        "baseCA": 12, "dex": "full",  "stealth": false, "strength": null, "cost": "45 po",   "weight": 6.5  },
+  { "name": "Peaux",           "category": "Intermédiaire", "baseCA": 12, "dex": "max2",  "stealth": false, "strength": null, "cost": "10 po",   "weight": 6    },
+  { "name": "Chemise de mailles","category":"Intermédiaire","baseCA": 13, "dex": "max2",  "stealth": false, "strength": null, "cost": "50 po",   "weight": 10   },
+  { "name": "Écailles",        "category": "Intermédiaire", "baseCA": 14, "dex": "max2",  "stealth": true,  "strength": null, "cost": "50 po",   "weight": 22.5 },
+  { "name": "Cuirasse",        "category": "Intermédiaire", "baseCA": 14, "dex": "max2",  "stealth": false, "strength": null, "cost": "400 po",  "weight": 10   },
+  { "name": "Demi-plate",      "category": "Intermédiaire", "baseCA": 15, "dex": "max2",  "stealth": true,  "strength": null, "cost": "750 po",  "weight": 20   },
+  { "name": "Anneaux",         "category": "Lourde",        "baseCA": 14, "dex": "none",  "stealth": false, "strength": null, "cost": "30 po",   "weight": 20   },
+  { "name": "Cottes de mailles","category": "Lourde",       "baseCA": 16, "dex": "none",  "stealth": true,  "strength": 13,   "cost": "75 po",   "weight": 27.5 },
+  { "name": "Éclisses",        "category": "Lourde",        "baseCA": 17, "dex": "none",  "stealth": true,  "strength": 15,   "cost": "200 po",  "weight": 30   },
+  { "name": "Harnois",         "category": "Lourde",        "baseCA": 18, "dex": "none",  "stealth": true,  "strength": 15,   "cost": "1500 po", "weight": 32.5 },
+  { "name": "Bouclier",        "category": "Bouclier",      "baseCA": 2,  "dex": "none",  "stealth": false, "strength": null, "cost": "10 po",   "weight": 3    }
+]

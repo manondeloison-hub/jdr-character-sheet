@@ -1110,6 +1110,10 @@
   let spellsCache = null;
   let racesCache = null;
   let classesCache = null;
+  let weaponsCache = null;
+  let armorCache = null;
+  let backgroundsCache = null;
+  let conditionsCache = null;
   let saveTimeout = null;
   let editMode = false;
   let consumablesCollapsed = true;
@@ -1181,12 +1185,20 @@
   });
 
   async function loadStaticData() {
-    const [racesRes, classesRes] = await Promise.all([
+    const [racesRes, classesRes, weaponsRes, armorRes, backgroundsRes, conditionsRes] = await Promise.all([
       apiFetch('/api/races'),
       apiFetch('/api/classes'),
+      apiFetch('/api/weapons'),
+      apiFetch('/api/armor'),
+      apiFetch('/api/backgrounds'),
+      apiFetch('/api/conditions'),
     ]);
     if (racesRes.ok) racesCache = await racesRes.json();
     if (classesRes.ok) classesCache = await classesRes.json();
+    if (weaponsRes.ok) weaponsCache = await weaponsRes.json();
+    if (armorRes.ok) armorCache = await armorRes.json();
+    if (backgroundsRes.ok) backgroundsCache = await backgroundsRes.json();
+    if (conditionsRes.ok) conditionsCache = await conditionsRes.json();
   }
 
   async function loadApp() {
@@ -1927,6 +1939,46 @@
       if (slots[lvl] > 0 && parseInt(lvl, 10) > max) max = parseInt(lvl, 10);
     }
     return max;
+  }
+
+  let conditionsCollapsed = true;
+
+  document.getElementById('conditions-header').addEventListener('click', () => {
+    conditionsCollapsed = !conditionsCollapsed;
+    renderConditions();
+  });
+
+  function renderConditions() {
+    const $toggle = document.getElementById('conditions-toggle');
+    const $body = document.getElementById('conditions-body');
+    if (!$toggle || !$body) return;
+    $toggle.textContent = conditionsCollapsed ? '▶' : '▼';
+    $body.classList.toggle('hidden', conditionsCollapsed);
+    if (conditionsCollapsed || !conditionsCache) return;
+
+    const $list = document.getElementById('conditions-list');
+    if ($list.childElementCount > 0) return; // render once
+
+    conditionsCache.forEach(cond => {
+      const item = document.createElement('div');
+      item.className = 'condition-item trait-expandable';
+
+      const header = document.createElement('div');
+      header.className = 'trait-racial-header';
+      header.innerHTML = '<span>' + (cond.icon || '⚠') + '</span> ' + cond.name;
+      item.appendChild(header);
+
+      const body = document.createElement('div');
+      body.className = 'trait-racial-desc hidden';
+      body.innerHTML = cond.effects.map(e => '<div class="condition-effect">• ' + e + '</div>').join('');
+      item.appendChild(body);
+
+      header.addEventListener('click', () => {
+        body.classList.toggle('hidden');
+        item.classList.toggle('trait-open');
+      });
+      $list.appendChild(item);
+    });
   }
 
   function renderSpellSlots() {
@@ -3458,7 +3510,8 @@
 
         // Tags dégâts : base + bonus
         let dmgTags = '';
-        if (wt.baseDmg) dmgTags += '<span class="wtag wtag-dmg">' + wt.baseDmg + '</span>';
+        if (w.baseDamage) dmgTags += '<span class="wtag wtag-dmg">' + w.baseDamage + ' ' + (wt.baseDmg || '') + '</span>';
+        else if (wt.baseDmg) dmgTags += '<span class="wtag wtag-dmg">' + wt.baseDmg + '</span>';
         (w.damageBonus || []).forEach(d => {
           if (d.type && d.amount) dmgTags += '<span class="wtag wtag-dmg">' + d.amount + ' ' + d.type + '</span>';
         });
@@ -4233,6 +4286,22 @@
     if (selType) { $sel.textContent = selType; $sel.classList.remove('hidden'); $sel.dataset.value = selType; }
     else { $sel.textContent = ''; $sel.classList.add('hidden'); $sel.dataset.value = ''; }
 
+    // Dés de base (depuis weapons.json)
+    const $bdmg = document.getElementById('wm-base-dmg');
+    if ($bdmg) {
+      const existingBd = w ? (w.baseDamage || '') : '';
+      const wt = WEAPON_TYPES.find(t => t.name === selType);
+      if (existingBd && wt) {
+        $bdmg.textContent = 'Dés de base : ' + existingBd + ' ' + (wt.baseDmg || '');
+        $bdmg.dataset.value = existingBd;
+        $bdmg.classList.remove('hidden');
+      } else {
+        $bdmg.textContent = '';
+        $bdmg.dataset.value = '';
+        $bdmg.classList.add('hidden');
+      }
+    }
+
     // Dégâts bonus
     const dmgRows = w ? (w.damageBonus || []) : [];
     renderWmDmgRows(dmgRows.map(d => ({ type: d.type, amount: d.amount })));
@@ -4280,6 +4349,22 @@
           $sel.dataset.value = wt.name;
           $sel.classList.remove('hidden');
           if (wt.hands) document.getElementById('wm-hands').value = wt.hands;
+          // Auto-fill base damage from weapons cache
+          const wd = weaponsCache ? weaponsCache[wt.name] : null;
+          const $bdmg = document.getElementById('wm-base-dmg');
+          if ($bdmg) {
+            if (wd && wd.damage && wd.damage !== '—') {
+              $bdmg.textContent = 'Dés de base : ' + wd.damage + ' ' + (wt.baseDmg || '');
+              $bdmg.dataset.value = wd.damage;
+              $bdmg.classList.remove('hidden');
+            } else {
+              $bdmg.textContent = '';
+              $bdmg.dataset.value = '';
+              $bdmg.classList.add('hidden');
+            }
+          }
+          // Auto-fill properties
+          if (wd && wd.properties && wd.properties.length > 0) renderWmProperties(wd.properties);
           renderWmTypeList();
         });
         $list.appendChild(item);
@@ -4411,7 +4496,8 @@
     }));
 
     const equipped = weaponEditIndex !== null ? (character.inventoryWeapons[weaponEditIndex].equipped || false) : false;
-    const weapon = { name, type, hands, atkBonus, damageBonus, properties, spells, desc, equipped };
+    const baseDamage = (document.getElementById('wm-base-dmg') || {}).dataset?.value || '';
+    const weapon = { name, type, hands, atkBonus, baseDamage, damageBonus, properties, spells, desc, equipped };
 
     if (!character.inventoryWeapons) character.inventoryWeapons = [];
     if (weaponEditIndex !== null) {

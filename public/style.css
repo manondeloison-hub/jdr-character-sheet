@@ -3441,6 +3441,23 @@ main {
 }
 .class-skill-hint strong { color: var(--gold); font-weight: 600; }
 
+/* --- Conditions --- */
+.conditions-list { display: flex; flex-direction: column; gap: 0.25rem; }
+.condition-item { padding: 0.35rem 0.5rem; background: var(--bg-card); border-radius: var(--radius); }
+.condition-effect { font-size: 0.82rem; color: var(--text-dim); padding: 0.15rem 0; }
+
+/* --- Weapon base damage badge --- */
+.wm-base-dmg {
+  display: inline-block;
+  margin-top: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(244, 197, 66, 0.12);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--gold);
+}
+
 /* --- Scrollbar --- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

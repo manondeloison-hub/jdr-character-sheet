@@ -1,0 +1,154 @@
+[
+  {
+    "id": "aveugle",
+    "name": "Aveuglé",
+    "icon": "👁️",
+    "effects": [
+      "Ne peut pas voir, rate automatiquement tout jet nécessitant la vue.",
+      "Les jets d'attaque contre la créature ont l'avantage.",
+      "Ses propres jets d'attaque ont le désavantage."
+    ]
+  },
+  {
+    "id": "charme",
+    "name": "Charmé",
+    "icon": "💗",
+    "effects": [
+      "Ne peut pas attaquer ni cibler nuisiblement l'instigateur du charme.",
+      "L'instigateur a l'avantage aux jets de caractéristique pour interagir socialement avec la créature."
+    ]
+  },
+  {
+    "id": "assourdi",
+    "name": "Assourdi",
+    "icon": "🔇",
+    "effects": [
+      "Ne peut pas entendre.",
+      "Rate automatiquement tout jet de caractéristique nécessitant l'ouïe."
+    ]
+  },
+  {
+    "id": "epuise",
+    "name": "Épuisé",
+    "icon": "😓",
+    "effects": [
+      "Niv. 1 — Désavantage aux jets de caractéristique.",
+      "Niv. 2 — Vitesse divisée par deux.",
+      "Niv. 3 — Désavantage aux jets d'attaque et de sauvegarde.",
+      "Niv. 4 — Maximum de PV divisé par deux.",
+      "Niv. 5 — Vitesse réduite à 0.",
+      "Niv. 6 — Mort."
+    ]
+  },
+  {
+    "id": "effraie",
+    "name": "Effrayé",
+    "icon": "😱",
+    "effects": [
+      "Désavantage aux jets de caractéristique et jets d'attaque tant que la source de la peur est visible.",
+      "Ne peut pas se déplacer volontairement vers la source de la peur."
+    ]
+  },
+  {
+    "id": "agrippe",
+    "name": "Agrippé",
+    "icon": "🤝",
+    "effects": [
+      "Vitesse réduite à 0.",
+      "La condition se termine si l'agrippeur est neutralisé ou si la créature est éloignée."
+    ]
+  },
+  {
+    "id": "incapacite",
+    "name": "Incapacité",
+    "icon": "🚫",
+    "effects": [
+      "Ne peut effectuer ni action ni réaction."
+    ]
+  },
+  {
+    "id": "invisible",
+    "name": "Invisible",
+    "icon": "👻",
+    "effects": [
+      "Impossible à voir sans magie ni sens spécial.",
+      "Ses jets d'attaque ont l'avantage.",
+      "Les jets d'attaque contre la créature ont le désavantage."
+    ]
+  },
+  {
+    "id": "paralyse",
+    "name": "Paralysé",
+    "icon": "⚡",
+    "effects": [
+      "Incapable d'agir et de se déplacer, ne peut pas parler.",
+      "Rate automatiquement les jets de sauvegarde de Force et de Dextérité.",
+      "Les jets d'attaque contre elle ont l'avantage.",
+      "Toute attaque portée à moins de 1,5 m est un coup critique."
+    ]
+  },
+  {
+    "id": "petrifie",
+    "name": "Pétrifié",
+    "icon": "🪨",
+    "effects": [
+      "Transformée en substance solide inerte avec ses objets.",
+      "Incapable d'agir, de se déplacer ou de parler.",
+      "Résistance à tous les dégâts.",
+      "Immunité aux poisons et maladies (déjà contractés suspendus).",
+      "Rate auto les jets de Force et Dextérité.",
+      "Les attaques contre elle ont l'avantage."
+    ]
+  },
+  {
+    "id": "empoisonne",
+    "name": "Empoisonné",
+    "icon": "☠️",
+    "effects": [
+      "Désavantage aux jets d'attaque et de caractéristique."
+    ]
+  },
+  {
+    "id": "renverse",
+    "name": "Renversé",
+    "icon": "🪃",
+    "effects": [
+      "Peut seulement ramper ou se relever (coûte la moitié de la vitesse).",
+      "Désavantage aux jets d'attaque.",
+      "Les attaques à moins de 1,5 m ont l'avantage ; les autres ont le désavantage."
+    ]
+  },
+  {
+    "id": "entrave",
+    "name": "Entravé",
+    "icon": "⛓️",
+    "effects": [
+      "Vitesse réduite à 0.",
+      "Désavantage aux jets d'attaque et aux jets de sauvegarde de Dextérité.",
+      "Les jets d'attaque contre la créature ont l'avantage."
+    ]
+  },
+  {
+    "id": "etourdi",
+    "name": "Étourdi",
+    "icon": "💫",
+    "effects": [
+      "Incapable d'agir, se déplacer ou parler de façon cohérente.",
+      "Rate automatiquement les jets de sauvegarde de Force et de Dextérité.",
+      "Les jets d'attaque contre elle ont l'avantage."
+    ]
+  },
+  {
+    "id": "inconscient",
+    "name": "Inconscient",
+    "icon": "💤",
+    "effects": [
+      "Inconsciente, incapable d'agir, se déplacer ou parler.",
+      "Ne sait pas ce qui se passe autour d'elle.",
+      "Lâche tout ce qu'elle tient et tombe au sol (renversée).",
+      "Rate automatiquement les jets de Force et de Dextérité.",
+      "Les jets d'attaque contre elle ont l'avantage.",
+      "Toute attaque portée à moins de 1,5 m est un coup critique."
+    ]
+  }
+]
