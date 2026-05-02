@@ -3307,80 +3307,123 @@
     if (!featuresCollapsed) {
       const cls   = character.class || '';
       const level = character.level || 1;
-      const allFeats = getClassFeatureList(cls, level);
-      const choices  = character.classFeatureChoices || {};
       const $autoList = document.getElementById('class-features-auto');
       $autoList.innerHTML = '';
 
-      const seenMulti = new Set();
-      for (const f of allFeats) {
-        if (f.t === 'multi-more') continue;
-        const id = f.id || f.name;
-        if (f.t === 'multi' && seenMulti.has(id)) continue;
-        if (f.t === 'multi') seenMulti.add(id);
-
-        const row = document.createElement('div');
-        row.className = 'class-feature-item';
-        const lvlSpan = '<span class="cf-level">Niv.' + f.l + '</span>';
-
-        if (f.t === 'auto') {
-          row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + '</span>';
-        } else if (f.t === 'asi') {
-          row.innerHTML = lvlSpan + '<span class="cf-name cf-asi">' + f.name + '</span>';
-        } else if (f.t === 'choice') {
-          const chosen = choices[id];
-          if (chosen) {
-            row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + ' : <strong>' + chosen + '</strong></span>';
-          } else {
-            row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + f.name + ' — à choisir</span>';
-          }
-        } else if (f.t === 'multi') {
-          const total  = getMultiTotalCount(allFeats, id);
-          const chosen = choices[id] || [];
-          if (chosen.length > 0) {
-            const extra = chosen.length < total ? ' <span class="cf-pending-small">(+' + (total - chosen.length) + ' à choisir)</span>' : '';
-            row.innerHTML = lvlSpan + '<span class="cf-name">' + f.name + ' : <strong>' + chosen.join(', ') + '</strong>' + extra + '</span>';
-          } else {
-            row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + f.name + ' (' + total + ' à choisir)</span>';
-          }
-        }
-        $autoList.appendChild(row);
-      }
-
-      // Typed features (patron, manifestations, faveur de pacte…)
-      const typedData = getTypedFeatures(cls);
-      if (typedData) {
-        const tChoices = character.classFeatureChoices || {};
-        for (const type of typedData.types) {
-          if (type.grantedAt > level) continue;
-          const row = document.createElement('div');
-          row.className = 'class-feature-item';
-          const lvlSpan = '<span class="cf-level">Niv.' + type.grantedAt + '</span>';
-          if (type.selectionType === 'single') {
-            const chosenId  = tChoices[type.id];
-            const chosenOpt = chosenId ? type.options.find(o => o.id === chosenId) : null;
-            if (chosenOpt) {
-              row.innerHTML = lvlSpan + '<span class="cf-name">' + type.name + ' : <strong>' + chosenOpt.name + '</strong></span>';
-            } else {
-              row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + type.name + ' — à choisir</span>';
-            }
-          } else if (type.selectionType === 'multi') {
-            const need = computeMultiCount(type, level);
-            const chosen = tChoices[type.id] || [];
-            if (chosen.length > 0) {
-              const extra = chosen.length < need ? ' <span class="cf-pending-small">(+' + (need - chosen.length) + ' à choisir)</span>' : '';
-              const names = chosen.map(id => { const o = type.options.find(x => x.id === id); return o ? o.name : id; });
-              row.innerHTML = lvlSpan + '<span class="cf-name">' + type.name + ' : <strong>' + names.join(', ') + '</strong>' + extra + '</span>';
-            } else {
-              row.innerHTML = lvlSpan + '<span class="cf-name cf-pending">' + type.name + ' (' + need + ' à choisir)</span>';
-            }
-          }
-          $autoList.appendChild(row);
-        }
-      }
-
       if (!cls) {
         $autoList.innerHTML = '<span class="text-dim">Sélectionne une classe dans le profil.</span>';
+      } else {
+        const allFeats = getClassFeatureList(cls, level);
+        const choices  = character.classFeatureChoices || {};
+
+        function makeCfSection(title) {
+          const sec = document.createElement('div');
+          sec.className = 'cf-section';
+          sec.innerHTML = '<div class="cf-section-title">' + title + '</div>';
+          const body = document.createElement('div');
+          body.className = 'cf-section-body';
+          sec.appendChild(body);
+          return sec;
+        }
+
+        // --- Section : capacités de base ---
+        const seenMulti = new Set();
+        const baseFeats = allFeats.filter(f => {
+          if (f.t === 'multi-more') return false;
+          const id = f.id || f.name;
+          if (f.t === 'multi') {
+            if (seenMulti.has(id)) return false;
+            seenMulti.add(id);
+          }
+          return true;
+        });
+
+        if (baseFeats.length > 0) {
+          const sec = makeCfSection('Capacités de classe');
+          const body = sec.querySelector('.cf-section-body');
+          baseFeats.forEach(f => {
+            const id = f.id || f.name;
+            const item = document.createElement('div');
+            item.className = 'cf-item';
+            if (f.t === 'auto') {
+              item.innerHTML = '<span class="cf-item-name">' + f.name + '</span>';
+            } else if (f.t === 'asi') {
+              item.innerHTML = '<span class="cf-item-name cf-item-asi">' + f.name + '</span>';
+            } else if (f.t === 'choice') {
+              const chosen = choices[id];
+              if (chosen) {
+                item.innerHTML = '<span class="cf-item-name">' + f.name + '</span><span class="cf-item-choice">' + chosen + '</span>';
+              } else {
+                item.innerHTML = '<span class="cf-item-name cf-pending">' + f.name + '</span><span class="cf-pending-badge">À choisir</span>';
+              }
+            } else if (f.t === 'multi') {
+              const total  = getMultiTotalCount(allFeats, id);
+              const chosen = choices[id] || [];
+              if (chosen.length > 0) {
+                const extra = chosen.length < total ? ' <span class="cf-pending-badge">+' + (total - chosen.length) + '</span>' : '';
+                item.innerHTML = '<span class="cf-item-name">' + f.name + '</span>' + extra +
+                  '<div class="cf-chips">' + chosen.map(c => '<span class="cf-chip">' + c + '</span>').join('') + '</div>';
+              } else {
+                item.innerHTML = '<span class="cf-item-name cf-pending">' + f.name + '</span><span class="cf-pending-badge">' + total + ' à choisir</span>';
+              }
+            }
+            body.appendChild(item);
+          });
+          $autoList.appendChild(sec);
+        }
+
+        // --- Sections : capacités typées (patron, manifestations, faveur de pacte…) ---
+        const typedData = getTypedFeatures(cls);
+        if (typedData) {
+          for (const type of typedData.types) {
+            if (type.grantedAt > level) continue;
+            const sec = makeCfSection(type.name);
+            const body = sec.querySelector('.cf-section-body');
+
+            if (type.selectionType === 'single') {
+              const chosenId  = choices[type.id];
+              const chosenOpt = chosenId ? type.options.find(o => o.id === chosenId) : null;
+              if (chosenOpt) {
+                const card = document.createElement('div');
+                card.className = 'cf-chosen-option';
+                card.innerHTML = '<div class="cf-chosen-name">' + chosenOpt.name + '</div>' +
+                  (chosenOpt.desc ? '<div class="cf-chosen-desc">' + chosenOpt.desc + '</div>' : '');
+                body.appendChild(card);
+              } else {
+                const item = document.createElement('div');
+                item.className = 'cf-item';
+                item.innerHTML = '<span class="cf-item-name cf-pending">Choix à effectuer</span><span class="cf-pending-badge">À choisir</span>';
+                body.appendChild(item);
+              }
+            } else if (type.selectionType === 'multi') {
+              const need   = computeMultiCount(type, level);
+              const chosen = choices[type.id] || [];
+              if (chosen.length > 0) {
+                chosen.forEach(optId => {
+                  const opt = type.options.find(o => o.id === optId);
+                  if (!opt) return;
+                  const item = document.createElement('div');
+                  item.className = 'cf-item cf-item-with-desc';
+                  item.innerHTML = '<span class="cf-item-name">' + opt.name + '</span>' +
+                    (opt.desc ? '<span class="cf-item-desc">' + opt.desc + '</span>' : '');
+                  body.appendChild(item);
+                });
+                if (chosen.length < need) {
+                  const more = document.createElement('div');
+                  more.className = 'cf-pending-more';
+                  more.textContent = '+' + (need - chosen.length) + ' à choisir';
+                  body.appendChild(more);
+                }
+              } else {
+                const item = document.createElement('div');
+                item.className = 'cf-item';
+                item.innerHTML = '<span class="cf-item-name cf-pending">Aucun choix effectué</span><span class="cf-pending-badge">' + need + ' à choisir</span>';
+                body.appendChild(item);
+              }
+            }
+            $autoList.appendChild(sec);
+          }
+        }
       }
 
       // Bouton — toujours visible si classe connue

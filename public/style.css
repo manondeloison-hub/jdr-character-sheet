@@ -571,29 +571,74 @@ main {
 }
 
 /* ---- Capacités de classe ---- */
-.class-features-auto {
-  margin-bottom: 0.5rem;
+.class-features-auto { margin-bottom: 0.5rem; }
+
+.cf-section {
+  margin-bottom: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
-.class-feature-item {
+.cf-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gold-dim);
+  padding: 0.35rem 0.7rem;
+  background: rgba(244,197,66,0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.cf-section-body { padding: 0.3rem 0.5rem; }
+
+.cf-item {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.2rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.3rem 0.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
+.cf-item:last-child { border-bottom: none; }
 
-.cf-level {
+.cf-item-name       { font-size: 0.85rem; font-weight: 500; }
+.cf-item-name.cf-item-asi { color: var(--text-dim); font-style: italic; font-weight: 400; }
+.cf-item-name.cf-pending  { color: rgba(245,158,11,0.9); }
+.cf-item-choice { font-size: 0.82rem; color: var(--gold); font-weight: 600; }
+
+.cf-pending-badge {
   font-size: 0.68rem;
-  color: var(--text-dim);
-  min-width: 2.8rem;
-  flex-shrink: 0;
+  background: rgba(245,158,11,0.1);
+  color: rgba(245,158,11,0.9);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(245,158,11,0.25);
+  white-space: nowrap;
 }
 
-.cf-name         { font-size: 0.85rem; color: var(--text); }
-.cf-name.cf-asi  { color: var(--text-dim); font-style: italic; }
-.cf-name.cf-pending { color: rgba(245,158,11,0.9); font-style: italic; }
-.cf-pending-small { font-size: 0.75rem; color: rgba(245,158,11,0.75); }
+.cf-chips { display: flex; flex-wrap: wrap; gap: 0.25rem; flex-basis: 100%; }
+.cf-chip {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.cf-chosen-option { padding: 0.4rem 0.2rem; }
+.cf-chosen-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+.cf-chosen-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.45; }
+
+.cf-item-with-desc { align-items: flex-start; flex-direction: column; gap: 0.15rem; }
+.cf-item-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+
+.cf-pending-more {
+  font-size: 0.78rem;
+  color: rgba(245,158,11,0.8);
+  font-style: italic;
+  padding: 0.2rem 0.2rem 0.1rem;
+}
 
 .btn-cf-pending, .btn-cf-edit {
   width: 100%;
